@@ -1,0 +1,5 @@
+class Controller {
+  void getDiscussion() {
+
+  }
+}
