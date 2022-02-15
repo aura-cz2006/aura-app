@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ca6f7ad-1b53-48f9-bca3-853ab007a603" name="Default Changelist" comment="Added tab navigation, and state">
-      <change afterPath="$PROJECT_DIR$/lib/apis/aura.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/config/config.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/controllers/discussion_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/managers/discussion_manager.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/models/comment.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/models/discussion.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/models/user.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/util/controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/util/manager.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/view/community/community_tab.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/view/map/map_tab.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/view/news/news_tab.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="6ca6f7ad-1b53-48f9-bca3-853ab007a603" name="Default Changelist" comment="Revised purpose of controllers, managers and apiHandlers">
+      <change afterPath="$PROJECT_DIR$/lib/api_handler/aura.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/apis/aura.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/controllers/discussion_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/controllers/discussion_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/managers/discussion_manager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/managers/discussion_manager.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/util/controller.dart" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +47,7 @@
     </file-type-list>
   </component>
   <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="4" />
     <option name="recentBranches">
       <RecentBranches>
         <option name="branchesForRepo">
@@ -113,6 +109,14 @@
       <option name="presentableId" value="Default" />
       <updated>1644837830819</updated>
     </task>
+    <task id="LOCAL-00001" summary="Added tab navigation, and state">
+      <created>1644882336366</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1644882336368</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -135,6 +139,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added tab navigation, and state" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added tab navigation, and state" />
+    <MESSAGE value="Revised purpose of controllers, managers and apiHandlers" />
+    <option name="LAST_COMMIT_MESSAGE" value="Revised purpose of controllers, managers and apiHandlers" />
   </component>
 </project>

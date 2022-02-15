@@ -1,36 +1,36 @@
 import 'dart:collection';
-
-import 'package:aura/apis/aura.dart';
 import 'package:aura/models/discussion.dart';
 import 'package:aura/util/manager.dart';
 
 class DiscussionManager extends Manager {
   // internal private state of discussions
   final List<Discussion> _discussions = [
-    Discussion("12345", "title0")
+    // Discussion("12345", "title0")
   ];
+  bool _isUpdating = false;
 
   // immutable list of discussions, to be consumed externally
+  bool get isUpdating => _isUpdating; // todo: fix this
+
   UnmodifiableListView<Discussion> get discussions =>
       UnmodifiableListView(_discussions);
 
-  // methodssync {
-  // call API
-  void getDiscussions() async {
-    // call API
+  void setUpdating(bool newVal) {
+    _isUpdating = newVal;
+  }
 
-    List<Discussion> newDiscussions =
-        await AuraDiscussionAPIInterface.getDiscussions();
-    newDiscussions.forEach((element) {print(element.toString());});
-    print(_discussions.length);
+  void setDiscussions(List<Discussion> discussions) {
+    // discussions.forEach((element) {print(element.toString());});
+    // print(_discussions.length);
 
-    _discussions.addAll(newDiscussions);
-    // store API result in state
+    _discussions.addAll(discussions);
+    // store API result in stat
     notifyListeners();
   }
 
-  void createDiscussion() {
+  void addDiscussion() {
     // call API
-    getDiscussions(); // update local state and notify listeners
+    // ? return http status?
+    notifyListeners();
   }
 }
