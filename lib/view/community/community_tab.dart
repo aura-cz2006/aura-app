@@ -19,21 +19,21 @@ class CommunityTab extends StatelessWidget {
       ),
       body: Center(child: Consumer<DiscussionManager>(
           builder: (context, discussionManager, child) {
-        return ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: discussionManager.discussions.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                height: 50,
-                margin: const EdgeInsets.all(2),
-                child: Center(
-                    child: Text(
-                  discussionManager.discussions[index].title ?? "undefined",
-                  style: const TextStyle(fontSize: 18),
-                )),
-              );
-            });
-      })),
+              return ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: discussionManager.discussions.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      height: 50,
+                      margin: const EdgeInsets.all(2),
+                      child: Center(
+                          child: Text(
+                        discussionManager.discussions[index].title ?? "undefined",
+                        style: const TextStyle(fontSize: 18),
+                      )),
+                    );
+                  });
+            })),
     );
   }
 }
