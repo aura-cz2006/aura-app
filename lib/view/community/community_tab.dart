@@ -10,7 +10,7 @@ class CommunityTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Community'),
+        title: const Text('Community!'),
         actions: [
           IconButton(
               onPressed: () => DiscussionController.getDiscussions(),
