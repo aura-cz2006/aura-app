@@ -54,6 +54,6 @@ class MyApp extends StatelessWidget {
                   decorationColor: Colors.red)))),
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,
-      );
+    );
   }
 }
