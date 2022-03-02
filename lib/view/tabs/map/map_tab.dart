@@ -45,9 +45,6 @@ class _MapTabState extends State<MapTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Map Tab'),
-      // ),
       body: FlutterMap(
         mapController: _mapController,
         options: MapOptions(

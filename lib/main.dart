@@ -64,9 +64,8 @@ class TabBar extends StatefulWidget {
   State<StatefulWidget> createState() => _TabBarState();
 }
 
-
 class _TabBarState extends State<TabBar> {
-  int selectedIndex = 0;
+  int selectedIndex = 1; // start at map by default
 
   @override
   Widget build(BuildContext context) {
