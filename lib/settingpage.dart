@@ -15,7 +15,6 @@ class Settings extends StatelessWidget {
             leading: IconButton(icon: Icon(Icons.arrow_back),
             onPressed:() => Navigator.pop(context, false),
             )
-
           ),
           body: Center(
             child: Column(
