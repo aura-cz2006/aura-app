@@ -24,10 +24,15 @@ class HomeAddresspage extends StatelessWidget {
               padding: EdgeInsets.only(top: 10),
               child: _currentaddressfield(),
             ),
+            Divider(color: Colors.black),
             Padding(
               padding: EdgeInsets.only(top: 10),
               child: _homeaddressfield(),
-            )
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: _confirmationdialog(),
+            ),
           ]
       )
     )
@@ -56,4 +61,13 @@ Widget _homeaddressfield() {
         ),
       )
   );
+}
+
+Widget _confirmationdialog(){
+  return Container(
+    child: ElevatedButton(
+        child: Text('Confirm'),
+        onPressed:null
+    ),
+    );
 }
