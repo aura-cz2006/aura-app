@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:aura/settingpage.dart';
 
 void main()=> runApp(HomeAddresspage());
 
@@ -67,7 +68,13 @@ Widget _confirmationdialog(){
   return Container(
     child: ElevatedButton(
         child: Text('Confirm'),
-        onPressed:null
-    ),
-    );
+  onPressed: () {
+      Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Settings()),
+      );
+      // do something
+      },
+    )
+  );
 }
