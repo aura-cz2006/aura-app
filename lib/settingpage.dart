@@ -41,7 +41,12 @@ class Settings extends StatelessWidget {
 Widget _logoutButton() {
   return Container(
     child: ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+/*        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Signin()), //TODO: Jamie's sign in screen goes here
+        );*/
+      },
       child: const Text('Logout'),
       style: ElevatedButton.styleFrom(
         primary: Colors.blue, //Background color
@@ -57,7 +62,12 @@ Widget _logoutButton() {
 Widget _changehomeButton() {
   return Container(
     child: ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeAddresspage()),
+        );
+      },
       child: const Text('Change Home Address'),
       style: ElevatedButton.styleFrom(
         primary: Colors.blue, //Background color
