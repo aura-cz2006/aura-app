@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 void main()=> runApp(HomeAddresspage());
 
 class HomeAddresspage extends StatelessWidget {
-  HomeAddresspage({required this.current_address});
-  String current_address;
 
   @override
   Widget build (BuildContext context){
@@ -22,22 +20,23 @@ class HomeAddresspage extends StatelessWidget {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            TextFormField(
-              decoration: const InputDecoration(
-              border: UnderlineInputBorder(),
-              labelText: 'Enter your username',
-              ),
-            ),
-
+            _currentaddressfield()
           ]
-
       )
     )
+    );
   }
 }
 
 
 Widget _currentaddressfield() {
-
+  return Container(
+    child: TextFormField(
+      decoration: const InputDecoration(
+        border: UnderlineInputBorder(),
+        labelText: "current_address",
+      ),
+    )
+  );
 }
 
