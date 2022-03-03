@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:aura/homeaddress.dart';
 void main()=> runApp(Settings());
 
 class Settings extends StatelessWidget {
@@ -62,10 +62,10 @@ Widget _changehomeButton() {
   return Container(
     child: ElevatedButton(
       onPressed: () {
-        Navigator.push(
+        /*Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomeAddresspage()),
-        );
+        );*/
       },
       child: const Text('Change Home Address'),
       style: ElevatedButton.styleFrom(

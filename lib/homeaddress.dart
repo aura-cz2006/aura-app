@@ -69,10 +69,10 @@ Widget _confirmationdialog(){
     child: ElevatedButton(
         child: Text('Confirm'),
   onPressed: () {
-      Navigator.push(
+      /*Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => Settings()),
-      );
+      );*/
       // do something
       },
     )
