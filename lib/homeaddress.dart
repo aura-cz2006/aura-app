@@ -20,7 +20,14 @@ class HomeAddresspage extends StatelessWidget {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _currentaddressfield()
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: _currentaddressfield(),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: _homeaddressfield(),
+            )
           ]
       )
     )
@@ -31,12 +38,22 @@ class HomeAddresspage extends StatelessWidget {
 
 Widget _currentaddressfield() {
   return Container(
-    child: TextFormField(
-      decoration: const InputDecoration(
-        border: UnderlineInputBorder(),
-        labelText: "current_address",
-      ),
-    )
-  );
+    child: Text("Current Address:\n62 Nanyang Drive",
+        style: TextStyle(
+            color: Colors.deepOrange,
+            fontSize: 30
+        )
+      )
+    );
 }
 
+Widget _homeaddressfield() {
+  return Container(
+      child: TextFormField(
+        decoration: const InputDecoration(
+          border: UnderlineInputBorder(),
+          labelText: "Enter your new home address",
+        ),
+      )
+  );
+}
