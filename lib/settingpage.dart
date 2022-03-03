@@ -9,8 +9,13 @@ class Settings extends StatelessWidget {
         home: Scaffold(
           appBar: AppBar(
             title: Center(
-              child: Text('Settings'),
+              child: Text('Settings')
+            ),
+            automaticallyImplyLeading: true,
+            leading: IconButton(icon: Icon(Icons.arrow_back),
+            onPressed:() => Navigator.pop(context, false),
             )
+
           ),
           body: Center(
             child: Column(
