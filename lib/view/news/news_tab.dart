@@ -7,7 +7,7 @@ class NewsTab extends StatefulWidget {
   State<StatefulWidget> createState() => _NewsTabState();
 }
 
-const List<Tab> tabs = <Tab>[
+const List<Tab> tabs = <Tab>[ // does this part d
   Tab(text: 'Now'),
   Tab(text: 'Upcoming'),
 ];
@@ -27,7 +27,8 @@ class _NewsTabState extends State<NewsTab> {
             // To get index of current tab use tabController.index
           }
         });
-        return Scaffold(
+        return MaterialApp(
+          home: Scaffold(
           appBar: AppBar(
             title: const TabBar(
               tabs: [
@@ -41,11 +42,138 @@ class _NewsTabState extends State<NewsTab> {
                   onPressed: () {}, icon: const Icon(Icons.settings_outlined))
             ],
           ),
-          body: const Center(
-            child: Text("newsTab"),
+          body: Container(
+              child:
+              ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[
+                  newsList()
+                ],
+              )
           ),
+        ),
         );
       }),
     );
   }
 }
+
+
+Widget newsList(){
+  return Column(
+    children: <Widget>[
+      upgradingNewsItem("At Block 1 Dover Road", "1st Quarter 2022"),
+      marketNewsItem("Upper Boon Keng Road Blk 17 (Blk 17 Upper Boon Keng Market and Food Centre)", "10/1/2022", "11/1/2022"),
+      eventNewsItem("intro to chromatic harmonica", "5 Mar 2022, 3pm - 5pm"),
+      dengueNewsItem("Joo Chiat Rd / Onan Rd", "3"),
+      upgradingNewsItem("Beside Block 268C Boon Lay Drive", "2nd Quarter 2022"),
+      marketNewsItem("Telok Blangah Rise Blk 36 (Telok Blangah Rise Market)", "10/1/2022", "10/1/2022"),
+      eventNewsItem("Jurong Spring IRCC Getai Nite 2022","19 Mar 2022- 20 Mar 2022 , 7.30pm - 10pm" ),
+      dengueNewsItem("Hougang Ave 3 (Blk 24)", "2"),
+      upgradingNewsItem("At Block 209 Boon Lay Place", "3rd Quarter 2022"),
+      marketNewsItem("Toa Payoh Lorong 8 Blk 210", "10/1/2022", "11/1/2022"),
+      eventNewsItem("Nanyang Shoe Recycling Drive Donation 2022", "15 Jan 2022 - 31 Dec 2022, 9.00am - 11:30pm"),
+      dengueNewsItem("Hougang Ave 8 (Blk 626, 629, 630)", "3")
+    ],
+  );
+}
+
+Widget upgradingNewsItem(String location, String date) { //since for upgrading exact date is not given, only time period is given, only 1 date var
+  return Center(
+    child: Card(
+      child: InkWell(
+        splashColor: Colors.red.withAlpha(30),
+        onTap: () {
+          debugPrint('Card tapped.'); // jamie i believe u shld be adding ur code here??? idk tbh
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Text("Upgrading"),
+              title: Text(location),
+              subtitle: Text("Estimated completion by " + date),
+            )
+          ],
+        ),
+      ),
+
+    ),
+
+  );
+} //type, location, date
+
+Widget marketNewsItem(String location, String date1, String date2) { //date 1 and date 2 is for if closed over period of time
+  return Center(
+    child: Card(
+      child: InkWell(
+        splashColor: Colors.red.withAlpha(30),
+        onTap: () {
+          debugPrint('Card tapped.'); // jamie i believe u shld be adding ur code here??? idk tbh
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Text("Market Closure"),
+              title: Text(location),
+              subtitle: Text(date1 + "-" + date2 ),
+            )
+          ],
+        ),
+      ),
+
+    ),
+
+  );
+} //type, location, date
+
+Widget eventNewsItem(String name, String dateTime) { //event name and date and time
+  return Center(
+    child: Card(
+      child: InkWell(
+        splashColor: Colors.red.withAlpha(30),
+        onTap: () {
+          debugPrint('Card tapped.'); // jamie i believe u shld be adding ur code here??? idk tbh
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Text("Events"),
+              title: Text(name),
+              subtitle: Text(dateTime),
+            )
+          ],
+        ),
+      ),
+
+    ),
+
+  );
+} //type, location, date
+
+Widget dengueNewsItem(String areaName, String caseSize) {
+  return Center(
+    child: Card(
+      child: InkWell(
+        splashColor: Colors.red.withAlpha(30),
+        onTap: () {
+          debugPrint('Card tapped.'); // jamie i believe u shld be adding ur code here??? idk tbh
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Text("Dengue"),
+              title: Text(areaName),
+              subtitle: Text("No of cases: " + caseSize ),
+            )
+          ],
+        ),
+      ),
+
+    ),
+
+  );
+} //type, location, date
