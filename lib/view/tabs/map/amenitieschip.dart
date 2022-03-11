@@ -16,44 +16,35 @@ class Settings extends StatelessWidget {
                   onPressed:() => Navigator.pop(context, false),
                 )
             ),
-            body: Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 0),
-                child: Container(
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: <Widget>[
-                        rowChips(),
-                      ],
-                    )
-                ),
-              ),
-            )
+            body: rowChips(),
         )
     );
   }
 }
 
 Widget rowChips(){
-  return Row(
-    children: <Widget>[
-      _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
-      _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
-      _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
-      _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
-      _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
-      _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
-      _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
-      _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
-      _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
-    ],
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Row(
+      children: <Widget>[
+        _amenitychip("ABC", 0xFFff8a65),
+        _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
+        _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
+        _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
+        _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
+        _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
+        _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
+        _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
+        _amenitychip("ABCDFEFEFASD", 0xFFff8a65),
+      ],
+    ),
   );
 }
 
 Widget _amenitychip(String text, int colour) { //Controls spacing between chips
   return Container(
-      margin: EdgeInsets.all(2.0), //Spacing in between chips
-      child: amenityChipWidget(chipName: text, bgColour: colour)
+    margin: EdgeInsets.all(2.0), //Spacing in between chips
+    child: amenityChipWidget(chipName: text, bgColour: colour)
   );
 }
 
