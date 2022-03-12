@@ -1,9 +1,7 @@
-import 'package:aura/managers/discussion_manager.dart';
-import 'package:aura/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'managers/notification_manager.dart';
+import 'package:aura/managers/discussion_manager.dart';
+import 'package:aura/managers/notification_manager.dart';
 
 void main() {
   runApp(
