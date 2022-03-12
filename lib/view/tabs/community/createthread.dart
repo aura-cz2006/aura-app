@@ -29,22 +29,28 @@ class createThread extends StatelessWidget {
 }
 
 Widget _contentbox() {
-  return Padding(
-      padding: EdgeInsets.only(left: 10, right: 10),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Color(0x11111111),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Padding(
-          padding: EdgeInsets.only(left: 15, right: 15, top: 5),
-          child: TextFormField(
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: "Content of Thread",
+  return Expanded(
+      child: SingleChildScrollView(
+          child:Padding(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Color(0x11111111),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+                child: TextFormField(
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Content of Thread",
+                    )
+                ),
               )
-          ),
-        )
+            )
+          )
       )
   );
 }
