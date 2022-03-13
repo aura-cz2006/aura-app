@@ -1,4 +1,4 @@
-class Discussion {
+class Thread {
   String? id;
   String? title;
 
@@ -8,7 +8,7 @@ class Discussion {
   // late List<User> likedBy;
 
   // constructor
-  Discussion(
+  Thread(
     this.id,
     this.title, // body, comments, author, likedBy
   );

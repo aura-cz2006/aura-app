@@ -1,10 +1,30 @@
-import 'package:aura/controllers/discussion_controller.dart';
-import 'package:aura/managers/discussion_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:icon_badge/icon_badge.dart';
 
-class CommunityTab extends StatelessWidget {
+import 'package:aura/controllers/discussion_controller.dart';
+import 'package:aura/managers/discussion_manager.dart';
+import 'package:aura/models/notification.dart' as no;
+import '../../controllers/meetups_controller.dart';
+import 'detailed_thread_view.dart';
+import 'detailed_meetup_view.dart';
+
+class CommunityTab extends StatefulWidget {
   const CommunityTab({Key? key}) : super(key: key);
+
+  @override
+  State<CommunityTab> createState() => _CommunityTabState();
+}
+
+class _CommunityTabState extends State<CommunityTab> {
+  DiscussionController discCtrl = DiscussionController();
+  MeetupsController meetCtrl = MeetupsController();
+  List<no.Notification> notifications = [
+    no.ThreadNotification("001", no.ThreadNotifType.NEW_LIKE, true),
+    no.ThreadNotification.withoutRead("002", no.ThreadNotifType.NEW_COMMENT),
+    no.MeetupNotification("003", no.MeetupNotifType.REMINDER, true),
+    no.MeetupNotification.withoutRead("004", no.MeetupNotifType.SUCCESSFULLY_RSVP),
+  ]; // TODO: get notifications from controller
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +32,14 @@ class CommunityTab extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Community'),
         actions: [
-          IconButton(
-              onPressed: () => DiscussionController.getDiscussions(),
-              icon: const Icon(Icons.download_rounded))
+          IconBadge(
+            icon: const Icon(Icons.notifications),
+            itemCount: notifications.where((n) => n.read == false).toList().length,
+            badgeColor: Colors.red,
+            itemColor: Colors.white,
+            hideZero: true,
+            onTap: _displayNotifs
+          ),
         ],
       ),
       body: Center(child: Consumer<DiscussionManager>(
@@ -34,6 +59,60 @@ class CommunityTab extends StatelessWidget {
                     );
                   });
             })),
+    );
+  }
+  void _displayNotifs() {
+    Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (context) {
+            final tiles = notifications.map(
+                  (n) {
+                return ListTile(
+                  title: Text(
+                      (n is no.ThreadNotification) ? n.getText(discCtrl) :
+                        (n is no.MeetupNotification) ? n.getText(meetCtrl) : ""
+                  ),
+                  leading: Icon(
+                    n.read ? null : Icons.circle,
+                    color: n.read ? null : Colors.red,
+                    size: 15,
+                  ),
+                  onTap: () {
+                    setState(() {
+                      n.markRead(); // TODO: need to fix, mark as read and remove red circle after tapping
+                      if (n is no.ThreadNotification) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => DetailedThreadView(
+                                discCtrl.getThread(n.threadID))));
+                      }
+                      else if (n is no.MeetupNotification) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => DetailedMeetupView(
+                                meetCtrl.getMeetup(n.meetupID))));
+                      }
+                    });
+                  },
+                );
+              },
+            );
+            final divided = tiles.isNotEmpty
+                ? ListTile.divideTiles(
+              context: context,
+              tiles: tiles,
+            ).toList()
+                : <Widget>[];
+
+            return Scaffold(
+              appBar: AppBar(
+                iconTheme: const IconThemeData(
+                  color: Colors.black,
+                ),
+                title: const Text('Notifications'),
+              ),
+              body: ListView(children: divided),
+            );
+          },
+    )
     );
   }
 }
