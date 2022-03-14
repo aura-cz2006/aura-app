@@ -3,8 +3,8 @@ import 'package:introduction_screen/introduction_screen.dart';
 
 import 'home_page.dart';
 
-void main() => runApp(TestScreen())
-class TestScreen extends StatelessWidget {
+void main() => runApp(IntroScreen());
+class IntroScreen extends StatelessWidget {
 
   List<PageViewModel> listPagesViewModel = [
     PageViewModel(
@@ -28,10 +28,13 @@ class TestScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return IntroductionScreen(
       pages: listPagesViewModel,
-      done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
-      onDone: () {
-        // When done button is press
-      },
+      showNextButton: false,
+      showBackButton: false,
+      showSkipButton: false,
+      showDoneButton: false,
+      // skip: const Text("Skip"),
+      // done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
+
     ); //Material App
   }
 }
