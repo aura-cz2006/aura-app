@@ -3,6 +3,7 @@ import 'package:introscreenonboarding/intro_app.dart';
 
 import 'home_page.dart';
 
+void main() => runApp(TestScreen())
 class TestScreen extends StatelessWidget {
   final List<Introduction> list = [
     Introduction(
