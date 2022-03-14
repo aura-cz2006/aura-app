@@ -1,5 +1,6 @@
 import 'package:aura/managers/discussion_manager.dart';
 import 'package:aura/routes/main_tabs.dart';
+import 'package:aura/view/onboarding/introduction_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +11,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => DiscussionManager()),
       ],
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
@@ -24,16 +25,16 @@ class MyApp extends StatelessWidget {
           path: '/',
           pageBuilder: (context, state) => MaterialPage<void>(
             key: state.pageKey,
-            child: const MainTabBar(),
+            child: IntroScreen(),
           ),
         ),
-        GoRoute(
-          path: '/settings',
-          pageBuilder: (context, state) => MaterialPage<void>(
-            key: state.pageKey,
-            child: const SettingsScreen(),
-          ),
-        ),
+        // GoRoute(
+        //   path: '/settings',
+        //   pageBuilder: (context, state) => MaterialPage<void>(
+        //     key: state.pageKey,
+        //     child: const SettingsScreen(),
+        //   ),
+        // ),
       ],
   );
 
