@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'createthread.dart';
 
 void main()=> runApp(FAB());
 
@@ -45,13 +46,9 @@ class _fabWidgetState extends State<fabWidget>{
       child: Icon(Icons.mode_edit_sharp),
       backgroundColor: Colors.lightBlueAccent,
       onPressed: () {
-        showDialog(
-          context: context, builder: (BuildContext context) {
-          return new AlertDialog(
-            title: new Text("My Super title"),
-            content: new Text("Hello World"),
-          );
-          }
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => createThread()),
         );
       },
     );

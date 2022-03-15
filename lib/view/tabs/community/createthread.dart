@@ -21,6 +21,7 @@ class createThread extends StatelessWidget {
             children: <Widget>[
               _titlebox(),
               _contentbox(),
+              submitButton(),
             ],
           ),
         )
@@ -73,5 +74,22 @@ Widget _titlebox() {
         ),
       )
     )
+  );
+}
+
+Widget submitButton() {
+  return Padding(
+    padding: EdgeInsets.only(bottom: 10),
+    child: ElevatedButton(
+      style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0)
+              )
+          )
+      ),
+      child: Text("Submit"),
+      onPressed: (){},
+    ),
   );
 }
