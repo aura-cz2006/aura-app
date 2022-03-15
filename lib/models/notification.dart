@@ -14,8 +14,8 @@ abstract class Notification {
 
   get id => _id;
 
-  void markRead() {
-    read = true;
+  void setRead(newReadStatus) {
+    read = newReadStatus;
   }
   String getText();
   @override

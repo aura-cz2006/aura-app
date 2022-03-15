@@ -1,3 +1,4 @@
+import 'package:aura/managers/notification_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:icon_badge/icon_badge.dart';
@@ -48,21 +49,22 @@ class _CommunityTabState extends State<CommunityTab> {
       ),
       body: Center(child: Consumer<DiscussionManager>(
           builder: (context, discussionManager, child) {
-              return ListView.builder(
-                  padding: const EdgeInsets.all(8),
-                  itemCount: discussionManager.discussions.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      height: 50,
-                      margin: const EdgeInsets.all(2),
-                      child: Center(
-                          child: Text(
-                        discussionManager.discussions[index].title ?? "undefined",
-                        style: const TextStyle(fontSize: 18),
-                      )),
-                    );
-                  });
-            })),
+            return ListView.builder(
+                padding: const EdgeInsets.all(8),
+                itemCount: discussionManager.discussions.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    height: 50,
+                    margin: const EdgeInsets.all(2),
+                    child: Center(
+                        child: Text(
+                          discussionManager.discussions[index].title ??
+                              "undefined",
+                          style: const TextStyle(fontSize: 18),
+                        )),
+                  );
+                });
+          })),
     );
   }
 }
