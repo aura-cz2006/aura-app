@@ -6,17 +6,21 @@ import 'meetup.dart';
 
 abstract class Notification {
   bool read;
+  String _id;
 
   // constructor
-  Notification(this.read);
-  Notification.withoutRead(): read = false;
+  Notification(this.read, this._id);
+  Notification.withoutRead(this._id): read = false;
+
+  get id => _id;
 
   void markRead() {
     read = true;
   }
+  String getText();
   @override
   String toString() {
-    return 'Notification: {read: $read}';
+    return 'Notification: {read: $read, id: $_id}';
   }
 }
 
@@ -31,15 +35,15 @@ class ThreadNotification extends Notification {
   String threadID;
   ThreadNotifType notifType;
 
-  ThreadNotification(this.threadID, this.notifType, read) : super(read);
-  ThreadNotification.withoutRead(this.threadID, this.notifType) : super.withoutRead();
+  ThreadNotification(this.threadID, this.notifType, read, id) : super(read, id);
 
   @override
   String toString() {
     return 'Thread Notification: {read: $read, text: $getText(), ID: $threadID, type: $notifType}';
   }
-  String getText(DiscussionController discCtrl) {
-    Thread thread = discCtrl.getThread(threadID); // TODO
+  @override
+  String getText() {
+    Thread thread = DiscussionController.getThread(threadID); // TODO
     switch(notifType) {
       case ThreadNotifType.SUCCESSFULLY_POSTED:
         return "Thread successfully posted: \"${thread.title}\"";
@@ -67,15 +71,15 @@ class MeetupNotification extends Notification {
   String meetupID;
   MeetupNotifType notifType;
 
-  MeetupNotification(this.meetupID, this.notifType, read) : super(read);
-  MeetupNotification.withoutRead(this.meetupID, this.notifType) : super.withoutRead();
+  MeetupNotification(this.meetupID, this.notifType, read, id) : super(read, id);
 
   @override
   String toString() {
     return 'Meetup Notification: {read: $read, text: $getText(), ID: $meetupID, type: $notifType}';
   }
-  String getText(MeetupsController meetCtrl) {
-    Meetup meetup = meetCtrl.getMeetup(meetupID); // TODO
+  @override
+  String getText() {
+    Meetup meetup = MeetupsController.getMeetup(meetupID); // TODO
     switch(notifType) {
       case MeetupNotifType.SUCCESSFULLY_POSTED:
         return "Meetup successfully posted: \"${meetup.title}\"";

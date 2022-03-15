@@ -14,7 +14,7 @@ class DiscussionController {
     DiscussionManager().setUpdating(false);
   }
 
-  Thread getThread(String ID) {
+  static Thread getThread(String ID) {
     // TODO: get the list of threads from manager and return the thread with the matching ID
     return Thread("0000", "TEST THREAD TITLE");
   }
