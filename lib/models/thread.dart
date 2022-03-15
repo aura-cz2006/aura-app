@@ -1,17 +1,20 @@
+import 'user.dart';
 class Thread {
   String? id;
   String? title;
 
-  // late String body;
-  // late List<String> comments; // todo: change this to List<Comment>
-  // late User author;
-  // late List<User> likedBy;
+  String content;
+  List<String> comments = []; // todo: change this to List<Comment>
+  User author;
+  List<User> likedBy = [];
 
   // constructor
   Thread(
-    this.id,
-    this.title, // body, comments, author, likedBy
-  );
+      this.id,
+      this.title,
+      this.author,
+      this.content// body, comments, author, likedBy
+      );
 
   @override
   String toString() {
