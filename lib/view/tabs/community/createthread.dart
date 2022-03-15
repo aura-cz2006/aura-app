@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-void main()=> runApp(createThread());
-
 class createThread extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -89,7 +87,11 @@ Widget submitButton() {
           )
       ),
       child: Text("Submit"),
-      onPressed: (){},
+      onPressed: (){
+        /*Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => createThread()),*/
+      },
     ),
   );
 }

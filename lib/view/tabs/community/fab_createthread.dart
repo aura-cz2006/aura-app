@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'createthread.dart';
 
-void main()=> runApp(FAB());
-
 class FAB extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
