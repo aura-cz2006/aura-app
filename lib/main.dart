@@ -2,8 +2,10 @@ import 'package:aura/managers/discussion_manager.dart';
 import 'package:aura/view/community/community_tab.dart';
 import 'package:aura/view/map/map_tab.dart';
 import 'package:aura/view/news/news_tab.dart';
+import 'package:aura/view/map/amenitieschip.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 
 void main() {
   runApp(
