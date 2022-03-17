@@ -1,4 +1,5 @@
 import 'package:aura/managers/discussion_manager.dart';
+import 'package:aura/managers/map_manager.dart';
 import 'package:aura/view/community/community_tab.dart';
 import 'package:aura/view/map/map_tab.dart';
 import 'package:aura/view/news/news_tab.dart';
@@ -12,6 +13,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => DiscussionManager()),
+        ChangeNotifierProvider(create: (context) => MapManager()),
       ],
       child: const MyApp(),
     ),
