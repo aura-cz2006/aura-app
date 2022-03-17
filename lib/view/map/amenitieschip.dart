@@ -41,7 +41,10 @@ Widget rowChips(){
   );
 }
 
-Widget _amenitychip(String text, int colour) { //Controls spacing between chips
+/*
+* Controls spacing between chips
+* */
+Widget _amenitychip(String text, int colour) {
   return Container(
     margin: EdgeInsets.all(2.0), //Spacing in between chips
     child: amenityChipWidget(chipName: text, bgColour: colour)

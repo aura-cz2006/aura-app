@@ -1,3 +1,4 @@
+import 'package:aura/view/map/amenitieschip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -45,29 +46,34 @@ class _MapTabState extends State<MapTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FlutterMap(
-        mapController: _mapController,
-        options: MapOptions(
-          center: LatLng(1.3521, 103.8198), // singapore
-          bounds: LatLngBounds.fromPoints(_pointList.map((point) => point.coords).toList()),
-          zoom: 5,
-          minZoom: 0,
-          maxZoom: 18,
-        ),
-        layers: [
-          TileLayerOptions(
-            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: ['a', 'b', 'c'],
-            attributionBuilder: (_) {
-              return const Text("© OpenStreetMap contributors");
-            }
+      body: Stack(
+        children: [
+          FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              center: LatLng(1.3521, 103.8198), // singapore
+              bounds: LatLngBounds.fromPoints(_pointList.map((point) => point.coords).toList()),
+              zoom: 5,
+              minZoom: 0,
+              maxZoom: 18,
+            ),
+            layers: [
+              TileLayerOptions(
+                  urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  subdomains: ['a', 'b', 'c'],
+                  attributionBuilder: (_) {
+                    return const Text("© OpenStreetMap contributors");
+                  }
+              ),
+              MarkerLayerOptions(
+                markers: _markers,
+                rotate: true,
+              ),
+            ],
           ),
-          MarkerLayerOptions(
-            markers: _markers,
-            rotate: true,
-          ),
+          rowChips(),
         ],
-      ),
+      )
     );
   }
 }
