@@ -103,6 +103,14 @@ class DisplayFullThread extends StatefulWidget {
 }
 
 class _DisplayFullThreadState extends State<DisplayFullThread> {
+  Future<bool> _handleTapLike(bool isLiked) async {
+    if (isLiked) {
+      widget.thread.removeLike(widget.currUser);
+    } else {
+      widget.thread.addLike(widget.currUser);
+    }
+    return !isLiked;
+  }
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -142,6 +150,7 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                 LikeButton(
                   isLiked: widget.thread.isLikedBy(widget.currUser),
                   likeCount: widget.thread.numLikes(),
+                  onTap: _handleTapLike,
                   countPostion: CountPostion.left,
                   circleColor: const CircleColor(
                       start: Colors.cyanAccent, end: Colors.cyan),
