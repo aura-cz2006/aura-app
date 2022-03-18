@@ -39,6 +39,9 @@ dependencies:
   latlong2: ^0.8.1
   flutter_map: any
 
+  #multiple floating action buttons
+  flutter_speed_dial: ^4.3.0
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   #  cupertino_icons: ^1.0.2 # disabling since our design doesn't support apple specific icons
