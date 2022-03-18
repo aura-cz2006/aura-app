@@ -94,25 +94,58 @@ class searchOverlay extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white.withOpacity(0.85),
       body: Center(
-        child: Container(
-          width: 350,
-            decoration: BoxDecoration(
-              color: Color(0x11111111),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(left: 15, right: 15, top: 5),
-              child: TextFormField(
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Content of Thread",
-                  )
-              ),
-            )
+        child: Stack(
+          children: <Widget>[
+            searchBar(),
+            submitButton()
+          ],
         )
       )
     );
   }
+}
+
+Widget submitButton() {
+  return Align(
+    alignment: Alignment(0,0.8),
+    child: ElevatedButton(
+      style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0)
+              )
+          )
+      ),
+      child: Text("Submit"),
+      onPressed: (){
+        /*Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => createThread()),*/
+      },
+    ),
+  );
+}
+
+Widget searchBar(){
+  return Align(
+    alignment: Alignment.center,
+    child: Container(
+        width: 350,
+        decoration: BoxDecoration(
+          color: Color(0x11111111),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+          child: TextFormField(
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "Search Location",
+              )
+          ),
+        )
+    )
+  );
 }
