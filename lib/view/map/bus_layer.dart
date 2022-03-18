@@ -133,24 +133,22 @@ class _busButtonState extends State<busButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Ink(
-        decoration: const ShapeDecoration(
-          color: Colors.redAccent,
-          shape: CircleBorder(),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.directions_bus_outlined),
-                color: Colors.black,
-            ),
-          ],
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.redAccent,
+        shape: BoxShape.circle,
       ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.directions_bus_outlined),
+            color: Colors.black,
+          )
+        ],
+      )
     );
   }
 }
