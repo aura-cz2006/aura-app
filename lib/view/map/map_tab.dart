@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:aura/view/map/meetups_layer.dart';
+import 'package:aura/view/map/bus_layer.dart';
 
 class Point {
   LatLng coords = LatLng(0, 0);
@@ -73,6 +75,7 @@ class _MapTabState extends State<MapTab> {
   Widget mapUI(List<Point> _pointerList, List<Marker> _markerList) {
     return Stack(
       children: [
+
         FlutterMap(
           mapController: _mapController,
           options: MapOptions(
@@ -98,7 +101,10 @@ class _MapTabState extends State<MapTab> {
             ),
           ],
         ),
+
         rowChips(),
+        busButton(),
+
       ],
     );
   }

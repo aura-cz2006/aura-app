@@ -97,9 +97,7 @@ Widget upgradingNewsItem(String location, String date) { //since for upgrading e
           ],
         ),
       ),
-
     ),
-
   );
 } //type, location, date
 
@@ -122,9 +120,7 @@ Widget marketNewsItem(String location, String date1, String date2) { //date 1 an
           ],
         ),
       ),
-
     ),
-
   );
 } //type, location, date
 
@@ -147,9 +143,7 @@ Widget eventNewsItem(String name, String dateTime) { //event name and date and t
           ],
         ),
       ),
-
     ),
-
   );
 } //type, location, date
 
@@ -172,8 +166,6 @@ Widget dengueNewsItem(String areaName, String caseSize) {
           ],
         ),
       ),
-
     ),
-
   );
 } //type, location, date

@@ -1,8 +1,11 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 import 'home_page.dart';
+*/
 
+/*
 void main() => runApp(IntroScreen());
 class IntroScreen extends StatelessWidget {
 
@@ -22,7 +25,9 @@ class IntroScreen extends StatelessWidget {
       ),
     )
   ];
+*/
 
+/*
 
   @override
   Widget build(BuildContext context) {
@@ -38,3 +43,4 @@ class IntroScreen extends StatelessWidget {
     ); //Material App
   }
 }
+*/
