@@ -42,6 +42,14 @@ class locationFab extends StatefulWidget {
 class _locationFabState extends State<locationFab> {
   var _isSelected = false;
 
+  void openDialog() {
+    Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return new searchOverlay();
+        },
+        fullscreenDialog: true));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SpeedDial(
@@ -53,19 +61,58 @@ class _locationFabState extends State<locationFab> {
         SpeedDialChild(
           child: Icon(Icons.gps_fixed),
           label: "Current",
-          backgroundColor: Colors.amber
+          backgroundColor: Colors.amber,
+          onTap: (){},
         ),
         SpeedDialChild(
           child: Icon(Icons.search_outlined),
           label: "Search",
-          backgroundColor: Colors.lightGreenAccent
+          backgroundColor: Colors.lightGreenAccent,
+          onTap: (){
+            Navigator.of(context).push(PageRouteBuilder(
+                opaque: false,
+                pageBuilder: (BuildContext context, _, __) =>
+                    searchOverlay()));
+            //Navigator.of(context).pop(MyReturnObject("some value");
+          },
         ),
         SpeedDialChild(
           child: Icon(Icons.home),
           label: "Home",
           backgroundColor: Colors.redAccent,
+          onTap: (){},
         )
       ],
+    );
+  }
+}
+
+
+class searchOverlay extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white.withOpacity(0.85),
+      body: Center(
+        child: Container(
+          width: 350,
+            decoration: BoxDecoration(
+              color: Color(0x11111111),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+              child: TextFormField(
+                  maxLines: null,
+                  keyboardType: TextInputType.multiline,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Content of Thread",
+                  )
+              ),
+            )
+        )
+      )
     );
   }
 }
