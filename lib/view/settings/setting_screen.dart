@@ -1,31 +1,31 @@
+import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-void main() => runApp(SettingsScreen());
+void main() => runApp(const SettingsScreen());
 
 class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-                title: Center(child: Text('Settings')),
+                title: const Center(child: Text('Settings')),
                 automaticallyImplyLeading: true,
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => {GoRouter.of(context).pop()},
-                )),
+                leading: const AppBarBackButton()),
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.only(top: 10),
-                    child: _changehomeButton(),
+                    child: ChangeHomeButton(),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10),
                     child: _logoutButton(),
                   ),
                 ],
@@ -35,37 +35,34 @@ class SettingsScreen extends StatelessWidget {
 }
 
 Widget _logoutButton() {
-  return Container(
-    child: ElevatedButton(
-      onPressed: () {
+  return ElevatedButton(
+    onPressed: () {
 /*        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Signin()), //TODO: Jamie's sign in screen goes here
-        );*/
-      },
-      child: const Text('Logout'),
-      style: ElevatedButton.styleFrom(
-        primary: Colors.blue,
-        //Background color
-        onPrimary: Colors.black,
-        //Text
-        fixedSize: const Size(240, 50),
-        padding: const EdgeInsets.all(25),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      ),
+        context,
+        MaterialPageRoute(builder: (context) => Signin()), //TODO: Jamie's sign in screen goes here
+      );*/
+    },
+    child: const Text('Logout'),
+    style: ElevatedButton.styleFrom(
+      primary: Colors.blue,
+      //Background color
+      onPrimary: Colors.black,
+      //Text
+      fixedSize: const Size(240, 50),
+      padding: const EdgeInsets.all(25),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
     ),
   );
 }
 
-Widget _changehomeButton() {
-  return Container(
-    child: ElevatedButton(
+class ChangeHomeButton extends StatelessWidget {
+  const ChangeHomeButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
       onPressed: () {
-        /*Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomeAddresspage()),
-        );*/
+        context.go('${GoRouter.of(context).location}/change_home_address');
       },
       child: const Text('Change Home Address'),
       style: ElevatedButton.styleFrom(
@@ -78,6 +75,6 @@ Widget _changehomeButton() {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
       ),
-    ),
-  );
+    );
+  }
 }
