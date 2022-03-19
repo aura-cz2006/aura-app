@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:aura/settingpage.dart';
 
 void main()=> runApp(HomeAddresspage());
 
