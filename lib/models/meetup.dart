@@ -1,11 +1,12 @@
 import 'dart:html';
 
 import 'package:aura/models/user.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Meetup {
   DateTime createdAt = DateTime.now();
   DateTime timeOfMeetUp;
-  Geolocation location;
+  String location;
   String ID;
   User creator;
   int maxAttendees;
@@ -14,9 +15,18 @@ class Meetup {
 
   Meetup(this.timeOfMeetUp, this.location, this.ID, this.creator, this.maxAttendees) {
     rsvpAttendees.add(creator);
+
   }
 
   int currNumAttendees(){
     return rsvpAttendees.length;
+  }
+
+  void addRsvpAttendee(User user){
+    rsvpAttendees.add(user);
+  }
+
+  void addComment(Comment newComment){
+    comments.add(newComment);
   }
 }
