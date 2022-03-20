@@ -1,20 +1,47 @@
+import 'package:aura/models/comment.dart';
+
+import 'user.dart';
 class Thread {
   String? id;
   String? title;
 
-  // late String body;
-  // late List<String> comments; // todo: change this to List<Comment>
-  // late User author;
-  // late List<User> likedBy;
+  String content;
+  List<Comment> comments = [];
+  User author;
+  List<User> likedBy = [];
+  DateTime timestamp;
 
   // constructor
   Thread(
-    this.id,
-    this.title, // body, comments, author, likedBy
-  );
+      this.id,
+      this.title,
+      this.author,
+      this.content,
+      this.timestamp// comments, likedBy
+      ) ;
 
   @override
-  String toString() {
-    return 'Discussion: {id: ${id ?? ""}, title: ${title ?? ""}}';
+  String toString() { //todo
+    return 'Thread: {id: ${id ?? ""}, title: ${title ?? ""}}';
+  }
+  void addComment(Comment newC) {
+    comments.add(newC);
+  }
+  bool isLikedBy(User user) {
+    if (likedBy.contains(user)) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  void addLike(User user) {
+    likedBy.add(user);
+  }
+  void removeLike(User user) {
+    likedBy.remove(user);
+  }
+  int numLikes() {
+    return likedBy.length;
   }
 }
