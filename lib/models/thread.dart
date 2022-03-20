@@ -41,9 +41,13 @@ class Thread {
   void removeLike(User user) {
     likedBy.remove(user);
   }
-  int numLikes() {
-    if (this.id == '1') return 1;
-    else return 99;
-    return likedBy.length;
+  int numLikes() { // TODO REMOVE THIS DUMMY CODE
+    if (this.id == '1') {
+      return likedBy.length + 1;
+    }
+    else {
+      return likedBy.length + 99;
+    }
+    return likedBy.length; // TODO PUT THIS BACK
   }
 }
