@@ -1,28 +1,28 @@
 import 'package:aura/models/meetup.dart';
 import 'package:aura/models/user.dart';
 import 'package:aura/util/manager.dart';
+import 'package:latlong2/latlong.dart';
 
-import 'package:geolocator/geolocator.dart';
 
 
 class Meetup_Manager extends Manager {
   var meet_up_list = [
     Meetup(
-        DateTime.now().add(Duration(days: 2)), 'Dakota', '1', User('1', 'Ryan'),
+        DateTime.now().add(Duration(days: 2)), LatLng(1.34,103.68), '1', User('1', 'Ryan'),
         5), Meetup(
-        DateTime.now().add(Duration(days: 1)), 'SengKang', '2',
+        DateTime.now().add(Duration(days: 1)), LatLng(1.3868,103.8914), '2',
         User('2', 'Dyllon'),
         15), Meetup(
-        DateTime.now().add(Duration(days: 4)), 'Hougang', '3',
+        DateTime.now().add(Duration(days: 4)), LatLng(1.3612,103.8863), '3',
         User('3', 'Jamie'),
         10), Meetup(
-        DateTime.now().add(Duration(days: 4)), 'Telok Blangah', '4',
+        DateTime.now().add(Duration(days: 4)), LatLng(1.2707,103.8099), '4',
         User('4', 'Alan'),
         7), Meetup(
-        DateTime.now().add(Duration(days: 4)), 'Chinese Garden', '5',
+        DateTime.now().add(Duration(days: 4)), LatLng(1.3385,103.7304), '5',
         User('5', 'Nicole'),
         8), Meetup(
-        DateTime.now().add(Duration(days: 4)), 'Queenstown', '6',
+        DateTime.now().add(Duration(days: 4)), LatLng(1.2942,103.7861), '6',
         User('6', 'Fath'),
         2),
   ];
@@ -49,5 +49,6 @@ class Meetup_Manager extends Manager {
         for (var each in temp_list){
           meet_up_list.add(each);
         }
+        return meet_up_list;
       }
 }
