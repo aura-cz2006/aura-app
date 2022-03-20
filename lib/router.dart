@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(
-    initialLocation: "/tabs/map",
+    initialLocation: "/sign-in",
     urlPathStrategy: UrlPathStrategy.path,
     routes: <GoRoute>[
       GoRoute(
