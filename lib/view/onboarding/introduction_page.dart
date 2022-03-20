@@ -26,7 +26,8 @@ class IntroScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IntroductionScreen(
+    return MaterialApp(
+    home: IntroductionScreen(
       pages: listPagesViewModel,
       showNextButton: false,
       showBackButton: false,
@@ -35,6 +36,7 @@ class IntroScreen extends StatelessWidget {
       // skip: const Text("Skip"),
       // done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
 
-    ); //Material App
+    ),
+    );//Material App
   }
 }
