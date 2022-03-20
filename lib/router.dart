@@ -1,4 +1,5 @@
 import 'package:aura/view/settings/change_home_address_screen.dart';
+import 'package:aura/view/signin/signin_screen.dart';
 import 'package:aura/view/tabs/main_tab_bar.dart';
 import 'package:aura/view/settings/setting_screen.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,10 @@ final router = GoRouter(
                   const ChangeHomeAddressScreen())
         ],
       ),
+      GoRoute(
+          path: "/sign-in",
+          builder: (BuildContext context, GoRouterState state) =>
+              const SigninScreen())
 
       // GoRoute(
       //     path: "/notifications",
