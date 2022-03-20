@@ -37,7 +37,7 @@ class Thread_Manager extends Manager {
     var curr_list = getThreadsByTopic(topic);
     curr_list.sort((a, b) => b.numLikes().compareTo(a.numLikes()));
     return curr_list;
-  } //
+  }//TODO: Figure this out
 
   List<Thread> getListOfThreadsSortedByTime(String topic) {
     var curr_list = getThreadsByTopic(topic);
