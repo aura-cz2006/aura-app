@@ -63,4 +63,8 @@ class Meetup {
   String getSummary() {// TODO replace latlong display w address
     return "$title \nLocation: LAT ${location.latitude}, LONG ${location.longitude} \nTime: ${DateFormat('yyyy-MM-dd kk:mm').format(timeOfMeetUp)}";
   }
+
+  int currNumAttendees(){
+    return rsvpAttendees.length;
+  }
 }
