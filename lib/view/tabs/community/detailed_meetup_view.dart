@@ -1,10 +1,11 @@
+import 'package:aura/models/meetup.dart';
 import 'package:flutter/material.dart';
-import '../../models/meetup.dart';
 
 class DetailedMeetupView extends StatelessWidget {
   final Meetup meetup;
 
   const DetailedMeetupView(this.meetup);
+
   // const DetailedThreadView({Key? key}) : super(key: key);
 
   @override
@@ -16,10 +17,10 @@ class DetailedMeetupView extends StatelessWidget {
         ),
         title: const Text('Meetup'),
       ),
-      body: Center( // TODO: implement detailed meetup view
+      body: Center(
+        // TODO: implement detailed meetup view
         child: Text("Detailed Meetup View for "
             "${meetup.title ?? ""} (id: ${meetup.id ?? ""})"),
-
       ),
     );
   }

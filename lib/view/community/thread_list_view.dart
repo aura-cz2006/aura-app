@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 
 import 'package:aura/managers/thread_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:like_button/like_button.dart';
 
 void main() => runApp(ThreadListView());
 
