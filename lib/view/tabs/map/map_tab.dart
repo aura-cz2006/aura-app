@@ -19,8 +19,8 @@ class MapTab extends StatefulWidget {
 class _MapTabState extends State<MapTab> {
   MapController _mapController = MapController();
   List<Point> _pointList = [
-    new Point(LatLng(1.3483, 103.6831), Icons.pin_drop, Colors.redAccent), // ntu
-    new Point(LatLng(1.3644, 103.9915), Icons.pin_drop, Colors.blueAccent), // changi airport
+    Point(LatLng(1.3483, 103.6831), Icons.pin_drop, Colors.redAccent), // ntu
+    Point(LatLng(1.3644, 103.9915), Icons.pin_drop, Colors.blueAccent), // changi airport
   ];
   List<Marker> _markers = [];
 

@@ -36,7 +36,7 @@ dependencies:
   icon_badge: ^1.0.0
 
   # for map tab
-  latlong: ^0.6.1
+  latlong2: ^0.8.1
   flutter_map: any
 
   # The following adds the Cupertino Icons font to your application.
