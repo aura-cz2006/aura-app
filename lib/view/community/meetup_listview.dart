@@ -25,7 +25,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
         iconTheme: const IconThemeData(
           color: Colors.black,
         ),
-        title: Text("Meetups"),
+        title: const Text("Meetups"),
       ),
       body: ListView(
           children: (active_meetup_manager.getMeetupsSortedByCreationDateTime())
