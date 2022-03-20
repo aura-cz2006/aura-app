@@ -3,6 +3,8 @@ import 'package:aura/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'managers/notification_manager.dart';
+
 void main() {
   runApp(
     MultiProvider(
