@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:aura/home.dart';
+import 'package:go_router/go_router.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({Key? key}) : super(key: key);
@@ -21,10 +22,7 @@ class _SigninScreenState extends State<SigninScreen> {
               side: const BorderSide(width: 1, color: Colors.white),
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Home()),
-              );
+              context.go("/tabs/map");
             },
             child: Image.network(
                 'https://www.gstvoucher.gov.sg/app/Content/images/LoginWithSingpass.png'),
