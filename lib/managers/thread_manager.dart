@@ -8,7 +8,7 @@ class Thread_Manager extends Manager{
       Thread('1', 'Otters spotted at Marina Bay Sands!',
           User('u1', 'Nicole Lim'), 'what a rare sight!', DateTime.now()),
       Thread('2', 'Rafflesia spotted at Raffles City', User('u2', 'Alan Seng'),
-          'what a gorgeous specimen!',DateTime.now())
+          'what a gorgeous specimen!',DateTime.now().add(const Duration(days:2)))
     ],
     'Food!': [
       Thread('3', 'Delicious Japanese food at Ion Orchard',

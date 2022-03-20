@@ -32,7 +32,7 @@ class _ThreadListViewState extends State<ThreadListView> {
           title: Text("Specific topic"),
         ),
         body: ListView(
-            children: (active_thread_manager.getListOfThreadsSortedByTime(topic))
+            children: (active_thread_manager.getListOfThreadsSortedByLikes(topic))
                 .map((t) => ListTile(
                       title: Text(t.title ?? "Untitled thread"),
                       onTap: null,
