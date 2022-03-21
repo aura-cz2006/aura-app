@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:aura/models/geolocation.dart';
 
 class NewsItem {
   DateTime? dateTime;
