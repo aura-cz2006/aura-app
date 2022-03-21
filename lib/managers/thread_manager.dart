@@ -105,4 +105,9 @@ class Thread_Manager extends Manager {
     Thread thread = getThreadByID(threadID)!;
     return thread.numLikes();
   }
+
+  void addThread(String title, String content, String topic, String UserID){
+    thread_list.add(Thread('1', title, UserID, content, topic, DateTime.now()));
+    notifyListeners();
+  }
 }

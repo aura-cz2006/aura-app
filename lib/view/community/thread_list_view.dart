@@ -110,19 +110,15 @@ class ThreadListViewState extends State<ThreadListView> {
                                       child: LikeButton(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
-                                        isLiked: t.isLikedBy(widget.curr_user),
+                                        isLiked: t.isLikedBy(widget.curr_user.id),
                                         likeCount: t.numLikes(),
                                         onTap: (bool isLiked) async {
                                           if (isLiked) {
                                             widget.active_thread_manager.removeLike(
-                                                widget.topic,
-                                                t.id!,
-                                                widget
-                                                    .curr_user); // TODO use manager function
+                                                t.id,widget.curr_user.id); // TODO use manager function
                                           } else {
                                             widget.active_thread_manager
-                                                .addLike(widget.topic, t.id!,
-                                                    widget.curr_user);
+                                                .addLike(t.id,widget.curr_user.id);
                                           }
                                           return !isLiked;
                                         },
@@ -161,7 +157,7 @@ class ThreadListViewState extends State<ThreadListView> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 const SizedBox(width: 16),
-                                Text("Posted by: ${t.author.username}",
+                                Text("Posted by: ${t.userID.username}",//TODO: Consumer
                                     style: DefaultTextStyle.of(context)
                                         .style
                                         .apply(
