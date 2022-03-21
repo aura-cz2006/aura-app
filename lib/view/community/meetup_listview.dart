@@ -16,7 +16,7 @@ class MeetUpListView extends StatefulWidget {
 class _MeetUpListViewState extends State<MeetUpListView> {
   Meetup_Manager active_meetup_manager = Meetup_Manager();
   User curr_user = User('1', 'Ryan');
-
+  late var meetup_list = active_meetup_manager.getMeetupsSortedByCreationDateTime();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,7 +28,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
         title: const Text("Meetups"),
       ),
       body: ListView(
-          children: (active_meetup_manager.getMeetupsSortedByCreationDateTime())
+          children: (meetup_list)
               .map(
                 (m) => Card(child: ListTile(
                   title: Text(m.title ?? "Untitled meetup"),
@@ -41,7 +41,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                 )
                 ),
               )
-              .toList()),
-    ));
+              .toList()),),
+    );
   }
 }
