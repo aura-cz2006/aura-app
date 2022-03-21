@@ -39,7 +39,7 @@ class Meetup {
     return rsvpAttendees.contains(user);
   }
 
-  void cancelMeetup() {
+  void cancel() {
     isCancelled = true;
   }
 }
