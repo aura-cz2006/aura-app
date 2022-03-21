@@ -86,67 +86,100 @@ class ThreadListViewState extends State<ThreadListView> {
                   physics: const ScrollPhysics(),
                   children: (thread_list)
                       .map((t) => Card(
-                              child: ListTile(
-                            title: Text(t.title ?? "Untitled thread"),
-                            onTap: null,
-                            subtitle: Text(t.content),
-                            isThreeLine: true,
-                            trailing: Wrap(
-                              spacing: 12, // space between two icons
+                              child: Column(children: [
+                            const SizedBox(height: 8),
+                            SizedBox(
+                                child: ListTile(
+                                    title: Text(t.title ?? "Untitled thread"),
+                                    onTap: null,
+                                    subtitle: Container(
+                                        margin: const EdgeInsets.only(
+                                          top: 5,
+                                        ),
+                                        child: Text(
+                                          t.content,
+                                          style: TextStyle(),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                          softWrap: true,
+                                        )),
+                                    trailing: Container(
+                                      height: 50,
+                                      width: 80,
+                                      alignment: const Alignment(1.0, 0.0),
+                                      child: LikeButton(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        isLiked: t.isLikedBy(widget.curr_user),
+                                        likeCount: t.numLikes(),
+                                        onTap: (bool isLiked) async {
+                                          if (isLiked) {
+                                            widget.active_thread_manager.removeLike(
+                                                widget.topic,
+                                                t.id!,
+                                                widget
+                                                    .curr_user); // TODO use manager function
+                                          } else {
+                                            widget.active_thread_manager
+                                                .addLike(widget.topic, t.id!,
+                                                    widget.curr_user);
+                                          }
+                                          return !isLiked;
+                                        },
+                                        countPostion: CountPostion.left,
+                                        circleColor: const CircleColor(
+                                            start: Colors.cyanAccent,
+                                            end: Colors.cyan),
+                                        bubblesColor: const BubblesColor(
+                                          dotPrimaryColor: Colors.lightBlue,
+                                          dotSecondaryColor: Colors.blueAccent,
+                                        ),
+                                        likeBuilder: (bool isLiked) {
+                                          return Icon(
+                                            Icons.thumb_up,
+                                            color: isLiked
+                                                ? Colors.blueAccent
+                                                : Colors.grey,
+                                          );
+                                        },
+                                        countBuilder: (int? count, bool isLiked,
+                                            String text) {
+                                          var color = isLiked
+                                              ? Colors.blueAccent
+                                              : Colors.grey;
+                                          return Container(
+                                              width: 30,
+                                              child: Text("$text",
+                                                  style: TextStyle(
+                                                    color: color,
+                                                  ),
+                                                  textAlign: TextAlign.right));
+                                        },
+                                      ),
+                                    ))),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                Text(DateFormat('yyyy-MM-dd kk:mm')
-                                    .format(t.timestamp)),
-                                // TODO: add date time properly into thread.dart
-                                Container(
-                                  height: 50,
-                                  width: 80,
-                                  alignment: const Alignment(1.0, 0.0),
-                                  child: LikeButton(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    isLiked: t.isLikedBy(widget.curr_user),
-                                    likeCount: t.numLikes(),
-                                    onTap: (bool isLiked) async {
-                                      if (isLiked) {
-                                        widget.active_thread_manager.removeLike(widget.topic, t.id!, widget.curr_user);// TODO use manager function
-                                      } else {
-                                        widget.active_thread_manager.addLike(widget.topic, t.id!, widget.curr_user);
-                                      }
-                                      return !isLiked;
-                                    },
-                                    countPostion: CountPostion.left,
-                                    circleColor: const CircleColor(
-                                        start: Colors.cyanAccent,
-                                        end: Colors.cyan),
-                                    bubblesColor: const BubblesColor(
-                                      dotPrimaryColor: Colors.lightBlue,
-                                      dotSecondaryColor: Colors.blueAccent,
-                                    ),
-                                    likeBuilder: (bool isLiked) {
-                                      return Icon(
-                                        Icons.thumb_up,
-                                        color: isLiked
-                                            ? Colors.blueAccent
-                                            : Colors.grey,
-                                      );
-                                    },
-                                    countBuilder: (int? count, bool isLiked,
-                                        String text) {
-                                      var color = isLiked
-                                          ? Colors.blueAccent
-                                          : Colors.grey;
-                                      return Container(
-                                          width: 30,
-                                          child: Text("$text",
-                                              style: TextStyle(
-                                                color: color,
-                                              ),
-                                              textAlign: TextAlign.right));
-                                    },
-                                  ),
-                                )
+                                const SizedBox(width: 16),
+                                Text("Posted by: ${t.author.username}",
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(
+                                            color: Colors.grey[700],
+                                            fontStyle: FontStyle.italic)),
+                                const SizedBox(width: 16),
+                                Text(
+                                    DateFormat('yyyy-MM-dd kk:mm')
+                                        .format(t.timestamp),
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .apply(
+                                            color: Colors.grey[700],
+                                            fontStyle: FontStyle.italic)),
                               ],
                             ),
-                          )))
+                            const SizedBox(height: 16),
+                          ])))
                       .toList()),
             )
           ])),
