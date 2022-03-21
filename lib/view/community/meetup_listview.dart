@@ -31,7 +31,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
           children: (active_meetup_manager.getMeetupsSortedByCreationDateTime())
               .map(
                 (m) => Card(child: ListTile(
-                  title: Text(m.title),
+                  title: Text(m.title ?? "Untitled meetup"),
                   onTap: null,
                   subtitle: Text(
                       "${m.currNumAttendees()}/${m.maxAttendees} Attendees"),
