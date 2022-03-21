@@ -65,19 +65,24 @@ class _NewsTabState extends State<NewsTab> {
           "10/1/2022",
           "11/1/2022",
         ),
-        eventNewsItem("intro to chromatic harmonica", "5 Mar 2022, 3pm - 5pm"),
+        eventNewsItem("intro to chromatic harmonica", "5 Mar 2022, 3pm - 5pm",
+            "https://www.onepa.gov.sg/events"),
         dengueNewsItem("Joo Chiat Rd / Onan Rd", "3"),
         upgradingNewsItem(
             "Beside Block 268C Boon Lay Drive", "2nd Quarter 2022"),
         marketNewsItem("Telok Blangah Rise Blk 36 (Telok Blangah Rise Market)",
             "10/1/2022", "10/1/2022"),
-        eventNewsItem("Jurong Spring IRCC Getai Nite 2022",
-            "19 Mar 2022- 20 Mar 2022 , 7.30pm - 10pm"),
+        eventNewsItem(
+            "Jurong Spring IRCC Getai Nite 2022",
+            "19 Mar 2022- 20 Mar 2022 , 7.30pm - 10pm",
+            "https://www.onepa.gov.sg/events"),
         dengueNewsItem("Hougang Ave 3 (Blk 24)", "2"),
         upgradingNewsItem("At Block 209 Boon Lay Place", "3rd Quarter 2022"),
         marketNewsItem("Toa Payoh Lorong 8 Blk 210", "10/1/2022", "11/1/2022"),
-        eventNewsItem("Nanyang Shoe Recycling Drive Donation 2022",
-            "15 Jan 2022 - 31 Dec 2022, 9.00am - 11:30pm"),
+        eventNewsItem(
+            "Nanyang Shoe Recycling Drive Donation 2022",
+            "15 Jan 2022 - 31 Dec 2022, 9.00am - 11:30pm",
+            "https://www.onepa.gov.sg/events"),
         dengueNewsItem("Hougang Ave 8 (Blk 626, 629, 630)", "3")
       ],
     );
@@ -99,9 +104,9 @@ class _NewsTabState extends State<NewsTab> {
               content: 'blah blah blah',
               actions: [
                 popup.button(
-                  label: 'More info',
-                  onPressed: _launchURL,
-                ),
+                  label: 'Done',
+                  onPressed: Navigator.of(context).pop,
+                )
               ],
               // bool barrierDismissible = false,
               // Widget close,
@@ -125,14 +130,8 @@ class _NewsTabState extends State<NewsTab> {
     );
   } //type, location, date
 
-  void _launchURL() async {
-    if (!await launch(_url)) throw 'Could not launch $_url';
-  }
-
-  Widget marketNewsItem(
-      String location, String date1, String date2, String URL) {
+  Widget marketNewsItem(String location, String date1, String date2) {
     //date 1 and date 2 is for if closed over period of time
-    String _url = URL;
     return Center(
       child: Card(
         child: InkWell(
@@ -146,7 +145,10 @@ class _NewsTabState extends State<NewsTab> {
               title: 'Market News',
               content: 'blah blah blah',
               actions: [
-                popup.button(label: 'Redirect', onPressed: _launchURL),
+                popup.button(
+                  label: 'Done',
+                  onPressed: Navigator.of(context).pop,
+                ),
               ],
               // bool barrierDismissible = false,
               // Widget close,
@@ -170,8 +172,13 @@ class _NewsTabState extends State<NewsTab> {
     );
   } //type, location, date
 
-  Widget eventNewsItem(String name, String dateTime) {
+  Widget eventNewsItem(String name, String dateTime, String URL) {
     //event name and date and time
+    String _url = URL;
+    void _launchURL() async {
+      if (!await launch(_url)) throw 'Could not launch $_url';
+    }
+
     return Center(
       child: Card(
         child: InkWell(
@@ -181,11 +188,15 @@ class _NewsTabState extends State<NewsTab> {
               context: context,
               template: TemplateGeolocation,
             );
+            //   final popup = BeautifulPopup.customize(
+            //   context: context,
+            //   build: (options) => MyTemplate(options),
+            // );
             popup.show(
-              title: 'Upgrading News',
+              title: 'Event News',
               content: 'blah blah blah',
               actions: [
-                popup.button(label: 'Redirect', onPressed: () {}),
+                popup.button(label: 'Redirect', onPressed: _launchURL),
               ],
               // bool barrierDismissible = false,
               // Widget close,
@@ -220,10 +231,13 @@ class _NewsTabState extends State<NewsTab> {
               template: TemplateGeolocation,
             );
             popup.show(
-              title: 'Upgrading News',
+              title: 'Dengue News',
               content: 'blah blah blah',
               actions: [
-                popup.button(label: 'Redirect', onPressed: () {}),
+                popup.button(
+                  label: 'Done',
+                  onPressed: Navigator.of(context).pop,
+                ),
               ],
               // bool barrierDismissible = false,
               // Widget close,
