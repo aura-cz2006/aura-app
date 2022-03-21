@@ -60,8 +60,10 @@ class _IntroScreenState extends State<IntroScreen> {
     return MaterialApp(
       home: IntroductionScreen(
         pages: listPagesViewModel,
-        showNextButton: false,
-        showBackButton: false,
+        showNextButton: true,
+        next: const Icon(Icons.arrow_forward),
+        showBackButton: true,
+        back: const Icon(Icons.arrow_back),
         showSkipButton: false,
         showDoneButton: false,
         // skip: const Text("Skip"),
