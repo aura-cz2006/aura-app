@@ -77,29 +77,44 @@ class _editThreadState extends State<editThread> {
 
   Widget contentField() => TextFormField(
     keyboardType: TextInputType.multiline,
+    maxLines: null,
     controller: contentController,
     decoration: InputDecoration(
         labelText: "Content",
         hintText: "Enter the content of your post here", border: OutlineInputBorder()),
-    textInputAction: TextInputAction.done,
   );
 
   Widget submitButton(BuildContext context){
-    return Consumer<Thread_Manager>(builder: (context, thread_manager, child){
-      return ElevatedButton(
-        child: Text("Submit"),
-        onPressed: () {
-          setState(() {
-            thread_manager.editThreadFunction( //Update thread
-                                        "Nature", //Later discuss with Ryan/Nicole
-                                        widget.og_thread.id,
-                                        titleController.text,
-                                        contentController.text);
-            Navigator.pop(context); //Return to previous, but updated thread
-          });
-        },
-      );
-    });
+    return ElevatedButton(
+      child: Text("Submit"),
+      onPressed: () {
+        setState(() {
+          /*thread_manager.editThreadFunction( //Update thread
+              "Nature", //Later discuss with Ryan/Nicole
+              widget.og_thread.id,
+              titleController.text,
+              contentController.text
+          );
+          Navigator.pop(context); //Return to previous, but updated thread*/
+        });
+      },
+    );
+    // return Consumer<Thread_Manager>(builder: (context, thread_manager, child){
+    //   return ElevatedButton(
+    //         child: Text("Submit"),
+    //         onPressed: () {
+    //           setState(() {
+    //             thread_manager.editThreadFunction( //Update thread
+    //               "Nature", //Later discuss with Ryan/Nicole
+    //               widget.og_thread.id,
+    //               titleController.text,
+    //               contentController.text
+    //             );
+    //             Navigator.pop(context); //Return to previous, but updated thread
+    //           });
+    //         },
+    //       );
+    // });
   }
 
   @override
