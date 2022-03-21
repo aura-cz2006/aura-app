@@ -1,11 +1,19 @@
 // meet ups layer
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:aura/view/map/map_tab.dart';
 
-class MeetUpMarker extends StatelessWidget {
-  const MeetUpMarker({Key? key}) : super(key: key);
+class MeetUpMarker extends StatefulWidget {
+  const  MeetUpMarker({Key? key}) : super(key: key);
+
+  @override
+  State< MeetUpMarker> createState() =>  _MeetUpMarker();
+}
+
+class _MeetUpMarker extends  State< MeetUpMarker> {
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -18,18 +26,28 @@ class MeetUpMarker extends StatelessWidget {
             context: context,
             builder: (BuildContext context) {
               return Container(
-                height: 100,
+                height: 200,
                 color: Colors.white,
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
-                      Text('Monopoly Night!'), //title,
-                      Text("by User1234"),
-                      Text("7pm - 10pm, Today"),
-                      Text("SCSE Lounge"),
-                      Text("Join me for a round of Monopoly and snacks!")
+                    children: <Widget>[
+                      Text('Monopoly Night!', style: TextStyle(
+                        fontSize: 20),), //title,
+                      Text("by User1234", style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[700],),),
+                      Text("Time: 7pm - 10pm, Today"),
+                      Text("Location: SCSE Lounge"),
+                      Text("Join me for a round of Monopoly and snacks!"),
+                      IconButton(
+                          icon:  Icon(Icons.arrow_forward),
+                        onPressed: (){
+                          setState((){
+                          });
+                          },
+                      )
                     ],
                   ),
                 ),
@@ -39,6 +57,7 @@ class MeetUpMarker extends StatelessWidget {
         },
       ),);
   }
+
 }
 
 //title, by USER, date and time, short desc
@@ -76,13 +95,12 @@ class _MeetUpsButton extends State< MeetUpsButton> {
                             width: 40,
                             height: 40,
                             point: LatLng(1.3461,103.6814),
-                            builder: (context) => const MeetUpMarker()
+                            builder: (context) =>  MeetUpMarker()
                         )
                     )]
                       : [meetupMarkersList.removeAt(0), //else
                     print("clicled")]
                   ];
-
                 });
               },
             ),

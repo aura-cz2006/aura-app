@@ -1,11 +1,14 @@
+import 'dart:async';
+
 import 'package:aura/view/map/amenitieschip.dart';
 import 'package:aura/view/map/meetups_layer.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 List<Marker> meetupMarkersList = [];
-bool rerender = false;
+
 
 class Point {
   LatLng coords = LatLng(0,0);
@@ -18,10 +21,10 @@ class MapTab extends StatefulWidget {
   const MapTab({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _MapTabState();
+  State<StatefulWidget> createState() => MapTabState();
 }
 
-class _MapTabState extends State<MapTab> {
+class MapTabState extends State<MapTab> {
   MapController _mapController = MapController();
   List<Point> _pointList = [
     new Point(LatLng(1.3483, 103.6831), Icons.pin_drop, Colors.redAccent), // ntu
@@ -47,12 +50,12 @@ class _MapTabState extends State<MapTab> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(
           children: [
+            Container(),
             FlutterMap(
               mapController: _mapController,
               options: MapOptions(
@@ -69,6 +72,8 @@ class _MapTabState extends State<MapTab> {
                     attributionBuilder: (_) {
                       return const Text("© OpenStreetMap contributors");
                     },
+                  updateInterval: 1,
+                  //rebuild: ,
 
                 ),
                 MarkerLayerOptions(
@@ -79,11 +84,12 @@ class _MapTabState extends State<MapTab> {
                 MarkerLayerOptions(
                   markers: meetupMarkersList,
                   rotate: true,
-                ),
-              ],
+
+    ),
+                  ],
             ),
             rowChips(),
-            const Positioned(
+             Positioned(
               right: 20,
               top:100,
               child: MeetUpsButton(),
@@ -93,3 +99,6 @@ class _MapTabState extends State<MapTab> {
     );
   }
 }
+
+
+
