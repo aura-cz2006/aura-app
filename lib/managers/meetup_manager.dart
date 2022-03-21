@@ -9,22 +9,22 @@ class Meetup_Manager extends Manager {
   var meet_up_list = [
     Meetup(
         DateTime.now().add(Duration(days: 2)), LatLng(1.34,103.68), '1', User('1', 'Ryan'),
-        5, 'table tennis', DateTime.now()), Meetup(
+        5, 'Table tennis', 'I love the high speed game.', DateTime.now()), Meetup(
         DateTime.now().add(Duration(days: 1)), LatLng(1.3868,103.8914), '2',
         User('2', 'Dyllon'),
-        15, 'hackathon',DateTime.now()), Meetup(
+        15, 'Hackathon', 'I love python.', DateTime.now()), Meetup(
         DateTime.now().add(Duration(days: 4)), LatLng(1.3612,103.8863), '3',
         User('3', 'Jamie'),
-        10, 'Muay Thai',DateTime.now()), Meetup(
+        10, 'Muay Thai', 'I love beating people up.', DateTime.now()), Meetup(
         DateTime.now().add(Duration(days: 4)), LatLng(1.2707,103.8099), '4',
         User('4', 'Alan'),
-        7, 'Botanics Garden',DateTime.now()), Meetup(
+        7, 'Botanic Gardens', 'I love plants.', DateTime.now()), Meetup(
         DateTime.now().add(Duration(days: 4)), LatLng(1.3385,103.7304), '5',
         User('5', 'Nicole'),
-        8, 'Sightseeing',DateTime.now()), Meetup(
+        8, 'Sightseeing', 'I love exploring the city.', DateTime.now()), Meetup(
         DateTime.now().add(Duration(days: 4)), LatLng(1.2942,103.7861), '6',
         User('6', 'Fath'),
-        2, 'Anime',DateTime.now()),
+        2, 'Anime', 'I love Attack on Titan.', DateTime.now()),
   ];
 
       List<Meetup> getMeetupsSortedByTimeOfMeetUp(){
