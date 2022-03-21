@@ -37,7 +37,7 @@ class Thread_Manager extends Manager {
     var curr_list = getThreadsByTopic(topic);
     curr_list.sort((a, b) => b.numLikes().compareTo(a.numLikes()));
     return curr_list;
-  }//TODO: Figure this out
+  } //
 
   List<Thread> getListOfThreadsSortedByTime(String topic) {
     var curr_list = getThreadsByTopic(topic);
@@ -69,12 +69,6 @@ class Thread_Manager extends Manager {
     var threadforEdit = getThreadByID(thread_id);
     threadforEdit!.title = new_title;
     threadforEdit.content = new_content;
-    notifyListeners();
-  }
-
-  void editThreadTopic(String thread_id, String new_content) {
-    var threadforEdit = getThreadByID(thread_id);
-    threadforEdit!.content = new_content;
     notifyListeners();
   }
 

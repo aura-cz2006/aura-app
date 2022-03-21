@@ -12,8 +12,8 @@ import 'package:provider/provider.dart';
 
 void main() {
   User user = User("USER_ID", "USERNAME");
-  Thread test = Thread("TEST_ID", "This is the Title.", user,
-    "This is the thread content.", DateTime.now());
+  Thread test = Thread("TEST_ID", "This is the Title.", "USER_ID",
+    "This is the thread content.", "Nature", DateTime.now());
 
   runApp(editThread(og_thread: test,));
 }
@@ -90,8 +90,7 @@ class _editThreadState extends State<editThread> {
         child: Text("Submit"),
         onPressed: () {
           setState(() {
-            thread_manager.editThreadFunction( //Update thread
-                                        "Nature", //Later discuss with Ryan/Nicole
+            thread_manager.editThread( //Update thread
                                         widget.og_thread.id,
                                         titleController.text,
                                         contentController.text);
