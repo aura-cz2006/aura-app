@@ -11,7 +11,7 @@ import 'package:like_button/like_button.dart';
 void main() {
   User user = User("USER_ID", "USERNAME");
   Meetup test = Meetup(
-    DateTime(2022, 03, 20, 23, 59),
+    DateTime(2023, 03, 21, 09, 20),
     LatLng(0, 0),
     "MEETUP_ID",
     user,
@@ -29,7 +29,7 @@ void main() {
         Comment("C3", user, DateTime.now(), "$i) This is the last comment."));
   }
   User curr = User("CURR_UID", "CURR_USERNAME");
-  runApp(DetailedMeetupView(meetup: test, currUser: curr));
+  runApp(DetailedMeetupView(meetup: test, currUser: user)); // curr
 }
 
 class DetailedMeetupView extends StatefulWidget {
@@ -70,7 +70,8 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
           Expanded(
               child: ListView(children: <Widget>[
             DisplayFullMeetup(meetup: widget.meetup, currUser: widget.currUser),
-            DisplayMeetupComments(comments: widget.meetup.comments)
+            DisplayMeetupComments(
+                meetup: widget.meetup, currUser: widget.currUser)
           ])),
           Row(children: [
             Expanded(
@@ -124,8 +125,6 @@ class DisplayFullMeetup extends StatefulWidget {
 }
 
 class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
-  // late Widget displayNumAttendees = DisplayNumAttendees(meetup: widget.meetup);
-
   Future<bool> _handleTapRSVP(bool isLiked) async {
     setState(() {
       if (isLiked) {
@@ -147,6 +146,43 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                 style: DefaultTextStyle.of(context)
                     .style
                     .apply(fontSizeFactor: 1.8, fontWeightDelta: 2)),
+            trailing: (widget.currUser.id == widget.meetup.creator.id &&
+                    DateTime.now().isBefore(widget.meetup.timeOfMeetUp
+                        .subtract(Duration(hours: 3))))
+                ? PopupMenuButton(
+                    onSelected: (value) {
+                      setState(() {
+                        if (value == "edit") {
+                          // TODO: navigate to edit meetup screen
+                        } else if (value == "delete") {
+                          widget.meetup
+                              .cancel(); // TODO: use manager function to delete meetup
+                        }
+                      });
+                    },
+                    itemBuilder: (context) => [
+                          PopupMenuItem(
+                            child: Row(
+                              children: const [
+                                Icon(Icons.edit, size: 20),
+                                SizedBox(width: 8),
+                                Text("Edit"),
+                              ],
+                            ),
+                            value: "edit",
+                          ),
+                          PopupMenuItem(
+                            child: Row(
+                              children: const [
+                                Icon(Icons.delete, size: 20),
+                                SizedBox(width: 8),
+                                Text("Delete"),
+                              ],
+                            ),
+                            value: "delete",
+                          ),
+                        ])
+                : null,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -165,7 +201,6 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
           ListTile(
             title: Text(widget.meetup.description ?? "", softWrap: true),
           ),
-          // displayNumAttendees, // DisplayNumAttendees(meetup: widget.meetup),
           ListTile(
             leading: const Icon(Icons.people),
             title: Text("${widget.meetup.currNumAttendees()} "
@@ -175,57 +210,89 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
           //   thickness: 1,
           //   color: Colors.grey,
           // ),
-          ListTile( // TODO: display location address instead of coordinates
+          ListTile(
+            // TODO: display location address instead of coordinates
             leading: const Icon(Icons.pin_drop),
-            title: Text("LAT ${widget.meetup.location.latitude}, LONG ${widget.meetup.location.longitude}"),
+            title: Text(
+                "LAT ${widget.meetup.location.latitude}, LONG ${widget.meetup.location.longitude}"),
           ),
           ListTile(
             leading: const Icon(Icons.access_time_filled),
-            title: Text(DateFormat('yyyy-MM-dd kk:mm').format(widget.meetup.timeOfMeetUp)),
+            title: Text(DateFormat('yyyy-MM-dd kk:mm')
+                .format(widget.meetup.timeOfMeetUp)),
           ),
           Row(
-            children: [
-              const SizedBox(width: 16),
-              const Text("RSVP: ",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(width: 12),
-              LikeButton(
-                size: 35,
-                isLiked: widget.meetup.isAttending(widget.currUser),
-                likeCount: widget.meetup.currNumAttendees(),
-                onTap: _handleTapRSVP,
-                circleColor: const CircleColor(
-                    start: Colors.lightGreen, end: Colors.green),
-                bubblesColor: const BubblesColor(
-                  dotPrimaryColor: Colors.lightGreenAccent,
-                  dotSecondaryColor:
-                      Colors.lightGreen, // TODO these colours kinda suck
-                ),
-                likeBuilder: (bool isLiked) {
-                  return Icon(
-                    isLiked ? Icons.check_circle : Icons.close,
-                    // isLiked ? Icons.person_add : Icons.person_remove,
-                    color: isLiked ? Colors.green : Colors.grey[700],
-                    size: 30,
-                  );
-                },
-                countBuilder: (int? count, bool isLiked, String text) {
-                  String? message;
-                  var color;
-                  color = isLiked ? Colors.green : Colors.grey[700];
-                  message = " " +
-                      (isLiked
-                          ? "Yes, I will be there!"
-                          : "Sorry, I will not be there.");
-                  return Text(
-                    (message),
-                    style: TextStyle(color: color, fontSize: 18),
-                  );
-                },
-              ),
-            ],
+            children: (widget.meetup.timeOfMeetUp.isBefore(DateTime.now()) ||
+                    widget.meetup.isCancelled)
+                ? [
+                    // meetup is past or meetup is cancelled: display error
+                    const SizedBox(width: 16),
+                    Row(
+                      children: [
+                        const Text("RSVP: ",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        SizedBox(width: 12),
+                        SizedBox(
+                          width: 250,
+                          child: Text(
+                              (widget.meetup.isCancelled
+                                      ? "This meetup has been cancelled."
+                                      : "This meetup has elapsed.") +
+                                  "\nNo more RSVPs are allowed.",
+                              softWrap: true,
+                              style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      ],
+                    ),
+                  ]
+                : [
+                    // meetup is upcoming: display RSVP
+                    const SizedBox(width: 16),
+                    const Text("RSVP: ",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 12),
+                    LikeButton(
+                      size: 35,
+                      isLiked: widget.meetup.isAttending(widget.currUser),
+                      likeCount: widget.meetup.currNumAttendees(),
+                      onTap: _handleTapRSVP,
+                      circleColor: const CircleColor(
+                          start: Colors.lightGreen, end: Colors.green),
+                      bubblesColor: const BubblesColor(
+                        dotPrimaryColor: Colors.lightGreenAccent,
+                        dotSecondaryColor:
+                            Colors.lightGreen, // TODO these colours kinda suck
+                      ),
+                      likeBuilder: (bool isLiked) {
+                        return Icon(
+                          isLiked ? Icons.check_circle : Icons.close,
+                          // isLiked ? Icons.person_add : Icons.person_remove,
+                          color: isLiked ? Colors.green : Colors.grey[700],
+                          size: 30,
+                        );
+                      },
+                      countBuilder: (int? count, bool isLiked, String text) {
+                        String? message;
+                        var color;
+                        color = isLiked ? Colors.green : Colors.grey[700];
+                        message = " " +
+                            (isLiked
+                                ? "Yes, I will be there!"
+                                : "Sorry, I will not be there.");
+                        return Text(
+                          (message),
+                          style: TextStyle(color: color, fontSize: 18),
+                        );
+                      },
+                    ),
+                  ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
         ]),
       ),
     );
@@ -233,9 +300,11 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
 }
 
 class DisplayMeetupComments extends StatefulWidget {
-  final List<Comment> comments;
+  final Meetup meetup;
+  final User currUser;
 
-  const DisplayMeetupComments({Key? key, required this.comments})
+  const DisplayMeetupComments(
+      {Key? key, required this.meetup, required this.currUser})
       : super(key: key);
 
   @override
@@ -243,12 +312,14 @@ class DisplayMeetupComments extends StatefulWidget {
 }
 
 class _DisplayMeetupCommentsState extends State<DisplayMeetupComments> {
+  late List<Comment> comments = widget.meetup.comments;
+
   @override
   Widget build(BuildContext context) {
     return ListView(
         shrinkWrap: true,
         physics: const ScrollPhysics(),
-        children: widget.comments
+        children: comments
             .map((c) => ListTile(
                   title: Text(c.text ?? ""),
                   subtitle: Text(
@@ -256,6 +327,29 @@ class _DisplayMeetupCommentsState extends State<DisplayMeetupComments> {
                       style: DefaultTextStyle.of(context).style.apply(
                           color: Colors.grey[700],
                           fontStyle: FontStyle.italic)),
+                  trailing: (widget.currUser.id == c.author.id)
+                      ? PopupMenuButton(
+                          onSelected: (value) {
+                            setState(() {
+                              if (value == "delete") {
+                                widget.meetup.removeComment(
+                                    c); // TODO: use manager function to delete comment
+                              }
+                            });
+                          },
+                          itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  child: Row(
+                                    children: const [
+                                      Icon(Icons.delete, size: 20),
+                                      SizedBox(width: 8),
+                                      Text("Delete"),
+                                    ],
+                                  ),
+                                  value: "delete",
+                                ),
+                              ])
+                      : null,
                 ))
             .toList());
   }

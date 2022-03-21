@@ -27,12 +27,16 @@ class Meetup {
     rsvpAttendees.add(user);
   }
 
+  void removeRsvpAttendee(User user){
+    rsvpAttendees.remove(user);
+  }
+
   void addComment(Comment newComment){
     comments.add(newComment);
   }
 
-  void removeRsvpAttendee(User user){
-    rsvpAttendees.remove(user);
+  void removeComment(Comment newComment){
+    comments.remove(newComment);
   }
 
   bool isAttending(User user){
