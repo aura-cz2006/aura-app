@@ -22,6 +22,7 @@ class User_Manager extends Manager {
   void updateHomeAddress(String id, String new_home_address){
     var curr_user = getUser(id);
     curr_user!.updateHomeAddress(new_home_address);
+    notifyListeners();
   }
 
   String? getUsernameByID(String id){

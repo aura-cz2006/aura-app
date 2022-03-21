@@ -97,6 +97,7 @@ class Meetup_Manager extends Manager {
   }
   void cancelMeetup(String meetupID) {
     getMeetupByID(meetupID).cancel();
+    notifyListeners();
   }
 
   int getCurrNumAttendees(String meetupID){
@@ -105,10 +106,12 @@ class Meetup_Manager extends Manager {
 
   void addRsvpAttendee(String meetupID, String userID){
     getMeetupByID(meetupID).addRsvpAttendee(userID);
+    notifyListeners();
   }
 
   void removeRsvpAttendee(String meetupID, String userID){
     getMeetupByID(meetupID).removeRsvpAttendee(userID);
+    notifyListeners();
   }
 
   void addComment(String meetupID, String userID, String text) {
@@ -120,6 +123,7 @@ class Meetup_Manager extends Manager {
   void removeComment(String meetupID, String commentID){
     Meetup meetup = getMeetupByID(meetupID);
     meetup.removeComment(commentID);
+    notifyListeners();
   }
 
   bool isAttending(String meetupID, String userID){
