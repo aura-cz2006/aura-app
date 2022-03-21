@@ -2,6 +2,7 @@ import 'package:aura/models/thread.dart';
 import 'package:aura/models/user.dart';
 import 'package:aura/view/community/detailed_thread_view.dart';
 import 'package:aura/view/community/thread_list_view.dart';
+import 'package:aura/view/onboarding/introduction_page.dart';
 import 'package:aura/view/settings/change_home_address_screen.dart';
 import 'package:aura/view/signin/signin_screen.dart';
 import 'package:aura/view/tabs/main_tab_bar.dart';
@@ -19,7 +20,7 @@ final router = GoRouter(
       GoRoute(
           path: "/onboarding",
           builder: (BuildContext context, GoRouterState state) =>
-              IntroductionScreen()),
+              IntroScreen()),
       GoRoute(
           path: "/tabs/:tabName",
           builder: (BuildContext context, GoRouterState state) => MainTabBar(
