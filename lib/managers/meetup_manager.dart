@@ -66,7 +66,7 @@ class Meetup_Manager extends Manager {
 
   List<Meetup> getMeetupsSortedByTimeOfMeetUp() {
     var list = getValidMeetups();
-    list.sort((a, b) => b.timeOfMeetUp.compareTo(a.timeOfMeetUp));
+    list.sort((a, b) => a.timeOfMeetUp.compareTo(b.timeOfMeetUp));
     return list;
   }
 
