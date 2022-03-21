@@ -1,97 +1,83 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'threadTopicDropDown.dart';
 
-class createThread extends StatelessWidget {
+void main() => runApp(createThread());
+
+class createThread extends StatefulWidget {
+  const createThread({Key? key}) : super(key: key);
+
+  @override
+  _createThreadState createState() => _createThreadState();
+}
+
+class _createThreadState extends State<createThread> {
+  final titleController = TextEditingController(); //Saves edited title
+  final contentController = TextEditingController(); //Saves edited content
+  final dropdownMenu = dropDownMenu();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(
-              title: Center(
-                  child: Text('Create Thread')
-              ),
-              automaticallyImplyLeading: true,
-              leading: IconButton(icon: Icon(Icons.arrow_back),
-                onPressed:() => Navigator.pop(context, false),
-              )
-          ),
-          body: Column(
-            children: <Widget>[
-              _titlebox(),
-              _contentbox(),
-              submitButton(),
+      home: Scaffold(
+        appBar: AppBar(
+            title: Center(
+                child: Text('Create Thread')
+            ),
+            automaticallyImplyLeading: true,
+            leading: IconButton(icon: Icon(Icons.arrow_back),
+              onPressed:() => Navigator.pop(context, false),
+            )
+        ),
+        body: Center(
+          child: Column(
+            children: [
+              Padding(padding: EdgeInsets.all(5), child: titleField()),
+              Padding(padding: EdgeInsets.all(5), child: dropdownMenu),
+              Padding(padding: EdgeInsets.all(5), child: contentField()),
+              Padding(padding: EdgeInsets.all(5), child: submitButton(context))
             ],
           ),
-        )
+        ),
+      ),
     );
   }
-}
 
-Widget _contentbox() {
-  return Expanded(
-      child: SingleChildScrollView(
-          child:Padding(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0x11111111),
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(left: 15, right: 15, top: 5),
-                child: TextFormField(
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: "Content of Thread",
-                    )
-                ),
-              )
-            )
-          )
-      )
+  Widget titleField() => TextFormField(
+    // onChanged: (value) => setState(() => this.title = value), //og.title = value
+    controller: titleController,
+    decoration: InputDecoration(
+        labelText: "Title",
+        hintText: "Enter the title of your post here", border: OutlineInputBorder()),
+    keyboardType: TextInputType.multiline,
+    textInputAction: TextInputAction.next,
   );
-}
 
-Widget _titlebox() {
-  return Padding(
-    padding: EdgeInsets.all(10),
-    child: Container(
-      decoration: BoxDecoration(
-        color: Color(0x11111111),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(left: 15, right: 15, top: 5),
-        child: TextFormField(
-          decoration: InputDecoration(
-          border: InputBorder.none,
-          labelText: 'Title of thread',
-          )
-        ),
-      )
-    )
+  Widget contentField() => TextFormField(
+    keyboardType: TextInputType.multiline,
+    maxLines: null,
+    controller: contentController,
+    decoration: InputDecoration(
+        labelText: "Content",
+        hintText: "Enter the content of your post here", border: OutlineInputBorder()),
   );
-}
 
-Widget submitButton() {
-  return Padding(
-    padding: EdgeInsets.only(bottom: 10),
-    child: ElevatedButton(
-      style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0)
-              )
-          )
-      ),
+  Widget submitButton(BuildContext context) {
+    return ElevatedButton(
       child: Text("Submit"),
-      onPressed: (){
-        /*Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => createThread()),*/
+      onPressed: () {
+        setState(() {
+          String a = dropdownMenu.dr
+          //Create thread
+          /*thread_manager.addThread(
+            titleController.text,
+            contentController.text,
+
+
+          );*/
+          Navigator.pop(context); //Return to previous, but updated threadlistview*/
+        });
       },
-    ),
-  );
+    );
+  }
 }
