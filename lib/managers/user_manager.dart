@@ -23,4 +23,12 @@ class User_Manager extends Manager {
     var curr_user = getUser(id);
     curr_user!.updateHomeAddress(new_home_address);
   }
+
+  String? getUsernameByID(String id){
+    for (var each in user_list){
+      if (each.id == id){
+        return each.username;
+      }
+    }
+  }
 }
