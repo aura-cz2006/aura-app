@@ -66,6 +66,12 @@ class Thread_Manager extends Manager {
     notifyListeners();
   }
 
+  void editThreadTopic(String thread_id, String new_content) {
+    var threadforEdit = getThreadByID(thread_id);
+    threadforEdit!.content = new_content;
+    notifyListeners();
+  }
+
   void removeLike(String threadID, String userID) {
     Thread thread = getThreadByID(threadID)!;
     thread.removeLike(userID);

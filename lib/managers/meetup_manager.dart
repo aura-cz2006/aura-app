@@ -1,5 +1,4 @@
 import 'package:aura/models/meetup.dart';
-import 'package:aura/models/user.dart';
 import 'package:aura/util/manager.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -93,7 +92,41 @@ class Meetup_Manager extends Manager {
     return validList;
   }
 
+  Meetup getMeetupByID(String meetupID) {
+    return meet_up_list.firstWhere((m) => m.meetupID == meetupID);
+  }
   void cancelMeetup(String meetupID) {
-    meet_up_list.firstWhere((m) => m.ID == meetupID).cancel();
+    getMeetupByID(meetupID).cancel();
+  }
+
+  int getCurrNumAttendees(String meetupID){
+    return getMeetupByID(meetupID).currNumAttendees();
+  }
+
+  void addRsvpAttendee(String meetupID, String userID){
+    getMeetupByID(meetupID).addRsvpAttendee(userID);
+  }
+
+  void removeRsvpAttendee(String meetupID, String userID){
+    getMeetupByID(meetupID).removeRsvpAttendee(userID);
+  }
+
+  void addComment(String meetupID, String userID, String text) {
+    Meetup meetup = getMeetupByID(meetupID);
+    meetup.addComment(userID, text);
+    notifyListeners();
+  }
+
+  void removeComment(String meetupID, String commentID){
+    Meetup meetup = getMeetupByID(meetupID);
+    meetup.removeComment(commentID);
+  }
+
+  bool isAttending(String meetupID, String userID){
+    return getMeetupByID(meetupID).isAttending(userID);
+  }
+
+  bool maxAttendeesReached(String meetupID) {
+    return getMeetupByID(meetupID).maxAttendeesReached();
   }
 }

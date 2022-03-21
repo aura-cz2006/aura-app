@@ -8,39 +8,40 @@ class Meetup {
   DateTime createdAt;
   DateTime timeOfMeetUp;
   LatLng location;
-  String ID;
-  User creator;
+  String meetupID;
+  String userID;
   int maxAttendees;
-  List<User> rsvpAttendees = [];
+  List<String> rsvpAttendees = []; // userIDs
   List<Comment> comments = [];
   bool isCancelled = false;
 
-  Meetup(this.timeOfMeetUp, this.location, this.ID, this.creator, this.maxAttendees, this.title, this.description, this.createdAt) {
-    rsvpAttendees.add(creator);
+  Meetup(this.timeOfMeetUp, this.location, this.meetupID, this.userID, this.maxAttendees, this.title, this.description, this.createdAt) {
+    rsvpAttendees.add(userID);
   }
 
   int currNumAttendees(){
     return rsvpAttendees.length;
   }
 
-  void addRsvpAttendee(User user){
-    rsvpAttendees.add(user);
+  void addRsvpAttendee(String userID){
+    rsvpAttendees.add(userID);
   }
 
-  void removeRsvpAttendee(User user){
-    rsvpAttendees.remove(user);
+  void removeRsvpAttendee(String userID){
+    rsvpAttendees.remove(userID);
+  }
+  void addComment(String userID, String text) {
+    Comment newC = Comment('commentID', userID, DateTime.now(), text); // todo set up unique comment id
+    comments.add(newC);
   }
 
-  void addComment(Comment newComment){
-    comments.add(newComment);
+  void removeComment(String commentID){
+    Comment comment = comments.firstWhere((c) => c.ID == commentID);
+    comments.remove(comment);
   }
 
-  void removeComment(Comment newComment){
-    comments.remove(newComment);
-  }
-
-  bool isAttending(User user){
-    return rsvpAttendees.contains(user);
+  bool isAttending(String userID){
+    return rsvpAttendees.contains(userID);
   }
 
   void cancel() {
@@ -48,6 +49,6 @@ class Meetup {
   }
 
   bool maxAttendeesReached() {
-    return currNumAttendees() == maxAttendees;
+    return (currNumAttendees() == maxAttendees);
   }
 }
