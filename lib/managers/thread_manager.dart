@@ -11,7 +11,7 @@ class Thread_Manager extends Manager {
           '2',
           'Rafflesia spotted at Raffles City',
           User('u2', 'Alan Seng'),
-          'what a gorgeous specimen!',
+          'what a gorgeous specimen! \nI love plants! \nBotanics is my favourite hobby, I could go on and on about it for days \nIn short, I love plants!',
           DateTime.now().add(const Duration(days: 2)))
     ],
     'Food!': [
