@@ -2,11 +2,11 @@ import 'package:aura/models/comment.dart';
 
 import 'user.dart';
 class Thread {
-  String? id;
+  String id;
   String? title;
 
   String content;
-  List<Comment> comments = [];
+  List<Comment> comments = []; // todo: change this to List<Comment>
   User author;
   List<User> likedBy = [];
   DateTime timestamp;
@@ -16,9 +16,9 @@ class Thread {
       this.id,
       this.title,
       this.author,
-      this.content,
-      this.timestamp// comments, likedBy
-      ) ;
+      this.content,// body, comments, author, likedBy
+      this.timestamp,
+      );
 
   @override
   String toString() { //todo
@@ -50,6 +50,4 @@ class Thread {
     }
     return likedBy.length; // TODO PUT THIS BACK
   }
-
-
 }

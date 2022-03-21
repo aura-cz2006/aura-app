@@ -6,6 +6,7 @@ import 'package:aura/models/thread.dart';
 import 'package:aura/models/user.dart';
 import 'package:aura/models/comment.dart';
 import 'package:like_button/like_button.dart';
+import 'editThread.dart';
 
 void main() {
   User user = User("USER_ID", "USERNAME");
@@ -46,6 +47,10 @@ class _DetailedThreadViewState extends State<DetailedThreadView> {
         // TODO: remove
         home: Scaffold(
       appBar: AppBar(
+        actions: [
+          //Show edit post button if user is the owner of post.
+          if (true) editThreadButton(widget.thread)
+        ],
         iconTheme: const IconThemeData(
           color: Colors.black,
         ),
@@ -91,7 +96,20 @@ class _DetailedThreadViewState extends State<DetailedThreadView> {
       ),
     ));
   }
+
+  Widget editThreadButton(Thread cur_thread){
+    return Container(
+      child: IconButton(
+        iconSize: 30,
+        icon: Icon(Icons.more_vert),
+        onPressed: (){
+
+        },),
+    );
+  }
 }
+
+
 
 class DisplayFullThread extends StatefulWidget {
   final Thread thread;

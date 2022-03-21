@@ -48,6 +48,18 @@ class Thread_Manager extends Manager {
     return curr_list;
   }
 
+  Thread? getThread(String topic, String thread_id){
+    for (var each in threadMap[topic]?? []){
+      if (each.id == thread_id) return each;
+    }
+  }
+
+  void editThreadFunction(String topic, String thread_id, String new_title, String new_content){
+    var threadforEdit = getThread(topic, thread_id);
+    threadforEdit?.title = new_title;
+    threadforEdit?.content = new_content;
+  }
+
   // Map<String, List<Thread>> getMapFromController(){
   //   //this function gets threadMap from thread_controller which gets it from API
   // }
