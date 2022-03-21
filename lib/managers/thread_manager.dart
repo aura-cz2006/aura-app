@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:aura/models/thread.dart';
 import 'package:aura/util/manager.dart';
 
