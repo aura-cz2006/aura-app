@@ -1,5 +1,6 @@
+import 'package:aura/models/thread.dart';
 import 'package:flutter/material.dart';
-import '../../models/thread.dart';
+
 
 class DetailedThreadView extends StatelessWidget {
   final Thread thread;

@@ -1,11 +1,11 @@
+import 'package:aura/controllers/discussion_controller.dart';
 import 'package:aura/controllers/meetups_controller.dart';
 import 'package:aura/controllers/notification_controller.dart';
 import 'package:aura/managers/notification_manager.dart';
+import 'package:aura/models/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../controllers/discussion_controller.dart';
-import '../../models/notification.dart' as no;
 import 'detailed_meetup_view.dart';
 import 'detailed_thread_view.dart';
 
@@ -31,9 +31,9 @@ class _NotificationsViewState extends State<NotificationsView> {
         return ListView(
             children: notificationData.notifications
                 .map((n) => ListTile(
-                      title: Text((n is no.ThreadNotification)
+                      title: Text((n is ThreadNotification)
                           ? n.getText()
-                          : (n is no.MeetupNotification)
+                          : (n is MeetupNotification)
                               ? n.getText()
                               : ""),
                       leading: Icon(
@@ -42,15 +42,18 @@ class _NotificationsViewState extends State<NotificationsView> {
                         size: 15,
                       ),
                       onTap: () {
-                        NotificationController.setRead(n.id, true); // TODO: switch to controller call?
-                        if (n is no.ThreadNotification) {
+                        NotificationController.setRead(
+                            n.id, true); // TODO: switch to controller call?
+                        if (n is ThreadNotification) {
+                          // TODO: replace with go_router
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => DetailedThreadView(
                                       DiscussionController.getThread(
                                           n.threadID))));
-                        } else if (n is no.MeetupNotification) {
+                        } else if (n is MeetupNotification) {
+                          // TODO: replace with go_router
                           Navigator.push(
                               context,
                               MaterialPageRoute(

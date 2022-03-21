@@ -1,6 +1,7 @@
 // discussion apis
 
 import 'package:aura/models/thread.dart';
+import 'package:aura/models/user.dart';
 // import 'package:dio/dio.dart';
 
 class AuraDiscussionAPI {
@@ -11,7 +12,8 @@ class AuraDiscussionAPI {
     // Response response = await Dio().get(apiUrl);
 
     return [
-      Thread("1234", "title")
+      Thread("0000", "TEST THREAD TITLE", User("01", "khong"),
+          "this is some content", DateTime.now())
     ];
   }
 }
