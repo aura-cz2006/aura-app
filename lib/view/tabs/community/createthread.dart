@@ -14,7 +14,7 @@ class createThread extends StatefulWidget {
 class _createThreadState extends State<createThread> {
   final titleController = TextEditingController(); //Saves edited title
   final contentController = TextEditingController(); //Saves edited content
-  final dropdownMenu = dropDownMenu();
+  String topic = '';
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,8 @@ class _createThreadState extends State<createThread> {
           child: Column(
             children: [
               Padding(padding: EdgeInsets.all(5), child: titleField()),
-              Padding(padding: EdgeInsets.all(5), child: dropdownMenu),
+              Padding(padding: EdgeInsets.all(5),
+                  child: new dropDownMenu(topic: (String val) => setState(() => topic = val))),
               Padding(padding: EdgeInsets.all(5), child: contentField()),
               Padding(padding: EdgeInsets.all(5), child: submitButton(context))
             ],
@@ -67,15 +68,15 @@ class _createThreadState extends State<createThread> {
       child: Text("Submit"),
       onPressed: () {
         setState(() {
-          String a = dropdownMenu.dr
+          print(Text("Title: ${titleController.text}\nTopic: ${topic}\nContent: ${contentController.text}"));
           //Create thread
           /*thread_manager.addThread(
             titleController.text,
             contentController.text,
-
-
+            topic,
+            userManager.userID //Not yet available
           );*/
-          Navigator.pop(context); //Return to previous, but updated threadlistview*/
+          // Navigator.pop(context); //Return to previous, but updated threadlistview*/
         });
       },
     );
