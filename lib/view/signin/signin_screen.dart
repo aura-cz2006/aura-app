@@ -23,8 +23,7 @@ class _SigninScreenState extends State<SigninScreen> {
             onPressed: () {
               context.go("/tabs/map");
             },
-            child: Image.network(
-                'https://www.gstvoucher.gov.sg/app/Content/images/LoginWithSingpass.png'),
+            child: Image.asset('assets/singpass.png'),
           ),
         ]));
   }
