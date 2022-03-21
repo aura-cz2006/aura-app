@@ -1,4 +1,5 @@
 import 'package:aura/managers/notification_manager.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +10,7 @@ import 'package:aura/managers/discussion_manager.dart';
 Map<String, Map<String, dynamic>> topics = {
   "general": {
     "bgImage": "",
-    "name": "General",
+    "name": "General Discussion",
   },
   "food": {
     "bgImage": "assets/topics_food.jpg",
@@ -17,7 +18,7 @@ Map<String, Map<String, dynamic>> topics = {
   },
   "tech": {
     "bgImage": "",
-    "name": "Tech",
+    "name": "IT",
   },
   "sports": {
     "bgImage": "",
@@ -68,25 +69,34 @@ class _CommunityTabState extends State<CommunityTab> {
       ),
       body: Center(child: Consumer<DiscussionManager>(
           builder: (context, discussionManager, child) {
-        return Column(
+        return ListView(
           // direction: Axis.vertical,
           // spacing: 20,
 
           children: topics.entries
               .map<Widget>((entry) => Card(
-                    child: InkWell(
-                      splashColor: Colors.blue.withAlpha(30),
-                      onTap: () {
-                        context.go(
-                            '${GoRouter.of(context).location}/topics/${entry.key}');
-                      },
-                      child: const SizedBox(
-                        width: 300,
-                        height: 100,
-                        child: Text('A card that can be tapped'),
+                      child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Ink.image(
+                        child: InkWell(
+                          onTap: () {
+                            context.go(
+                                '${GoRouter.of(context).location}/topics/${entry.key}');
+                          },
+                        ),
+                        image:
+                            NetworkImage('https://picsum.photos/250?image=9'),
+                        height: 200,
+                        fit: BoxFit.cover,
                       ),
-                    ),
-                  ))
+                      Container(
+                        child: Text(entry.value['name'],style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,),),
+                        color: Colors.yellowAccent,
+
+                      )
+                    ],
+                  )))
               .toList()
           // ElevatedButton(
           //   onPressed: () {
@@ -95,7 +105,6 @@ class _CommunityTabState extends State<CommunityTab> {
           //   child: Text('Meetups'),
           // ),
           ,
-
         );
         // ListView.builder(
         //   padding: const EdgeInsets.all(8),
