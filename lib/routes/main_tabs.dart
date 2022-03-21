@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:aura/view/community/community_tab.dart';
-import 'package:aura/view/map/map_tab.dart';
-import 'package:aura/view/news/news_tab.dart';
+import 'package:aura/view/tabs/community/community_tab.dart';
+import 'package:aura/view/tabs/map/map_tab.dart';
+import 'package:aura/view/tabs/news/news_tab.dart';
 
 /* Navigation Tab Bar */
 class MainTabBar extends StatefulWidget {

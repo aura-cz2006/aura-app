@@ -8,11 +8,18 @@ import 'package:aura/view/tabs/main_tab_bar.dart';
 import 'package:aura/view/settings/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:introduction_screen/introduction_screen.dart';
+
+bool isNewUser = true;
 
 final router = GoRouter(
-    initialLocation: "/sign-in",
+    initialLocation: isNewUser ? "/onboarding" : "/sign-in",
     urlPathStrategy: UrlPathStrategy.path,
     routes: <GoRoute>[
+      GoRoute(
+          path: "/onboarding",
+          builder: (BuildContext context, GoRouterState state) =>
+              IntroductionScreen()),
       GoRoute(
           path: "/tabs/:tabName",
           builder: (BuildContext context, GoRouterState state) => MainTabBar(
