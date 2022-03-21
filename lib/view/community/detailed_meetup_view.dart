@@ -223,7 +223,8 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
           ),
           Row(
             children: (widget.meetup.timeOfMeetUp.isBefore(DateTime.now()) ||
-                    widget.meetup.isCancelled)
+                    widget.meetup.isCancelled ||
+                    widget.meetup.maxAttendeesReached())
                 ? [
                     // meetup is past or meetup is cancelled: display error
                     const SizedBox(width: 16),
@@ -238,7 +239,9 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                           child: Text(
                               (widget.meetup.isCancelled
                                       ? "This meetup has been cancelled."
-                                      : "This meetup has elapsed.") +
+                                      : widget.meetup.maxAttendeesReached()
+                                          ? "Maximum number of attendees has been reached."
+                                          : "This meetup has elapsed.") +
                                   "\nNo more RSVPs are allowed.",
                               softWrap: true,
                               style: const TextStyle(

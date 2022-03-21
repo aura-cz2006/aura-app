@@ -46,4 +46,8 @@ class Meetup {
   void cancel() {
     isCancelled = true;
   }
+
+  bool maxAttendeesReached() {
+    return currNumAttendees() == maxAttendees;
+  }
 }
