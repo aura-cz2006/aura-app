@@ -1,5 +1,6 @@
 import 'package:aura/managers/notification_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:icon_badge/icon_badge.dart';
 
@@ -16,13 +17,12 @@ class CommunityTab extends StatefulWidget {
 }
 
 class _CommunityTabState extends State<CommunityTab> {
-  List<no.Notification> notifications = [
-  ]; // TODO: get notifications from controller
+  List<no.Notification> notifications =
+  []; // TODO: get notifications from controller
 
   void _tapNotifs() {
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const NotificationsView())
-    );
+        MaterialPageRoute(builder: (context) => const NotificationsView()));
   }
 
   @override
@@ -42,28 +42,46 @@ class _CommunityTabState extends State<CommunityTab> {
                     badgeColor: Colors.red,
                     itemColor: Colors.white,
                     hideZero: true,
-                    onTap: _tapNotifs
-                );
+                    onTap: _tapNotifs);
               })
         ],
       ),
       body: Center(child: Consumer<DiscussionManager>(
           builder: (context, discussionManager, child) {
-            return ListView.builder(
-                padding: const EdgeInsets.all(8),
-                itemCount: discussionManager.discussions.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    height: 50,
-                    margin: const EdgeInsets.all(2),
-                    child: Center(
-                        child: Text(
-                          discussionManager.discussions[index].title ??
-                              "undefined",
-                          style: const TextStyle(fontSize: 18),
-                        )),
-                  );
-                });
+            return Wrap(
+              direction: Axis.vertical,
+              spacing: 20,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    context.push("${GoRouter.of(context).location}/topic/1234");
+                  },
+                  child: Text('some topic title'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    context.push("${GoRouter.of(context).location}/meetups");
+                  },
+                  child: Text('Meetups'),
+                ),
+              ],
+            );
+            // ListView.builder(
+            //   padding: const EdgeInsets.all(8),
+            //   itemCount: discussionManager.discussions.length,
+            //   itemBuilder: (BuildContext context, int index) {
+            //     // return Container(
+            //     //     height: 50,
+            //     //     margin: const EdgeInsets.all(2),
+            //     //     child:
+            //         // Center(
+            //         //     child: Text(
+            //         //       discussionManager.discussions[index].title ??
+            //         //           "undefined",
+            //         //       style: const TextStyle(fontSize: 18),
+            //         //     )),
+            //         // );
+            //   });
           })),
     );
   }

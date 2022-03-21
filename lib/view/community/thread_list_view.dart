@@ -1,13 +1,14 @@
 import 'package:aura/models/user.dart';
+import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:intl/intl.dart';
 
 import 'package:aura/managers/thread_manager.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(ThreadListView());
-
 class ThreadListView extends StatefulWidget {
-  const ThreadListView({Key? key}) : super(key: key);
+  final String? topicName;
+
+  const ThreadListView({Key? key, this.topicName}) : super(key: key);
 
   @override
   State<ThreadListView> createState() => _ThreadListViewState();
@@ -28,27 +29,29 @@ class _ThreadListViewState extends State<ThreadListView> {
             color: Colors.black,
           ),
           title: Text("Specific topic"),
+          leading: const AppBarBackButton(),
         ),
         body: ListView(
-            children: (active_thread_manager.getListOfThreadsSortedByTime(topic))
-                .map((t) => ListTile(
-                      title: Text(t.title ?? "Untitled thread"),
-                      onTap: null,
-                      subtitle: Text(t.content),
-                      isThreeLine: true,
-                      trailing: Wrap(
-                        spacing: 12, // space between two icons
-                        children: <Widget>[
-                          Text(DateFormat('yyyy-MM-dd kk:mm')
-                          .format(t.timestamp)),
-                          Text('${t.numLikes()}'),
-                          // TODO: add date time properly into thread.dart
-                          Icon(Icons.thumb_up_alt_outlined),
-                          // icon-2
-                        ],
-                      ),
-                    ))
-                .toList()),
+            children:
+                (active_thread_manager.getListOfThreadsSortedByTime(topic))
+                    .map((t) => ListTile(
+                          title: Text(t.title ?? "Untitled thread"),
+                          onTap: null,
+                          subtitle: Text(t.content),
+                          isThreeLine: true,
+                          trailing: Wrap(
+                            spacing: 12, // space between two icons
+                            children: <Widget>[
+                              Text(DateFormat('yyyy-MM-dd kk:mm')
+                                  .format(t.timestamp)),
+                              Text('${t.numLikes()}'),
+                              // TODO: add date time properly into thread.dart
+                              Icon(Icons.thumb_up_alt_outlined),
+                              // icon-2
+                            ],
+                          ),
+                        ))
+                    .toList()),
       ),
     );
   }
