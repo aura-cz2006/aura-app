@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'package:aura/util/manager.dart';
+import '../models/news.dart';
 
 class NewsManager extends Manager {
   final List<NewsItem> _upcomingnews = [];
@@ -15,6 +16,4 @@ class NewsManager extends Manager {
 
 
 
-  void setNews(List<NewsItem> news) {
-  
-  }
+  void setNews(List<NewsItem> news) {}}
