@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:aura/models/user.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:aura/models/comment.dart';
@@ -15,6 +13,7 @@ class Meetup {
   int maxAttendees;
   List<User> rsvpAttendees = [];
   List<Comment> comments = [];
+  bool isCancelled = false;
 
   Meetup(this.timeOfMeetUp, this.location, this.ID, this.creator, this.maxAttendees, this.title, this.description, this.createdAt) {
     rsvpAttendees.add(creator);
@@ -38,5 +37,9 @@ class Meetup {
 
   bool isAttending(User user){
     return rsvpAttendees.contains(user);
+  }
+
+  void cancelMeetup() {
+    isCancelled = true;
   }
 }

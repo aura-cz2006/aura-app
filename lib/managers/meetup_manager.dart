@@ -3,8 +3,6 @@ import 'package:aura/models/user.dart';
 import 'package:aura/util/manager.dart';
 import 'package:latlong2/latlong.dart';
 
-
-
 class Meetup_Manager extends Manager {
   var meet_up_list = [
     Meetup(

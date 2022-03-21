@@ -11,14 +11,15 @@ import 'package:like_button/like_button.dart';
 void main() {
   User user = User("USER_ID", "USERNAME");
   Meetup test = Meetup(
-      "This is the title of the meetup",
-      "This is the meetup description.",
-      DateTime.now(),
-      DateTime(2022, 03, 20, 23, 59),
-      LatLng(0, 0),
-      "MEETUP_ID",
-      user,
-      10);
+    DateTime(2022, 03, 20, 23, 59),
+    LatLng(0, 0),
+    "MEETUP_ID",
+    user,
+    10,
+    "This is the title of the meetup",
+    "This is the meetup description.",
+    DateTime.now(),
+  );
   for (int i = 0; i < 5; i += 1) {
     test.addComment(
         Comment("C1", user, DateTime.now(), "$i) This is a comment."));
@@ -71,7 +72,6 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
             DisplayFullMeetup(meetup: widget.meetup, currUser: widget.currUser),
             DisplayMeetupComments(comments: widget.meetup.comments)
           ])),
-          // CommentInputField(thread: widget.thread, currUser: widget.currUser),
           Row(children: [
             Expanded(
               child: TextField(
@@ -111,30 +111,6 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
   }
 }
 
-// class DisplayNumAttendees extends StatefulWidget {
-//   final Meetup meetup;
-//   const DisplayNumAttendees({Key? key, required this.meetup}) : super(key: key);
-//
-//   // void update() {
-//   //   setState((){}); // TODO NOW this needs to update after tap button
-//   // }
-//
-//   @override
-//   State<DisplayNumAttendees> createState() => _DisplayNumAttendeesState();
-// }
-//
-// class _DisplayNumAttendeesState extends State<DisplayNumAttendees> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return ListTile(
-//       leading: const Icon(Icons.people),
-//       title: Text("${widget.meetup.currNumAttendees()} "
-//           "/ ${widget.meetup.maxAttendees} ATTENDEES"),
-//     );
-//   }
-// }
-
-
 class DisplayFullMeetup extends StatefulWidget {
   final Meetup meetup;
   final User currUser;
@@ -151,11 +127,13 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
   // late Widget displayNumAttendees = DisplayNumAttendees(meetup: widget.meetup);
 
   Future<bool> _handleTapRSVP(bool isLiked) async {
-    if (isLiked) {
-      widget.meetup.removeRsvpAttendee(widget.currUser);
-    } else {
-      widget.meetup.addRsvpAttendee(widget.currUser);
-    }
+    setState(() {
+      if (isLiked) {
+        widget.meetup.removeRsvpAttendee(widget.currUser);
+      } else {
+        widget.meetup.addRsvpAttendee(widget.currUser);
+      }
+    });
     return !isLiked;
   }
 
@@ -193,12 +171,18 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
             title: Text("${widget.meetup.currNumAttendees()} "
                 "/ ${widget.meetup.maxAttendees} ATTENDEES"),
           ),
-          const Divider(
-            thickness: 1,
-            color: Colors.grey,
+          // const Divider(
+          //   thickness: 1,
+          //   color: Colors.grey,
+          // ),
+          ListTile( // TODO: display location address instead of coordinates
+            leading: const Icon(Icons.pin_drop),
+            title: Text("LAT ${widget.meetup.location.latitude}, LONG ${widget.meetup.location.longitude}"),
           ),
-          // TODO: add other meetup details as listtiles
-          // const SizedBox(height: 8),
+          ListTile(
+            leading: const Icon(Icons.access_time_filled),
+            title: Text(DateFormat('yyyy-MM-dd kk:mm').format(widget.meetup.timeOfMeetUp)),
+          ),
           Row(
             children: [
               const SizedBox(width: 16),
@@ -214,7 +198,8 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                     start: Colors.lightGreen, end: Colors.green),
                 bubblesColor: const BubblesColor(
                   dotPrimaryColor: Colors.lightGreenAccent,
-                  dotSecondaryColor: Colors.lightGreen, // TODO these colours kinda suck
+                  dotSecondaryColor:
+                      Colors.lightGreen, // TODO these colours kinda suck
                 ),
                 likeBuilder: (bool isLiked) {
                   return Icon(
@@ -227,19 +212,20 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                 countBuilder: (int? count, bool isLiked, String text) {
                   String? message;
                   var color;
-                  // setState(() { // TODO NOW: ERROR: setState() or markNeedsBuild() called during build.
-                    color = isLiked ? Colors.green : Colors.grey[700];
-                    message = " " +
-                          (isLiked
-                              ? "Yes, I will be there!"
-                              : "Sorry, I will not be there.");
-                    // displayNumAttendees.update(); // TODO NOW fix update displaynumattendees
-                  // });
-                  return Text((message), style: TextStyle(color: color, fontSize: 18),);
+                  color = isLiked ? Colors.green : Colors.grey[700];
+                  message = " " +
+                      (isLiked
+                          ? "Yes, I will be there!"
+                          : "Sorry, I will not be there.");
+                  return Text(
+                    (message),
+                    style: TextStyle(color: color, fontSize: 18),
+                  );
                 },
               ),
             ],
-          )
+          ),
+          const SizedBox(height: 8),
         ]),
       ),
     );
