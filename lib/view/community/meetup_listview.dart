@@ -84,12 +84,15 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                               const SizedBox(height: 8),
                               SizedBox(
                                   child: ListTile(
-                                title: Text(m.title! + " on "+DateFormat('MM-dd kk:mm')
-                                    .format(m.timeOfMeetUp),
+                                title: Text(
+                                    m.title! +
+                                        " on " +
+                                        DateFormat('MM-dd kk:mm')
+                                            .format(m.timeOfMeetUp),
                                     style: DefaultTextStyle.of(context)
                                         .style
                                         .apply(
-                                        color: Colors.grey[700],
+                                          color: Colors.grey[700],
                                         )),
                                 onTap: null,
                                 subtitle: Container(
@@ -105,14 +108,14 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                   alignment: const Alignment(1.0, 0.0),
                                   child: LikeButton(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    isLiked: m.isAttending(curr_user),
+                                    isLiked: m.isAttending(curr_user.id),
                                     onTap: (bool isLiked) async {
                                       setState(() {
                                         if (isLiked) {
-                                          m.removeRsvpAttendee(
-                                              curr_user); // TODO use manager function
+                                          m.removeRsvpAttendee(curr_user
+                                              .id); // TODO use manager function
                                         } else {
-                                          m.addRsvpAttendee(curr_user);
+                                          m.addRsvpAttendee(curr_user.id);
                                         }
                                       });
                                       return !isLiked;
@@ -156,12 +159,13 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
                                   const SizedBox(width: 16),
-                                  Text("Posted by: ${m.creator.username}",
+                                  Text("Posted by: ${m.userID}",
+                                      // todo: lookup username
                                       style: DefaultTextStyle.of(context)
                                           .style
                                           .apply(
-                                          color: Colors.grey[700],
-                                          fontStyle: FontStyle.italic)),
+                                              color: Colors.grey[700],
+                                              fontStyle: FontStyle.italic)),
                                   const SizedBox(width: 16),
                                   Text(
                                       DateFormat('yyyy-MM-dd kk:mm')
@@ -169,8 +173,8 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                       style: DefaultTextStyle.of(context)
                                           .style
                                           .apply(
-                                          color: Colors.grey[700],
-                                          fontStyle: FontStyle.italic)),
+                                              color: Colors.grey[700],
+                                              fontStyle: FontStyle.italic)),
                                 ],
                               ),
                               const SizedBox(height: 16),
@@ -178,7 +182,6 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                           ),
                         )
                         .toList()),
-
               ),
             ])));
   }

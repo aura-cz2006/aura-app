@@ -7,7 +7,7 @@ class NotificationController {
     // todo: handle api call here
   }
 
-  static void setRead(String notifID, bool readStatus) {
-    NotificationManager().updateNotificationReadStatus(notifID, readStatus);
+  static void setRead(String notifID, bool readStatus) { // ! deprecated - should be removed
+    NotificationManager().setNotificationReadStatus(notifID, readStatus);
   }
 }

@@ -157,7 +157,7 @@ class ThreadListViewState extends State<ThreadListView> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 const SizedBox(width: 16),
-                                Text("Posted by: ${t.userID.username}",//TODO: Consumer
+                                Text("Posted by: ${t.userID}",//TODO: lookup username via consumer
                                     style: DefaultTextStyle.of(context)
                                         .style
                                         .apply(
