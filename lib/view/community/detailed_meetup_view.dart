@@ -2,6 +2,7 @@ import 'dart:core';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:like_button/like_button.dart';
@@ -137,10 +138,11 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                       onSelected: (value) {
                         setState(() {
                           if (value == "edit") {
-                            // TODO ROUTING: navigate to edit meetup screen
+                            context
+                                .push("${GoRouter.of(context).location}/edit");
                           } else if (value == "delete") {
                             meetupMgr.cancelMeetup(widget.meetupID);
-                            // TODO ROUTING: navigate to meetup list view
+                            context.pop();
                           }
                         });
                       },
@@ -270,8 +272,7 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                             start: Colors.lightGreen, end: Colors.green),
                         bubblesColor: const BubblesColor(
                           dotPrimaryColor: Colors.lightGreenAccent,
-                          dotSecondaryColor: Colors
-                              .lightGreen,
+                          dotSecondaryColor: Colors.lightGreen,
                         ),
                         likeBuilder: (bool isLiked) {
                           return Icon(
@@ -300,7 +301,7 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
               isCancelled: meetupMgr.isCancelled(widget.meetupID),
               currNumAttendees: meetupMgr.getCurrNumAttendees(widget.meetupID),
               maxAttendees:
-              meetupMgr.getMeetupByID(widget.meetupID).maxAttendees,
+                  meetupMgr.getMeetupByID(widget.meetupID).maxAttendees,
               attendeeList: meetupMgr
                   .getAttendeeIDList(widget.meetupID)
                   .map((String userID) => userMgr.getUsernameByID(userID)!)

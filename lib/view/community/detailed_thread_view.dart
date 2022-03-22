@@ -2,6 +2,7 @@ import 'dart:core';
 import 'package:aura/managers/thread_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:aura/models/user.dart';
@@ -149,10 +150,10 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                         onSelected: (value) {
                           setState(() {
                             if (value == "edit") {
-                              // TODO ROUTING: navigate to edit thread screen
+                              context.push("${GoRouter.of(context).location}/edit");
                             } else if (value == "delete") {
                               threadMgr.removeThread(widget.threadID);
-                              // TODO ROUTING: fix this. screen turns red bc thread is delated. route to threadlist view?
+                              context.pop();
                             }
                           });
                         },
