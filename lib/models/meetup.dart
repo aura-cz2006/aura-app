@@ -1,20 +1,62 @@
-// import 'package:aura/models/user.dart';
+import 'package:aura/models/user.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:aura/models/comment.dart';
 
-class Meetup { // TODO
+class Meetup {
   String? title;
-  // DateTime? dateTime;
-  // Geolocation? location;
-  String? id;
-  // int? maxAttendees;
-  // List<User> rsvpAttendees;
+  String? description;
+  DateTime createdAt;
+  DateTime timeOfMeetUp;
+  LatLng location;
+  String meetupID;
+  String userID;
+  int maxAttendees;
+  List<String> rsvpAttendees = []; // userIDs
+  List<Comment> comments = [];
+  bool isCancelled = false;
 
-  // constructor
-  Meetup(this.id, this.title);
-  // Meetup(this.title, this.dateTime, this.location, this.id, this.maxAttendees) : rsvpAttendees = [];
+  Meetup(this.timeOfMeetUp, this.location, this.meetupID, this.userID, this.maxAttendees, this.title, this.description, this.createdAt) {
+    rsvpAttendees.add(userID);
+  }
 
-  @override
-  String toString() {
-    // return 'Meetup: {id: ${id ?? ""}, title: ${title ?? ""}, dateTime: $dateTime, location: $location, max: $maxAttendees, rsvpNum: ${rsvpAttendees.length}}';
-    return 'Meetup: {id: ${id ?? ""}, title: ${title ?? ""}}';
+  int currNumAttendees(){
+    return rsvpAttendees.length;
+  }
+
+  void addRsvpAttendee(String userID){
+    rsvpAttendees.add(userID);
+  }
+
+  void removeRsvpAttendee(String userID){
+    rsvpAttendees.remove(userID);
+  }
+  void addComment(String userID, String text) {
+    Comment newC = Comment('commentID', userID, DateTime.now(), text); // todo set up unique comment id
+    comments.add(newC);
+  }
+
+  void removeComment(String commentID){
+    Comment comment = comments.firstWhere((c) => c.commentID == commentID);
+    comments.remove(comment);
+  }
+
+  bool isAttending(String userID){
+    return rsvpAttendees.contains(userID);
+  }
+
+  void cancel() {
+    isCancelled = true;
+  }
+
+  bool maxAttendeesReached() {
+    return (currNumAttendees() == maxAttendees);
+  }
+
+  bool canEdit() {
+    return DateTime.now().isBefore(timeOfMeetUp.subtract(const Duration(hours: 3)));
+  }
+
+  bool hasElapsed() {
+    return timeOfMeetUp.isBefore(DateTime.now());
   }
 }
