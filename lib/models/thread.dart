@@ -1,6 +1,5 @@
 import 'package:aura/models/comment.dart';
-
-import 'user.dart';
+import 'package:intl/intl.dart';
 
 class Thread {
   String id;
@@ -29,7 +28,8 @@ class Thread {
   }
 
   void addComment(String userID, String text) {
-    Comment newC = Comment('commentID', userID, DateTime.now(), text); // todo set up unique comment id
+    Comment newC = Comment('commentID', userID, DateTime.now(),
+        text); // todo set up unique comment id
     comments.add(newC);
   }
 
@@ -61,5 +61,9 @@ class Thread {
       return likedBy.length + 99;
     }
     return likedBy.length; // TODO PUT THIS BACK
+  }
+
+  String getSummary() {
+    return "[$topic] $title \nPosted on: ${DateFormat('yyyy-MM-dd kk:mm').format(timestamp)}";
   }
 }

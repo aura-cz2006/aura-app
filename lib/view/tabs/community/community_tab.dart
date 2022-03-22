@@ -16,6 +16,8 @@ class CommunityTab extends StatefulWidget {
 }
 
 class _CommunityTabState extends State<CommunityTab> {
+  final String _testUserID = "1"; // TODO READ USER ID OF VIEWER FROM SOMEWHERE?
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +35,7 @@ class _CommunityTabState extends State<CommunityTab> {
               onTap: () => Navigator.push( // TODO ROUTING: replace w go router to notif view
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const NotificationsView())),
+                      builder: (context) => NotificationsView(currUserID: _testUserID))),
             );
           })
         ],
@@ -48,13 +50,13 @@ class _CommunityTabState extends State<CommunityTab> {
               onPressed: () {
                 context.push("${GoRouter.of(context).location}/topic/1234");
               },
-              child: Text('some topic title'),
+              child: const Text('some topic title'),
             ),
             ElevatedButton(
               onPressed: () {
                 context.push("${GoRouter.of(context).location}/meetups");
               },
-              child: Text('Meetups'),
+              child: const Text('Meetups'),
             ),
           ],
         );

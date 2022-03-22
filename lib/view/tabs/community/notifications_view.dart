@@ -36,12 +36,11 @@ class _NotificationsViewState extends State<NotificationsView> {
                         n.getTypeMsg(),
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      subtitle: Text(((n is ThreadNotification)
-                              ? threadMgr.getThreadByID(n.threadID)!.title
-                              : (n is MeetupNotification)
-                                  ? meetupMgr.getMeetupByID(n.meetupID)!.title
-                                  : "") ??
-                          ""),
+                      subtitle: Text((n is ThreadNotification) // todo fix
+                          ? threadMgr.getThreadByID(n.threadID)!.getSummary()
+                          : (n is MeetupNotification)
+                              ? meetupMgr.getMeetupByID(n.meetupID).getSummary()
+                              : ""),
                       leading: Icon(
                         n.isRead ? null : Icons.circle,
                         color: n.isRead ? null : Colors.red,

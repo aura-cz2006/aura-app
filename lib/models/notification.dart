@@ -1,9 +1,3 @@
-import 'package:aura/controllers/discussion_controller.dart';
-import 'package:aura/models/thread.dart';
-
-import '../controllers/meetups_controller.dart';
-import 'meetup.dart';
-
 abstract class Notification {
   bool isRead;
   String _notifID;

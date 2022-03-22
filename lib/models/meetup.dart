@@ -1,4 +1,4 @@
-import 'package:aura/models/user.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:aura/models/comment.dart';
 
@@ -58,5 +58,9 @@ class Meetup {
 
   bool hasElapsed() {
     return timeOfMeetUp.isBefore(DateTime.now());
+  }
+
+  String getSummary() {// TODO replace latlong display w address
+    return "$title \nLocation: LAT ${location.latitude}, LONG ${location.longitude} \nTime: ${DateFormat('yyyy-MM-dd kk:mm').format(timeOfMeetUp)}";
   }
 }

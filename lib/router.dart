@@ -43,16 +43,9 @@ final router = GoRouter(
                     builder: (BuildContext context, GoRouterState state) =>
                         DetailedThreadView(
                             key: state.pageKey,
-                            // TODO: only supply strings to the widget here:
-                            // thread: state.params['threadId']!,
-                            thread: Thread(
-                                "TEST_ID",
-                                "This is the Title.",
-                                User("SOME_UID", "SOME_USERNAME"),
-                                "This is the thread content.",
-                                DateTime.now()),
+                            threadID: state.params['threadId']!,
                             // TODO: remove currUser (should be passed via manager
-                            currUser: User("CURR_UID", "CURR_USERNAME")),
+                            currUserID: "1"),
                   )
                 ])
           ]),
