@@ -1,4 +1,5 @@
 import 'package:aura/managers/notification_manager.dart';
+import 'package:aura/models/notification.dart' as no;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -42,8 +43,7 @@ class _CommunityTabState extends State<CommunityTab> {
       []; // TODO: get notifications from controller
 
   void _tapNotifs() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const NotificationsView()));
+    context.push("tabs/community/notifications");
   }
 
   @override
@@ -57,7 +57,7 @@ class _CommunityTabState extends State<CommunityTab> {
             return IconBadge(
                 icon: const Icon(Icons.notifications),
                 itemCount: notificationData.notifications
-                    .where((n) => n.read == false)
+                    .where((n) => n.isRead == false)
                     .toList()
                     .length,
                 badgeColor: Colors.red,
