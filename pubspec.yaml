@@ -34,6 +34,9 @@ dependencies:
   like_button: ^2.0.4
   intl: ^0.17.0
 
+  #Date and Time Widget for MeetUp
+  datetime_picker_formfield: ^2.0.0
+
   #multiple floating action buttons
   flutter_speed_dial: ^4.3.0
 
