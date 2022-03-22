@@ -4,9 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:icon_badge/icon_badge.dart';
+import 'package:badges/badges.dart';
 import 'package:aura/managers/discussion_manager.dart';
-
 
 Map<String, Map<String, dynamic>> topics = {
   "general": {
@@ -53,76 +52,67 @@ class _CommunityTabState extends State<CommunityTab> {
         title: const Text('Community'),
         actions: [
           Consumer<NotificationManager>(
-              builder: (context, notificationData, child) {
-            return IconBadge(
-                icon: const Icon(Icons.notifications),
-                itemCount: notificationData.notifications
-                    .where((n) => n.isRead == false)
-                    .toList()
-                    .length,
-                badgeColor: Colors.red,
-                itemColor: Colors.white,
-                hideZero: true,
-                onTap: _tapNotifs);
-          })
+              builder: (context, notificationData, child) => Badge(
+                    position: BadgePosition.topEnd(top: 8, end: 3),
+                    badgeContent: Text(
+                      notificationData.getNumUnreadNotifications().toString(),
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.notifications),
+                      onPressed: () =>
+                          context.push("/tabs/community/notifications"),
+                    ),
+                  )),
+          IconButton(
+            icon: const Icon(
+              Icons.settings,
+              color: Colors.black54,
+            ),
+            onPressed: () {
+              GoRouter.of(context).push("/settings");
+            },
+          )
         ],
       ),
       body: Center(child: Consumer<DiscussionManager>(
           builder: (context, discussionManager, child) {
         return ListView(
-          // direction: Axis.vertical,
-          // spacing: 20,
-
           children: topics.entries
               .map<Widget>((entry) => Card(
-                    child: Container(
-                      height: 200,
-                      alignment: AlignmentDirectional.center,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(entry.value['bgImage']),
-                          colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
-                          fit: BoxFit.cover,
-                          alignment: Alignment.center,
-                        ),
-                      ),
-                      child: Text(
-                        entry.value['name'],
-                        textAlign: TextAlign.center,
-                        style:
-                           const TextStyle(
-                            color: Colors.white,
-                            fontSize: 48,
-                            fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
+                    child: InkWell(
+                        onTap: () {
+                          context.push(
+                              "/tabs/community/topic/${(entry.value['name'] as String).toLowerCase()}");
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(4),
+                          height: 200,
+                          alignment: AlignmentDirectional.center,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            image: DecorationImage(
+                              image: AssetImage(entry.value['bgImage']),
+                              colorFilter: ColorFilter.mode(
+                                  Colors.black.withOpacity(0.4),
+                                  BlendMode.darken),
+                              fit: BoxFit.cover,
+                              alignment: Alignment.center,
+                            ),
+                          ),
+                          child: Text(
+                            entry.value['name'],
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 48,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        )),
                   ))
-              .toList()
-          // ElevatedButton(
-          //   onPressed: () {
-          //     context.push("${GoRouter.of(context).location}/meetups");
-          //   },
-          //   child: Text('Meetups'),
-          // ),
-          ,
+              .toList(),
         );
-        // ListView.builder(
-        //   padding: const EdgeInsets.all(8),
-        //   itemCount: discussionManager.discussions.length,
-        //   itemBuilder: (BuildContext context, int index) {
-        //     // return Container(
-        //     //     height: 50,
-        //     //     margin: const EdgeInsets.all(2),
-        //     //     child:
-        //         // Center(
-        //         //     child: Text(
-        //         //       discussionManager.discussions[index].title ??
-        //         //           "undefined",
-        //         //       style: const TextStyle(fontSize: 18),
-        //         //     )),
-        //         // );
-        //   });
       })),
     );
   }

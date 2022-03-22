@@ -28,21 +28,21 @@ class _MainTabBarState extends State<MainTabBar> {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Aura'),
-          backgroundColor: Colors.blue,
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(
-                Icons.settings,
-                color: Colors.black54,
-              ),
-              onPressed: () {
-                GoRouter.of(context).push("/settings");
-              },
-            )
-          ],
-        ),
+        // appBar: AppBar(
+        //   title: const Text('Aura'),
+        //   backgroundColor: Colors.blue,
+        //   actions: <Widget>[
+        //     IconButton(
+        //       icon: const Icon(
+        //         Icons.settings,
+        //         color: Colors.black54,
+        //       ),
+        //       onPressed: () {
+        //         GoRouter.of(context).push("/settings");
+        //       },
+        //     )
+        //   ],
+        // ),
         body: IndexedStack(
           index: selectedIndex,
           children: const <Widget>[
