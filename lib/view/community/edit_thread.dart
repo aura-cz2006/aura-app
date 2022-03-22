@@ -15,19 +15,19 @@ void main() {
   Thread test = Thread("TEST_ID", "This is the Title.", "USER_ID",
     "This is the thread content.", "Nature", DateTime.now());
 
-  runApp(editThread(og_thread: test,));
+  runApp(EditThreadView(og_thread: test,));
 }
 
-class editThread extends StatefulWidget {
-  Thread og_thread;
+class EditThreadView extends StatefulWidget {
+  Thread og_thread; // todo: change this to pass in threadId, then lookup here
 
-  editThread({required this.og_thread});
+  EditThreadView({required this.og_thread});
 
   @override
-  _editThreadState createState() => _editThreadState();
+  _EditThreadViewState createState() => _EditThreadViewState();
 }
 
-class _editThreadState extends State<editThread> {
+class _EditThreadViewState extends State<EditThreadView> {
   late String title = widget.og_thread.title ?? '';
   late String content = widget.og_thread.content;
   final titleController = TextEditingController(); //Saves edited title

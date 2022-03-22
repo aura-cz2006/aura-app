@@ -1,5 +1,10 @@
+import 'package:aura/managers/thread_manager.dart';
+import 'package:aura/models/thread.dart';
+import 'package:aura/models/user.dart';
 import 'package:aura/view/community/detailed_meetup_view.dart';
 import 'package:aura/view/community/detailed_thread_view.dart';
+import 'package:aura/view/community/edit_thread.dart';
+import 'package:aura/view/community/meetup_listview.dart';
 import 'package:aura/view/community/thread_list_view.dart';
 import 'package:aura/view/settings/change_home_address_screen.dart';
 import 'package:aura/view/signin/signin_screen.dart';
@@ -8,6 +13,14 @@ import 'package:aura/view/tabs/main_tab_bar.dart';
 import 'package:aura/view/settings/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+Thread sampleThread = Thread(
+    '2',
+    'Rafflesia spotted at Raffles City',
+    '4',
+    'what a gorgeous specimen! \nI love plants! \nBotanics is my favourite hobby, I could go on and on about it for days \nIn short, I love plants!',
+    "Nature",
+    DateTime.now().add(const Duration(days: 2)));
 
 final router = GoRouter(
     initialLocation: "/sign-in",
@@ -21,32 +34,47 @@ final router = GoRouter(
             GoRoute(
                 path: 'meetups',
                 builder: (BuildContext context, GoRouterState state) =>
-                    ThreadListView(
-                      key: state.pageKey,
-                      topicName: 'meetups',
-                    ),
+                    MeetUpListView(key: state.pageKey),
                 routes: [
                   GoRoute(
                       path: ':meetupId',
                       builder: (BuildContext context, GoRouterState state) =>
-                          Text("detailed_meetup_view goes here"))
+                          DetailedMeetupView(meetupID: state.params['meetupID']!, currUserID: "123"),
+                      routes: [
+                        GoRoute(
+                            path: "edit",
+                            builder:
+                                (BuildContext context, GoRouterState state) =>
+                                    EditThreadView(og_thread: sampleThread)) // todo: replace this with editMeetupThread
+                      ])
                 ]),
             GoRoute(
-              path: 'topic/:topicName',
-              builder: (BuildContext context, GoRouterState state) =>
-                  ThreadListView(
+                path: 'topic/:topicName',
+                builder: (BuildContext context, GoRouterState state) =>
+                    ThreadListView(
                       key: state.pageKey,
-                      topicName: state.params['topicName']!),
-            ),
+                      active_thread_manager: Thread_Manager(),
+                      topic: 'meetups',
+                      curr_user:
+                          User('123', 'khong'), // todo: remove this param
+                    )),
             GoRoute(
-              path: 'thread/:threadId',
-              builder: (BuildContext context, GoRouterState state) =>
-                  DetailedThreadView(
-                      key: state.pageKey,
-                      threadID: state.params['threadId']!,
-                      // TODO: remove currUser (should be passed via manager
-                      currUserID: "1"),
-            ),
+                path: 'thread/:threadId',
+                builder: (BuildContext context, GoRouterState state) =>
+                    DetailedThreadView(
+                        key: state.pageKey,
+                        threadID: state.params['threadId']!,
+                        // TODO: remove currUser (should be passed via manager
+                        currUserID: "1"),
+                routes: [
+                  GoRoute(
+                      path: "edit",
+                      builder: (BuildContext context, GoRouterState state) =>
+                          EditThreadView(
+                            og_thread: sampleThread,
+                          ) // TODO: replace with thread id
+                      )
+                ]),
             GoRoute(
               path: 'meetup/:meetupId',
               builder: (BuildContext context, GoRouterState state) =>

@@ -33,11 +33,5 @@ class User_Manager extends Manager {
     }
   }
 
-  String? getUsernameByID(String id){
-    for (var each in user_list){
-      if (each.id == id){
-        return each.username;
-      }
-    }
-  }
+
 }
