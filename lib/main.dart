@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'managers/notification_manager.dart';
+import 'managers/thread_manager.dart';
+import 'managers/meetup_manager.dart';
 
 void main() {
   runApp(
@@ -11,6 +13,8 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => DiscussionManager()),
         ChangeNotifierProvider(create: (context) => NotificationManager()),
+        ChangeNotifierProvider(create: (context) => Thread_Manager()),
+        ChangeNotifierProvider(create: (context) => Meetup_Manager()),
       ],
       child: const MyApp(),
     ),

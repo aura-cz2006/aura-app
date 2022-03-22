@@ -27,14 +27,17 @@ class NotificationManager extends Manager {
 
   void setNotifications(List<Notification> notifications) {
     _notifications.addAll(notifications);
-
     notifyListeners();
   }
 
-  void updateNotificationReadStatus(String notifId, bool readStatus) {
-
-     _notifications = [_notifications[0]];
-
+  void setNotificationReadStatus(String notifID, bool newReadStatus) {
+    _notifications
+        .firstWhere((n) => n.notifID == notifID)
+        .setRead(newReadStatus);
     notifyListeners();
+  }
+
+  int getNumUnreadNotifications() {
+    return _notifications.where((n) => n.isRead == false).toList().length;
   }
 }

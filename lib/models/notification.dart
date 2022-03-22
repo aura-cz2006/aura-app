@@ -5,23 +5,19 @@ import '../controllers/meetups_controller.dart';
 import 'meetup.dart';
 
 abstract class Notification {
-  bool read;
-  String _id;
+  bool isRead;
+  String _notifID;
 
   // constructor
-  Notification(this.read, this._id);
-  Notification.withoutRead(this._id): read = false;
+  Notification(this.isRead, this._notifID);
+  Notification.withoutRead(this._notifID): isRead = false;
 
-  get id => _id;
+  get notifID => _notifID;
 
-  void setRead(newReadStatus) {
-    read = newReadStatus;
+  void setRead(bool newReadStatus) {
+    isRead = newReadStatus;
   }
-  String getText();
-  @override
-  String toString() {
-    return 'Notification: {read: $read, id: $_id}';
-  }
+  String getTypeMsg();
 }
 
 enum ThreadNotifType {
@@ -35,24 +31,19 @@ class ThreadNotification extends Notification {
   String threadID;
   ThreadNotifType notifType;
 
-  ThreadNotification(this.threadID, this.notifType, read, id) : super(read, id);
+  ThreadNotification(this.threadID, this.notifType, read, notifID) : super(read, notifID);
 
   @override
-  String toString() {
-    return 'Thread Notification: {read: $read, text: $getText(), ID: $threadID, type: $notifType}';
-  }
-  @override
-  String getText() {
-    Thread thread = DiscussionController.getThread(threadID); // TODO
+  String getTypeMsg() {
     switch(notifType) {
       case ThreadNotifType.SUCCESSFULLY_POSTED:
-        return "Thread successfully posted: \"${thread.title}\"";
+        return "Thread successfully posted";
       case ThreadNotifType.NEW_COMMENT:
-        return "New comment on your thread: \"${thread.title}\"";
+        return "New comment on your thread";
       case ThreadNotifType.NEW_LIKE:
-        return "New like on your thread: \"${thread.title}\"";
+        return "New like on your thread";
       case ThreadNotifType.TRENDING:
-        return "Trending thread: \"${thread.title}\"";
+        return "Trending thread";
     }
   }
 }
@@ -74,27 +65,22 @@ class MeetupNotification extends Notification {
   MeetupNotification(this.meetupID, this.notifType, read, id) : super(read, id);
 
   @override
-  String toString() {
-    return 'Meetup Notification: {read: $read, text: $getText(), ID: $meetupID, type: $notifType}';
-  }
-  @override
-  String getText() {
-    Meetup meetup = MeetupsController.getMeetup(meetupID); // TODO
+  String getTypeMsg() {
     switch(notifType) {
       case MeetupNotifType.SUCCESSFULLY_POSTED:
-        return "Meetup successfully posted: \"${meetup.title}\"";
+        return "Meetup successfully posted";
       case MeetupNotifType.SUCCESSFULLY_RSVP:
-        return "Meetup successfully RSVPed: \"${meetup.title}\"";
+        return "Meetup successfully RSVPed";
       case MeetupNotifType.REMINDER:
-        return "Meetup in 1 hour: \"${meetup.title}\"";
+        return "Meetup in 1 hour";
       case MeetupNotifType.NEW_COMMENT:
-        return "New comment on your meetup: \"${meetup.title}\"";
+        return "New comment on your meetup";
       case MeetupNotifType.NEW_ATTENDEE:
-        return "New attendee for your meetup: \"${meetup.title}\"";
+        return "New attendee for your meetup";
       case MeetupNotifType.MEETUP_CANCELLED:
-        return "Meetup cancelled: \"${meetup.title}\"";
+        return "Meetup cancelled";
       case MeetupNotifType.MEETUP_DETAIL_CHANGE:
-        return "Meetup details changed: \"${meetup.title}\"";
+        return "Meetup details changed";
     }
   }
 }

@@ -4,12 +4,9 @@ import 'package:aura/managers/user_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:aura/models/thread.dart';
 import 'package:aura/models/user.dart';
-import 'package:aura/models/comment.dart';
 import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
-import 'editThread.dart';
 
 void main() {
   String userID = "1"; // viewer
