@@ -1,9 +1,12 @@
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/models/user.dart';
+import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
+import 'package:go_router/go_router.dart';
+
 
 void main() => runApp(MeetUpListView());
 
@@ -29,6 +32,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
               iconTheme: const IconThemeData(
                 color: Colors.black,
               ),
+              leading: const AppBarBackButton(),
               title: const Text("Meetups"),
             ),
             body: Column(children: [
@@ -89,12 +93,13 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                         " on " +
                                         DateFormat('MM-dd kk:mm')
                                             .format(m.timeOfMeetUp),
-                                    style: DefaultTextStyle.of(context)
-                                        .style
-                                        .apply(
-                                          color: Colors.grey[700],
-                                        )),
-                                onTap: null,
+                                    // style: DefaultTextStyle.of(context)
+                                    //     .style
+                                    //     .apply(
+                                    //       color: Colors.grey[700],
+                                    //     )
+                                ),
+                                onTap: () => context.push("/tabs/community/meetups/${m.meetupID}"),
                                 subtitle: Container(
                                   margin: const EdgeInsets.only(
                                     top: 5,
@@ -159,22 +164,26 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
                                   const SizedBox(width: 16),
-                                  Text("Posted by: ${m.userID}",
-                                      // todo: lookup username
-                                      style: DefaultTextStyle.of(context)
-                                          .style
-                                          .apply(
-                                              color: Colors.grey[700],
-                                              fontStyle: FontStyle.italic)),
+                                  Text(
+                                    "Posted by: ${m.userID}",
+                                    // todo: lookup username
+                                    // todo: fix/replace DefaultTextStyle !
+                                    //     style: DefaultTextStyle.of(context)
+                                    //         .style
+                                    //         .apply(
+                                    //             color: Colors.grey[700],
+                                    //             fontStyle: FontStyle.italic)
+                                  ),
                                   const SizedBox(width: 16),
                                   Text(
-                                      DateFormat('yyyy-MM-dd kk:mm')
-                                          .format(m.createdAt),
-                                      style: DefaultTextStyle.of(context)
-                                          .style
-                                          .apply(
-                                              color: Colors.grey[700],
-                                              fontStyle: FontStyle.italic)),
+                                    DateFormat('yyyy-MM-dd kk:mm')
+                                        .format(m.createdAt),
+                                    //     style: DefaultTextStyle.of(context)
+                                    //         .style
+                                    //         .apply(
+                                    //             color: Colors.grey[700],
+                                    //             fontStyle: FontStyle.italic)
+                                  ),
                                 ],
                               ),
                               const SizedBox(height: 16),

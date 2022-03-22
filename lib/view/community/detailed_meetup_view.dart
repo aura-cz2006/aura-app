@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/managers/user_manager.dart';
+import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -51,6 +52,7 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
               iconTheme: const IconThemeData(
                 color: Colors.black,
               ),
+              leading: const AppBarBackButton(),
               title: const Text('Meetup'),
             ),
             body: Consumer2<Meetup_Manager, User_Manager>(

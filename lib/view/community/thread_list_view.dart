@@ -1,5 +1,6 @@
 import 'package:aura/models/user.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:aura/managers/thread_manager.dart';
@@ -37,11 +38,11 @@ class ThreadListViewState extends State<ThreadListView> {
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
-            iconTheme: const IconThemeData(
-              color: Colors.black,
-            ),
-            title: const Text("Specific topic"),
-          ),
+              iconTheme: const IconThemeData(
+                color: Colors.black,
+              ),
+              title: Text("${widget.topic}"), // todo: use friendly text here
+              leading: AppBarBackButton()),
           body: Column(children: [
             Row(
               children: [
@@ -91,7 +92,9 @@ class ThreadListViewState extends State<ThreadListView> {
                             SizedBox(
                                 child: ListTile(
                                     title: Text(t.title ?? "Untitled thread"),
-                                    onTap: null,
+                                    onTap: () => context.push(
+                                        // ? can we use an arrow function here? will it affect performance???
+                                        "/tabs/community/thread/${t.id}"),
                                     subtitle: Container(
                                         margin: const EdgeInsets.only(
                                           top: 5,
@@ -110,15 +113,19 @@ class ThreadListViewState extends State<ThreadListView> {
                                       child: LikeButton(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
-                                        isLiked: t.isLikedBy(widget.curr_user.id),
+                                        isLiked:
+                                            t.isLikedBy(widget.curr_user.id),
                                         likeCount: t.numLikes(),
                                         onTap: (bool isLiked) async {
                                           if (isLiked) {
                                             widget.active_thread_manager.removeLike(
-                                                t.id,widget.curr_user.id); // TODO use manager function
+                                                t.id,
+                                                widget.curr_user
+                                                    .id); // TODO use manager function
                                           } else {
                                             widget.active_thread_manager
-                                                .addLike(t.id,widget.curr_user.id);
+                                                .addLike(
+                                                    t.id, widget.curr_user.id);
                                           }
                                           return !isLiked;
                                         },
@@ -157,21 +164,26 @@ class ThreadListViewState extends State<ThreadListView> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 const SizedBox(width: 16),
-                                Text("Posted by: ${t.userID}",//TODO: lookup username via consumer
-                                    style: DefaultTextStyle.of(context)
-                                        .style
-                                        .apply(
-                                            color: Colors.grey[700],
-                                            fontStyle: FontStyle.italic)),
+                                Text(
+                                  "Posted by: ${t.userID}", //TODO: lookup username via consumer
+                                  // todo: fix/change how we use DefaultTextStyle
+                                  // style: DefaultTextStyle.of(context)
+                                  //     .style
+                                  //     .apply(
+                                  //         color: Colors.grey[700],
+                                  //         fontStyle: FontStyle.italic)
+                                ),
                                 const SizedBox(width: 16),
                                 Text(
-                                    DateFormat('yyyy-MM-dd kk:mm')
-                                        .format(t.timestamp),
-                                    style: DefaultTextStyle.of(context)
-                                        .style
-                                        .apply(
-                                            color: Colors.grey[700],
-                                            fontStyle: FontStyle.italic)),
+                                  DateFormat('yyyy-MM-dd kk:mm').format(t
+                                      .timestamp), // TODO: lookup username via consumer
+                                  // todo: fix/change how we use DefaultTextStyle
+                                  // style: DefaultTextStyle.of(context)
+                                  //     .style
+                                  //     .apply(
+                                  //         color: Colors.grey[700],
+                                  //         fontStyle: FontStyle.italic)
+                                ),
                               ],
                             ),
                             const SizedBox(height: 16),

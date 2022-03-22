@@ -43,7 +43,7 @@ class _CommunityTabState extends State<CommunityTab> {
           children: [
             ElevatedButton(
               onPressed: () {
-                context.push("${GoRouter.of(context).location}/topic/1234");
+                context.push("${GoRouter.of(context).location}/topic/nature");
               },
               child: const Text('some topic title'),
             ),

@@ -39,7 +39,7 @@ final router = GoRouter(
                   GoRoute(
                       path: ':meetupId',
                       builder: (BuildContext context, GoRouterState state) =>
-                          DetailedMeetupView(meetupID: state.params['meetupID']!, currUserID: "123"),
+                          DetailedMeetupView(meetupID: state.params['meetupId']!, currUserID: "123"),
                       routes: [
                         GoRoute(
                             path: "edit",
@@ -54,7 +54,7 @@ final router = GoRouter(
                     ThreadListView(
                       key: state.pageKey,
                       active_thread_manager: Thread_Manager(),
-                      topic: 'meetups',
+                      topic: state.params['topicName']!,
                       curr_user:
                           User('123', 'khong'), // todo: remove this param
                     )),
