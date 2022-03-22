@@ -1,16 +1,22 @@
 import 'package:aura/managers/discussion_manager.dart';
+import 'package:aura/managers/user_manager.dart';
 import 'package:aura/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'managers/notification_manager.dart';
+import 'managers/thread_manager.dart';
+import 'managers/meetup_manager.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => DiscussionManager()),
+        ChangeNotifierProvider(create: (context) => DiscussionManager()), // todo replace w thread manager
         ChangeNotifierProvider(create: (context) => NotificationManager()),
+        ChangeNotifierProvider(create: (context) => Thread_Manager()),
+        ChangeNotifierProvider(create: (context) => Meetup_Manager()),
+        ChangeNotifierProvider(create: (context) => User_Manager()),
       ],
       child: const MyApp(),
     ),

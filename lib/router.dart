@@ -1,9 +1,9 @@
-import 'package:aura/models/thread.dart';
-import 'package:aura/models/user.dart';
+import 'package:aura/view/community/detailed_meetup_view.dart';
 import 'package:aura/view/community/detailed_thread_view.dart';
 import 'package:aura/view/community/thread_list_view.dart';
 import 'package:aura/view/settings/change_home_address_screen.dart';
 import 'package:aura/view/signin/signin_screen.dart';
+import 'package:aura/view/tabs/community/notifications_view.dart';
 import 'package:aura/view/tabs/main_tab_bar.dart';
 import 'package:aura/view/settings/setting_screen.dart';
 import 'package:flutter/material.dart';
@@ -32,29 +32,35 @@ final router = GoRouter(
                           Text("detailed_meetup_view goes here"))
                 ]),
             GoRoute(
-                path: 'topic/:topicName',
+              path: 'topic/:topicName',
+              builder: (BuildContext context, GoRouterState state) =>
+                  ThreadListView(
+                      key: state.pageKey,
+                      topicName: state.params['topicName']!),
+            ),
+            GoRoute(
+              path: 'thread/:threadId',
+              builder: (BuildContext context, GoRouterState state) =>
+                  DetailedThreadView(
+                      key: state.pageKey,
+                      threadID: state.params['threadId']!,
+                      // TODO: remove currUser (should be passed via manager
+                      currUserID: "1"),
+            ),
+            GoRoute(
+              path: 'meetup/:meetupId',
+              builder: (BuildContext context, GoRouterState state) =>
+                  DetailedMeetupView(
+                      key: state.pageKey,
+                      meetupID: state.params['meetupId']!,
+                      // TODO: remove currUser (should be passed via manager
+                      currUserID: "1"),
+            ),
+            GoRoute(
+                path: "notifications",
                 builder: (BuildContext context, GoRouterState state) =>
-                    ThreadListView(
-                        key: state.pageKey,
-                        topicName: state.params['topicName']!),
-                routes: [
-                  GoRoute(
-                    path: 'thread/:threadId',
-                    builder: (BuildContext context, GoRouterState state) =>
-                        DetailedThreadView(
-                            key: state.pageKey,
-                            // TODO: only supply strings to the widget here:
-                            // thread: state.params['threadId']!,
-                            thread: Thread(
-                                "TEST_ID",
-                                "This is the Title.",
-                                User("SOME_UID", "SOME_USERNAME"),
-                                "This is the thread content.",
-                                DateTime.now()),
-                            // TODO: remove currUser (should be passed via manager
-                            currUser: User("CURR_UID", "CURR_USERNAME")),
-                  )
-                ])
+                    const NotificationsView(currUserID: "123")),
+            // TODO: remove currUserId param
           ]),
       GoRoute(
         path: "/settings",
@@ -71,10 +77,6 @@ final router = GoRouter(
           path: "/sign-in",
           builder: (BuildContext context, GoRouterState state) =>
               const SigninScreen())
-
-      // GoRoute(
-      //     path: "/notifications",
-      //     builder: (BuildContext context, GoRouterState state) => const NotificationsScreen()),
     ]
     // errorPageBuilder: (context, state) => MaterialPage<void>(
     //   key: state.pageKey,

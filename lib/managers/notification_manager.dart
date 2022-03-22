@@ -7,10 +7,10 @@ class NotificationManager extends Manager {
   // internal private state of notifications
   List<Notification> _notifications = [
     // dummy state
-    ThreadNotification("001", ThreadNotifType.NEW_LIKE, true, "n04"),
-    ThreadNotification("002", ThreadNotifType.NEW_COMMENT, false, "n03"),
-    MeetupNotification("003", MeetupNotifType.REMINDER, true, "n02"),
-    MeetupNotification("004", MeetupNotifType.SUCCESSFULLY_RSVP, false, "n01")
+    ThreadNotification("1", ThreadNotifType.NEW_LIKE, true, "n04"),
+    ThreadNotification("2", ThreadNotifType.NEW_COMMENT, false, "n03"),
+    MeetupNotification("3", MeetupNotifType.REMINDER, true, "n02"),
+    MeetupNotification("4", MeetupNotifType.SUCCESSFULLY_RSVP, false, "n01")
   ]; // TODO: get notifications from api
 
   bool _isUpdating = false;
@@ -27,14 +27,17 @@ class NotificationManager extends Manager {
 
   void setNotifications(List<Notification> notifications) {
     _notifications.addAll(notifications);
-
     notifyListeners();
   }
 
-  void updateNotificationReadStatus(String notifId, bool readStatus) {
-
-     _notifications = [_notifications[0]];
-
+  void setNotificationReadStatus(String notifID, bool newReadStatus) {
+    _notifications
+        .firstWhere((n) => n.notifID == notifID)
+        .setRead(newReadStatus);
     notifyListeners();
+  }
+
+  int getNumUnreadNotifications() {
+    return _notifications.where((n) => n.isRead == false).toList().length;
   }
 }

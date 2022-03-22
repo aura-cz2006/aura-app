@@ -1,16 +1,16 @@
-import 'package:aura/controllers/discussion_controller.dart';
-import 'package:aura/controllers/meetups_controller.dart';
-import 'package:aura/controllers/notification_controller.dart';
+import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/managers/notification_manager.dart';
+import 'package:aura/managers/thread_manager.dart';
 import 'package:aura/models/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'detailed_meetup_view.dart';
-import 'detailed_thread_view.dart';
+import 'package:go_router/go_router.dart';
 
 class NotificationsView extends StatefulWidget {
-  const NotificationsView({Key? key}) : super(key: key);
+  final String currUserID;
+
+  const NotificationsView({Key? key, required this.currUserID})
+      : super(key: key);
 
   @override
   State<NotificationsView> createState() => _NotificationsViewState();
@@ -26,40 +26,31 @@ class _NotificationsViewState extends State<NotificationsView> {
         ),
         title: const Text('Notifications'),
       ),
-      body: Consumer<NotificationManager>(
-          builder: (context, notificationData, child) {
+      body: Consumer3<NotificationManager, Thread_Manager, Meetup_Manager>(
+          builder: (context, notifMgr, threadMgr, meetupMgr, child) {
         return ListView(
-            children: notificationData.notifications
+            children: notifMgr.notifications
                 .map((n) => ListTile(
-                      title: Text((n is ThreadNotification)
-                          ? n.getText()
+                      title: Text(
+                        n.getTypeMsg(),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text((n is ThreadNotification) // todo fix
+                          ? threadMgr.getThreadByID(n.threadID)!.getSummary()
                           : (n is MeetupNotification)
-                              ? n.getText()
+                              ? meetupMgr.getMeetupByID(n.meetupID).getSummary()
                               : ""),
                       leading: Icon(
-                        n.read ? null : Icons.circle,
-                        color: n.read ? null : Colors.red,
+                        n.isRead ? null : Icons.circle,
+                        color: n.isRead ? null : Colors.red,
                         size: 15,
                       ),
                       onTap: () {
-                        NotificationController.setRead(
-                            n.id, true); // TODO: switch to controller call?
+                        notifMgr.setNotificationReadStatus(n.notifID, true);
                         if (n is ThreadNotification) {
-                          // TODO: replace with go_router
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DetailedThreadView(
-                                      DiscussionController.getThread(
-                                          n.threadID))));
+                          context.push("/tabs/community/thread/${n.threadID}");
                         } else if (n is MeetupNotification) {
-                          // TODO: replace with go_router
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DetailedMeetupView(
-                                      MeetupsController.getMeetup(
-                                          n.meetupID))));
+                          context.push("/tabs/community/meetup/${n.meetupID}");
                         }
                       },
                     ))
