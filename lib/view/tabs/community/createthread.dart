@@ -30,7 +30,7 @@ class _createThreadState extends State<createThread> {
             )
         ),
         body: Center(
-          child: Column(
+          child: ListView(
             children: [
               Padding(padding: EdgeInsets.all(5), child: titleField()),
               Padding(padding: EdgeInsets.all(5),
@@ -64,21 +64,29 @@ class _createThreadState extends State<createThread> {
   );
 
   Widget submitButton(BuildContext context) {
-    return ElevatedButton(
-      child: Text("Submit"),
-      onPressed: () {
-        setState(() {
-          print(Text("Title: ${titleController.text}\nTopic: ${topic}\nContent: ${contentController.text}"));
-          //Create thread
-          /*thread_manager.addThread(
+    return Align(
+      child: SizedBox(
+        width: 100,
+        height: 50,
+        child: Card(
+          child: ElevatedButton(
+            child: Text("Submit"),
+            onPressed: () {
+              setState(() {
+                print(Text("Title: ${titleController.text}\nTopic: ${topic}\nContent: ${contentController.text}"));
+                //Create thread
+                /*thread_manager.addThread(
             titleController.text,
             contentController.text,
             topic,
             userManager.userID //Not yet available
           );*/
-          // Navigator.pop(context); //Return to previous, but updated threadlistview*/
-        });
-      },
+                // Navigator.pop(context); //Return to previous, but updated threadlistview*/
+              });
+            },
+          ),
+        ),
+      ),
     );
   }
 }
