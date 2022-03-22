@@ -75,34 +75,29 @@ class _CommunityTabState extends State<CommunityTab> {
 
           children: topics.entries
               .map<Widget>((entry) => Card(
-                      child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Ink.image(
-                        child: InkWell(
-                          onTap: () {
-                            context.go(
-                                '${GoRouter.of(context).location}/topics/${entry.key}');
-                          },
+                    child: Container(
+                      height: 200,
+                      alignment: AlignmentDirectional.center,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(entry.value['bgImage']),
+                          colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
                         ),
-                        colorFilter: ColorFilter.mode(
-                            Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                        image: AssetImage(entry.value['bgImage']),
-                        height: 200,
-                        fit: BoxFit.cover,
                       ),
-                      Container(
-                        child: Text(
-                          entry.value['name'],
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      child: Text(
+                        entry.value['name'],
+                        textAlign: TextAlign.center,
+                        style:
+                           const TextStyle(
+                            color: Colors.white,
+                            fontSize: 48,
+                            fontWeight: FontWeight.w500,
                         ),
-                        color: Colors.yellowAccent,
-                      )
-                    ],
-                  )))
+                      ),
+                    ),
+                  ))
               .toList()
           // ElevatedButton(
           //   onPressed: () {
