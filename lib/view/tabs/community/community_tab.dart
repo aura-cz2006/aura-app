@@ -9,7 +9,7 @@ import 'package:aura/managers/discussion_manager.dart';
 
 Map<String, Map<String, dynamic>> topics = {
   "general": {
-    "bgImage": "",
+    "bgImage": "assets/General_discussion_topics.jpg",
     "name": "General Discussion",
   },
   "food": {
@@ -17,15 +17,15 @@ Map<String, Map<String, dynamic>> topics = {
     "name": "Food",
   },
   "tech": {
-    "bgImage": "",
+    "bgImage": "assets/IT_topics.jpg",
     "name": "IT",
   },
   "sports": {
-    "bgImage": "",
+    "bgImage": "assets/Sports_topic.webp",
     "name": "Sports",
   },
   "nature": {
-    "bgImage": "",
+    "bgImage": "assets/Nature_topic.jpeg",
     "name": "Nature",
   }
 };
@@ -85,15 +85,21 @@ class _CommunityTabState extends State<CommunityTab> {
                                 '${GoRouter.of(context).location}/topics/${entry.key}');
                           },
                         ),
-                        image:
-                            NetworkImage('https://picsum.photos/250?image=9'),
+                        colorFilter: ColorFilter.mode(
+                            Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                        image: AssetImage(entry.value['bgImage']),
                         height: 200,
                         fit: BoxFit.cover,
                       ),
                       Container(
-                        child: Text(entry.value['name'],style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,),),
+                        child: Text(
+                          entry.value['name'],
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         color: Colors.yellowAccent,
-
                       )
                     ],
                   )))
