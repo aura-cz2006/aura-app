@@ -16,7 +16,7 @@ class DiscussionController {
 
   static Thread getThread(String ID) {
     // TODO: get the list of threads from manager and return the thread with the matching ID
-    return Thread("0000", "TEST THREAD TITLE", User("01", "khong"),
-        "this is some content", DateTime.now());
+    return Thread("0000", "TEST THREAD TITLE", "01",
+        "this is some content", "Anime", DateTime.now());
   }
 }

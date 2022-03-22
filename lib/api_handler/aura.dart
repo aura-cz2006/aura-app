@@ -12,8 +12,8 @@ class AuraDiscussionAPI {
     // Response response = await Dio().get(apiUrl);
 
     return [
-      Thread("0000", "TEST THREAD TITLE", User("01", "khong"),
-          "this is some content", DateTime.now())
+      Thread("0000", "TEST THREAD TITLE", "01",
+          "this is some content", "Anime", DateTime.now())
     ];
   }
 }

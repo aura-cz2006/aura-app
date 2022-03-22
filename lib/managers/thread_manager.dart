@@ -13,13 +13,8 @@ class Thread_Manager extends Manager {
         'what a gorgeous specimen! \nI love plants! \nBotanics is my favourite hobby, I could go on and on about it for days \nIn short, I love plants!',
         "Nature",
         DateTime.now().add(const Duration(days: 2))),
-    Thread(
-        '3',
-        'Delicious Japanese food at Ion Orchard',
-        '1',
-        'Yummy and affordable',
-        "Food",
-        DateTime.now()),
+    Thread('3', 'Delicious Japanese food at Ion Orchard', '1',
+        'Yummy and affordable', "Food", DateTime.now()),
     Thread('4', 'New SSD out on the market!', '3',
         'so much memory at such an affordable price!', "IT", DateTime.now()),
     Thread('5', 'New Muay Thai facility in NTU', '5',
@@ -47,8 +42,9 @@ class Thread_Manager extends Manager {
 
   List<Thread> getThreadsByTopic(String topic) {
     List<Thread> filtered_thread_list = [];
-    for (var each in thread_list){
-      if (each.topic == topic){
+    for (var each in thread_list) {
+      if (each.topic.toLowerCase() == topic.toLowerCase()) {
+        // todo: move this lowercase elsewhere (i.e. lowercase the topic name in the manager)
         filtered_thread_list.add(each);
       }
     }
@@ -106,12 +102,12 @@ class Thread_Manager extends Manager {
     return thread.numLikes();
   }
 
-  void addThread(String title, String content, String topic, String UserID){
+  void addThread(String title, String content, String topic, String UserID) {
     thread_list.add(Thread('1', title, UserID, content, topic, DateTime.now()));
     notifyListeners();
   }
 
-  void removeThread(String threadID){
+  void removeThread(String threadID) {
     thread_list.remove(getThreadByID(threadID));
     notifyListeners();
   }
