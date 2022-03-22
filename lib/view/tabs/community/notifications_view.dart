@@ -2,10 +2,9 @@ import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/managers/notification_manager.dart';
 import 'package:aura/managers/thread_manager.dart';
 import 'package:aura/models/notification.dart';
-import 'package:aura/view/community/detailed_meetup_view.dart';
-import 'package:aura/view/community/detailed_thread_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 class NotificationsView extends StatefulWidget {
   final String currUserID;
@@ -49,21 +48,9 @@ class _NotificationsViewState extends State<NotificationsView> {
                       onTap: () {
                         notifMgr.setNotificationReadStatus(n.notifID, true);
                         if (n is ThreadNotification) {
-                          // TODO ROUTING: replace with go_router
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DetailedThreadView(
-                                      threadID: n.threadID,
-                                      currUserID: widget.currUserID)));
+                          context.push("/tabs/community/thread/${n.threadID}");
                         } else if (n is MeetupNotification) {
-                          // TODO: replace with go_router
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DetailedMeetupView(
-                                      meetupID: n.meetupID,
-                                      currUserID: widget.currUserID)));
+                          context.push("/tabs/community/meetup/${n.meetupID}");
                         }
                       },
                     ))

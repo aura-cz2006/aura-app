@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:icon_badge/icon_badge.dart';
-
 import 'package:aura/managers/discussion_manager.dart';
 
-import 'notifications_view.dart';
 
 class CommunityTab extends StatefulWidget {
   const CommunityTab({Key? key}) : super(key: key);
@@ -16,7 +14,7 @@ class CommunityTab extends StatefulWidget {
 }
 
 class _CommunityTabState extends State<CommunityTab> {
-  final String _testUserID = "1"; // TODO READ USER ID OF VIEWER FROM SOMEWHERE?
+  // final String _testUserID = "1"; // TODO READ USER ID OF VIEWER FROM SOMEWHERE?
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +30,7 @@ class _CommunityTabState extends State<CommunityTab> {
               badgeColor: Colors.red,
               itemColor: Colors.white,
               hideZero: true,
-              onTap: () => Navigator.push( // TODO ROUTING: replace w go router to notif view
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => NotificationsView(currUserID: _testUserID))),
+              onTap: () => context.push("/tabs/community/notifications")
             );
           })
         ],
@@ -60,22 +55,6 @@ class _CommunityTabState extends State<CommunityTab> {
             ),
           ],
         );
-        // ListView.builder(
-        //   padding: const EdgeInsets.all(8),
-        //   itemCount: discussionManager.discussions.length,
-        //   itemBuilder: (BuildContext context, int index) {
-        //     // return Container(
-        //     //     height: 50,
-        //     //     margin: const EdgeInsets.all(2),
-        //     //     child:
-        //         // Center(
-        //         //     child: Text(
-        //         //       discussionManager.discussions[index].title ??
-        //         //           "undefined",
-        //         //       style: const TextStyle(fontSize: 18),
-        //         //     )),
-        //         // );
-        //   });
       })),
     );
   }
