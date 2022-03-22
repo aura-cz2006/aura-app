@@ -14,6 +14,12 @@ import 'editThread.dart';
 void main() {
   String userID = "1"; // viewer
   String threadID = "1";
+  // for (int i = 0; i < 5; i += 1) {
+  //   test.addComment(userID, "$i) This is a comment.");
+  //   test.addComment(userID, "$i) This is another comment.");
+  //   test.addComment(userID, "$i) This is the last comment.");
+  // }
+  User curr = User("CURR_UID", "CURR_USERNAME");
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => Thread_Manager()),
@@ -283,7 +289,7 @@ class _DisplayThreadCommentsState extends State<DisplayThreadComments> {
                   ListTile(
                     title: Text(c.text ?? ""),
                     subtitle: Text(
-                        "${userMgr.getUsernameByID(c.userID)}    ${DateFormat('yyyy-MM-dd kk:mm')
+                        "${userMgr.getUsernameByID(c.userID)}\t\t${DateFormat('yyyy-MM-dd kk:mm')
                             .format(c.timestamp)}",
                         style: DefaultTextStyle
                             .of(context)
