@@ -23,15 +23,17 @@ import 'package:go_router/go_router.dart';
 //   }
 // }
 
-Widget _FAB(){
+Widget FAB_CreateThread(String topic){
   return Padding(
     padding: EdgeInsets.only(bottom: 50, right: 20),
-    child: fabWidget(),
+    child: fabWidget(topic: topic),
   );
 }
 
 class fabWidget extends StatefulWidget {
-  fabWidget();
+  final String topic;
+
+  fabWidget({required this.topic});
 
   @override
   _fabWidgetState createState() => _fabWidgetState();
