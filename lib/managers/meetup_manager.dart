@@ -19,6 +19,7 @@ class Meetup_Manager extends Manager {
         '6', 2, 'Anime', 'I love Attack on Titan.', DateTime.now()),
   ];
 
+
   List<Meetup> getValidMeetups() {
     List<Meetup> validList = [];
     for (var each in meet_up_list) {
@@ -105,6 +106,17 @@ class Meetup_Manager extends Manager {
     return getMeetupByID(meetupID).canEdit();
   }
 
+  void editMeetup(String meetup_id, DateTime new_date, String new_title,
+      String new_desc, LatLng new_location, int new_max_attendees) {
+    var meetupForEdit = getMeetupByID(meetup_id);
+    meetupForEdit.timeOfMeetUp = new_date;
+    meetupForEdit.title = new_title;
+    meetupForEdit.description = new_desc;
+    meetupForEdit.location = new_location;
+    meetupForEdit.maxAttendees = new_max_attendees; // todo check constraint
+    notifyListeners();
+  }
+
   bool hasElapsed(String meetupID) {
     return getMeetupByID(meetupID).hasElapsed();
   }
@@ -120,4 +132,15 @@ class Meetup_Manager extends Manager {
   List<String> getAttendeeIDList(String meetupID) {
     return getMeetupByID(meetupID).rsvpAttendees;
   }
+
+  void addMeetup(DateTime timeofMeetup, LatLng location, String userID, int maxAttendees, String title, String description){
+    Meetup meetup_to_add = Meetup(timeofMeetup, location, generateUUID(), userID, maxAttendees, title, description, DateTime.now());
+    meet_up_list.add(meetup_to_add);
+    notifyListeners();
+  }
+
+  String generateUUID(){
+    return (meet_up_list.length+1).toString();
+  }
+
 }

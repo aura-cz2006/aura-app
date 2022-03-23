@@ -137,7 +137,7 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                         setState(() {
                           if (value == "edit") {
                             context
-                                .push("${GoRouter.of(context).location}/edit");
+                                .push("${GoRouter.of(context).location}/editMeetup");
                           } else if (value == "delete") {
                             meetupMgr.cancelMeetup(widget.meetupID);
                             context.pop();
