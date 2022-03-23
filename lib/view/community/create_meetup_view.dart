@@ -67,12 +67,12 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
   Widget selectTime() => Row(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 5, left: 5, right: 15, bottom: 5),
+            padding: EdgeInsets.only(top: 5, left: 5, right: 8, bottom: 5),
             child:
-                Text("Date & Time of Meetup: ", style: TextStyle(fontSize: 20)),
+                Text("Date & Time of Meetup: ", style: TextStyle(fontSize: 15)),
           ),
           Padding(
-              padding: EdgeInsets.only(top: 5, left: 15, right: 5, bottom: 5),
+              padding: EdgeInsets.only(top: 5, left: 8, right: 5, bottom: 5),
               child: new datetime_picker(
                   date_reference: DateTime.now(),
                   onClicked: (DateTime val) =>
