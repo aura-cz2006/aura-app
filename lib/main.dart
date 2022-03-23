@@ -4,6 +4,7 @@ import 'package:aura/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'managers/news_manager.dart';
 import 'managers/notification_manager.dart';
 import 'managers/thread_manager.dart';
 import 'managers/meetup_manager.dart';
@@ -17,6 +18,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => Thread_Manager()),
         ChangeNotifierProvider(create: (context) => Meetup_Manager()),
         ChangeNotifierProvider(create: (context) => User_Manager()),
+        ChangeNotifierProvider(create: (context) => News_Manager()),
       ],
       child: const MyApp(),
     ),
