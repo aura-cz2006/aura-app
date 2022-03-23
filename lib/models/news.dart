@@ -1,9 +1,10 @@
 import 'dart:core';
 import 'package:aura/models/geolocation.dart';
+import 'package:latlong2/latlong.dart';
 
 class NewsItem {
   DateTime? dateTime;
-  Geolocation? location;
+  LatLng? location;
 
   // constructor
   NewsItem(
@@ -18,38 +19,40 @@ class NewsItem {
 }
 
 class DengueNewsItem extends NewsItem {
-  DengueNewsItem(DateTime dateTime, Geolocation location) : super(dateTime, location);
+  DengueNewsItem(DateTime dateTime, LatLng? location, int numCases)
+      : super(dateTime, location);
   int numCases = 0;
 
   @override
   String toString() {
-    return 'Dengue News Item: {Datetime: ${dateTime ?? ""}, Location: ${location ??""}, Number of Case: ${numCases ??""}}';
+    return 'Dengue News Item: {Datetime: ${dateTime ?? ""}, Location: ${location ?? ""}, Number of Case: ${numCases ?? ""}}';
   }
 }
 
 class EventNewsItem extends NewsItem {
-  EventNewsItem(DateTime? dateTime, Geolocation? location) : super(dateTime, location);
+  EventNewsItem(DateTime? dateTime, LatLng? location)
+      : super(dateTime, location);
   String eventTitle = "event";
   String toString() {
-    return 'Event News Item: {Datetime: ${dateTime ?? ""}, Location: ${location ??""}, Event Title: ${eventTitle ?? ""}}';
+    return 'Event News Item: {Datetime: ${dateTime ?? ""}, Location: ${location ?? ""}, Event Title: ${eventTitle ?? ""}}';
   }
 }
 
 class MarketNewsItem extends NewsItem {
-  MarketNewsItem(DateTime? dateTime, Geolocation? location) : super(dateTime, location);
+  MarketNewsItem(DateTime? dateTime, LatLng? location)
+      : super(dateTime, location);
   String marketName = "marketName";
   String toString() {
-    return 'Event News Item: {Datetime: ${dateTime ?? ""}, Location: ${location ??""}, Market Name: ${marketName ?? ""}}';
+    return 'Event News Item: {Datetime: ${dateTime ?? ""}, Location: ${location ?? ""}, Market Name: ${marketName ?? ""}}';
   }
-
 }
 
 class UpgradingNewsItem extends NewsItem {
-  UpgradingNewsItem(DateTime? dateTime, Geolocation? location) : super(dateTime, location);
+  UpgradingNewsItem(DateTime? dateTime, LatLng? location)
+      : super(dateTime, location);
   String desc = "Desc";
 
   String toString() {
-    return 'Event News Item: {Datetime: ${dateTime ?? ""}, Location: ${location ??""}, Description: ${desc ?? ""}}';
+    return 'Event News Item: {Datetime: ${dateTime ?? ""}, Location: ${location ?? ""}, Description: ${desc ?? ""}}';
   }
 }
-
