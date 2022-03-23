@@ -28,11 +28,7 @@ class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
       home: Scaffold(
         appBar: AppBar(
             title: Center(child: Text('Change Home Address')),
-            automaticallyImplyLeading: true,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context, false),
-            )),
+            leading: AppBarBackButton()),
         body: Center(
           child: Column(
             children: [

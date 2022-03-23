@@ -13,7 +13,6 @@ class SettingsScreen extends StatelessWidget {
         home: Scaffold(
             appBar: AppBar(
                 title: const Center(child: Text('Settings')),
-                automaticallyImplyLeading: true,
                 leading: const AppBarBackButton()),
             body: Center(
               child: Column(
