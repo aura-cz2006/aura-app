@@ -21,11 +21,11 @@ class SettingsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   const Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: EdgeInsets.only(bottom: 20),
                     child: ChangeHomeButton(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 20),
                     child: _logoutButton(),
                   ),
                 ],
@@ -34,26 +34,20 @@ class SettingsScreen extends StatelessWidget {
   }
 }
 
-Widget _logoutButton() {
+Widget _logoutButton(){
   return ElevatedButton(
-    onPressed: () {
-/*        Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Signin()), //TODO: Jamie's sign in screen goes here
-      );*/
-    },
-    child: const Text('Logout'),
-    style: ElevatedButton.styleFrom(
-      primary: Colors.blue,
-      //Background color
-      onPrimary: Colors.black,
-      //Text
-      fixedSize: const Size(240, 50),
-      padding: const EdgeInsets.all(25),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-    ),
+      onPressed: (){},
+      child: Text("Log Out"),
+      style: ElevatedButton.styleFrom(
+        onPrimary: Colors.white, //text
+        primary: Colors.blue,
+        fixedSize: Size(240,50),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      )
   );
 }
+
+
 
 class ChangeHomeButton extends StatelessWidget {
   const ChangeHomeButton({Key? key}) : super(key: key);
@@ -61,20 +55,17 @@ class ChangeHomeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
+      child: Text("Change Home Address"),
+      onPressed: (){
         context.go('${GoRouter.of(context).location}/change_home_address');
       },
-      child: const Text('Change Home Address'),
       style: ElevatedButton.styleFrom(
+        onPrimary: Colors.white, //text
         primary: Colors.blue,
-        //Background color
-        onPrimary: Colors.black,
-        //Text
-        fixedSize: const Size(240, 50),
-        padding: const EdgeInsets.all(25),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-      ),
+        fixedSize: Size(240,50),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      )
     );
   }
 }
+

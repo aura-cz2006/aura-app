@@ -1,28 +1,25 @@
+import 'package:aura/managers/user_manager.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:flutter/material.dart';
-
+import 'package:aura/managers/user_manager.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 class ChangeHomeAddressScreen extends StatefulWidget {
-  final String threadID;
 
-  EditThreadView({required this.threadID});
+  ChangeHomeAddressScreen();
 
   @override
   _ChangeHomeAddressScreenState createState() => _ChangeHomeAddressScreenState();
 }
 
 class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
-  var titleController = TextEditingController(); //Saves edited title
-  var contentController = TextEditingController(); //Saves edited content
+  var oldaddressController = TextEditingController(); //Saves
+  var newaddressController = TextEditingController();// s edited content
 
-  TextEditingController _initTitleController(String og_title) {
-    titleController.text = og_title;
-    return titleController;
-  }
-
-  TextEditingController _initContentController(String og_content) {
-    contentController.text = og_content;
-    return contentController;
+  TextEditingController _initAddressController(String og_title) {
+    oldaddressController.text = og_title;
+    return oldaddressController;
   }
 
   @override
@@ -30,7 +27,7 @@ class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-            title: Center(child: Text('Edit Thread')),
+            title: Center(child: Text('Change Home Address')),
             automaticallyImplyLeading: true,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
@@ -39,8 +36,8 @@ class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
         body: Center(
           child: Column(
             children: [
-              Padding(padding: EdgeInsets.all(5), child: titleField()),
-              Padding(padding: EdgeInsets.all(5), child: contentField()),
+              Padding(padding: EdgeInsets.only(top: 20, left: 5, right: 5,bottom: 5), child: originalAddressField()),
+              Padding(padding: EdgeInsets.all(5), child: newAddressField()),
               Padding(padding: EdgeInsets.all(5), child: submitButton(context))
             ],
           ),
@@ -50,47 +47,43 @@ class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
   }
 
   Widget originalAddressField() {
-    return Consumer<Thread_Manager>(builder: (context, threadMgr, child) {
+    return Consumer<User_Manager>(builder: (context, userMgr, child) {
       return TextFormField(
-        // onChanged: (value) => setState(() => this.title = value), //og.title = value
-        controller: _initTitleController(
-            threadMgr.getThreadByID(widget.threadID)!.title!),
+        readOnly: true,
+        maxLines: null,
+        controller: _initAddressController(
+            userMgr.getUser(userMgr.active_user_id)!.getHomeAddress()),
         decoration: InputDecoration(
-            labelText: "Title",
-            hintText: "Enter the title of your post here",
+            labelText: "Original Address",
             border: OutlineInputBorder()),
-        textInputAction: TextInputAction.next,
-      ); // move whatever was built in Widget build here
+      );
     });
   }
 
-  Widget contentField() {
-    return Consumer<Thread_Manager>(builder: (context, threadMgr, child) {
+  Widget newAddressField() {
+    return Consumer<User_Manager>(builder: (context, userMgr, child) {
       return TextFormField(
         keyboardType: TextInputType.multiline,
-        controller: _initContentController(
-            threadMgr.getThreadByID(widget.threadID)!.content),
-        decoration: const InputDecoration(
-            labelText: "Content",
-            hintText: "Enter the content of your post here",
+        maxLines: null,
+        controller: newaddressController,
+        decoration: InputDecoration(
+            labelText: "New Address",
             border: OutlineInputBorder()),
-        textInputAction: TextInputAction.done,
       );
     });
   }
 
   Widget submitButton(BuildContext context) {
-    return Consumer<Thread_Manager>(builder: (context, thread_manager, child) {
+    return Consumer<User_Manager>(builder: (context, userMgr, child) {
       return ElevatedButton(
         child: Text("Submit"),
         onPressed: () {
           setState(() {
-            print("Text: ${titleController.text}, Content: ${contentController.text}"); // TODO REMOVE
-            thread_manager.editThread(
-              //Update thread
-                widget.threadID,
-                titleController.text,
-                contentController.text);
+            print("New Home Address: ${newaddressController.text}"); // TODO REMOVE
+            userMgr.updateHomeAddress( //update User's homeaddress in manager
+              userMgr.active_user_id,
+              newaddressController.text
+            );
             context.pop(); // Navigator.pop(context); //Return to previous, but updated thread
           });
         },
@@ -101,8 +94,7 @@ class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    titleController.dispose();
-    contentController.dispose();
+    oldaddressController.dispose();
     super.dispose();
   }
 }

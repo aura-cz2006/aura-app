@@ -92,7 +92,7 @@ final router = GoRouter(
           GoRoute(
               path: "change_home_address",
               builder: (BuildContext context, GoRouterState state) =>
-                  const ChangeHomeAddressScreen())
+                  ChangeHomeAddressScreen())
         ],
       ),
       GoRoute(
