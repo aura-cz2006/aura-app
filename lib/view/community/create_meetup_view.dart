@@ -10,16 +10,16 @@ import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:go_router/go_router.dart';
 
-void main() => runApp(createMeetUp());
+void main() => runApp(CreateMeetupView());
 
-class createMeetUp extends StatefulWidget {
-  const createMeetUp({Key? key}) : super(key: key);
+class CreateMeetupView extends StatefulWidget {
+  const CreateMeetupView({Key? key}) : super(key: key);
 
   @override
-  _createMeetUpState createState() => _createMeetUpState();
+  _CreateMeetupViewState createState() => _CreateMeetupViewState();
 }
 
-class _createMeetUpState extends State<createMeetUp> {
+class _CreateMeetupViewState extends State<CreateMeetupView> {
   final titleController = TextEditingController(); //Saves edited title
   final descriptionController = TextEditingController(); //Saves edited content
   final locationController = TextEditingController();

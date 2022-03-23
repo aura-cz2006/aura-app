@@ -1,6 +1,7 @@
 import 'package:aura/managers/thread_manager.dart';
 import 'package:aura/models/thread.dart';
 import 'package:aura/models/user.dart';
+import 'package:aura/view/community/create_meetup_view.dart';
 import 'package:aura/view/community/detailed_meetup_view.dart';
 import 'package:aura/view/community/detailed_thread_view.dart';
 import 'package:aura/view/community/edit_thread_view.dart';
@@ -34,50 +35,54 @@ final router = GoRouter(
             GoRoute(
                 path: 'meetups',
                 builder: (BuildContext context, GoRouterState state) =>
-                    MeetUpListView(key: state.pageKey,),
+                    MeetUpListView(
+                      key: state.pageKey,
+                    ),
                 routes: [
+                  // GoRoute(path: "createMeetup",
+                  //     builder: (BuildContext context, GoRouterState state) =>
+                  //         CreateMeetupView(
+                  //             key: state.pageKey)
+                  // ),
                   GoRoute(
                       path: ':meetupId',
                       builder: (BuildContext context, GoRouterState state) =>
-                          DetailedMeetupView(meetupID: state.params['meetupId']!,),
+                          state.params['meetupId'] == "createMeetup"
+                              ? CreateMeetupView(key: state.pageKey)
+                              : DetailedMeetupView(
+                                  meetupID: state.params['meetupId']!,
+                                ),
                       routes: [
                         GoRoute(
                             path: "edit",
                             builder:
                                 (BuildContext context, GoRouterState state) =>
-                                    EditThreadView(threadID: state.params['threadID']!)) // todo: replace this with editMeetupThread
+                                    EditThreadView(
+                                        threadID: state.params['threadID']!))
+                        // todo: replace this with editMeetupThread
                       ])
                 ]),
             GoRoute(
                 path: 'topic/:topicName',
                 builder: (BuildContext context, GoRouterState state) =>
                     ThreadListView(
-                      key: state.pageKey,
-                      topic: state.params['topicName']!
-                    )),
+                        key: state.pageKey, topic: state.params['topicName']!)),
             GoRoute(
                 path: 'thread/:threadId',
                 builder: (BuildContext context, GoRouterState state) =>
                     DetailedThreadView(
-                        key: state.pageKey,
-                        threadID: state.params['threadId']!,
-                        ),
+                      key: state.pageKey,
+                      threadID: state.params['threadId']!,
+                    ),
                 routes: [
                   GoRoute(
                       path: "edit",
                       builder: (BuildContext context, GoRouterState state) =>
                           EditThreadView(
-                              threadID: state.params['threadId']!
-                          ) // TODO: replace with thread id
+                              threadID: state.params[
+                                  'threadId']!) // TODO: replace with thread id
                       )
                 ]),
-            GoRoute(
-              path: 'meetup/:meetupId',
-              builder: (BuildContext context, GoRouterState state) =>
-                  DetailedMeetupView(
-                      key: state.pageKey,
-                      meetupID: state.params['meetupId']!,),
-            ),
             GoRoute(
                 path: "notifications",
                 builder: (BuildContext context, GoRouterState state) =>
