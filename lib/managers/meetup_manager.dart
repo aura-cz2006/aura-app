@@ -134,9 +134,13 @@ class Meetup_Manager extends Manager {
   }
 
   void addMeetup(DateTime timeofMeetup, LatLng location, String userID, int maxAttendees, String title, String description){
-    Meetup meetup_to_add = Meetup(timeofMeetup, location, '1', userID, maxAttendees, title, description, DateTime.now());
+    Meetup meetup_to_add = Meetup(timeofMeetup, location, generateUUID(), userID, maxAttendees, title, description, DateTime.now());
     meet_up_list.add(meetup_to_add);
     notifyListeners();
+  }
+
+  String generateUUID(){
+    return (meet_up_list.length+1).toString();
   }
 
 }

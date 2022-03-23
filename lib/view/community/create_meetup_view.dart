@@ -1,14 +1,12 @@
-import 'package:aura/view/community/fab_createmeetup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:aura/view/community/datetime_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:go_router/go_router.dart';
+import 'package:aura/widgets/app_bar_back_button.dart';
 
 void main() => runApp(CreateMeetupView());
 
@@ -33,11 +31,7 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
         appBar: AppBar(
             title: Center(child: Text('Create Meetup')),
             automaticallyImplyLeading: true,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () =>
-                  Navigator.pop(context, false), //todo: app back button
-            )),
+            leading: AppBarBackButton()),
         body: Center(
           child: ListView(
             children: [

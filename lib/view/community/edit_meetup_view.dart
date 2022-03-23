@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:aura/managers/meetup_manager.dart';
+import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
@@ -46,10 +47,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
         appBar: AppBar(
             title: Center(child: Text('Edit Thread')),
             automaticallyImplyLeading: true,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context, false),
-            )),
+            leading: AppBarBackButton()),
         body: Center(
           child: Column(
             children: [
