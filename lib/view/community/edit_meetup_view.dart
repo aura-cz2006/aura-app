@@ -102,7 +102,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
     });
   }
 
-  Widget maxAttendeesField() {
+  Widget maxAttendeesField() { //todo raise error if new value < currNumAttendees
     return Consumer<Meetup_Manager>(builder: (context, meetupMgr, child) {
       return TextFormField(
         // onChanged: (value) => setState(() => this.title = value), //og.title = value
