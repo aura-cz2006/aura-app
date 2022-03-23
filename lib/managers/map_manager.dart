@@ -48,7 +48,7 @@ class MapManager extends ChangeNotifier {
   }
 
   // * layers
-  List<String> selectedLayers = ['taxi', "meetups"];
+  List<String> selectedLayers = ['taxi', "meetups", 'dengue'];
 
   void toggleLayer(String layerName) {
     if (selectedLayers.contains(layerName)) {
@@ -56,6 +56,11 @@ class MapManager extends ChangeNotifier {
     } else {
       selectedLayers.add(layerName);
     }
+    notifyListeners();
+  }
+
+  bool isLayerEnabled (String layerName) {
+    return selectedLayers.contains(layerName);
   }
 
   // * taxis

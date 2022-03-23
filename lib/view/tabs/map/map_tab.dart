@@ -81,6 +81,9 @@ class _MapTabState extends State<MapTab> {
 
       return Consumer2<MapManager, Meetup_Manager>(
           builder: (context, mapManager, meetupManager, child) {
+            print(mapManager.selectedLayers);
+        print("taxi present ${mapManager.isLayerEnabled('taxi')}");
+
         return Stack(children: [
           FlutterMap(
             mapController: _mapController,
@@ -103,28 +106,86 @@ class _MapTabState extends State<MapTab> {
                   attributionBuilder: (_) {
                     return const Text("© OpenStreetMap contributors");
                   }),
-              MarkerLayerOptions(
-                markers: _testMarkers,
-                rotate: true,
-              ),
+              // MarkerLayerOptions(
+              //   markers: _testMarkers,
+              //   rotate: true,
+              // ),
               MarkerLayerOptions(
                 markers: _amenitiesMarkers,
                 rotate: true,
               ),
               MarkerLayerOptions(
-                markers: taxiMarkers(mapManager),
+                markers: taxiMarkers(mapManager.taxis,
+                    mapManager.selectedLayers.contains('taxi')),
                 rotate: true,
               ),
               MarkerLayerOptions(
                 markers: meetupsMarkers(mapManager, meetupManager),
                 rotate: true,
               ),
-              PolygonLayerOptions(
-                polygons: denguePolygons(mapManager)
-              )
+              PolygonLayerOptions(polygons: denguePolygons(mapManager))
             ],
           ),
-          const AmenitiesFilterChips()
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              const AmenitiesFilterChips(),
+              Padding(
+                padding: const EdgeInsets.only(top: 20, right: 8),
+                child: ElevatedButton(
+                  onPressed: () {
+                    mapManager.setSelectedCategory('taxi');
+                  },
+                  child: const Icon(Icons.car_repair, color: Colors.black),
+                  style: ElevatedButton.styleFrom(
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(16),
+                    primary: mapManager.selectedCategories.contains('taxi')
+                        ? Colors.blue
+                        : Colors.white,
+                    // <-- Button color
+                    // onPrimary: Colors.red, // <-- Splash color
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20, right: 8),
+                child: ElevatedButton(
+                  onPressed: () {
+                    mapManager.setSelectedCategory('meetups');
+                  },
+                  child: const Icon(Icons.people, color: Colors.black),
+                  style: ElevatedButton.styleFrom(
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(16),
+                    primary: mapManager.selectedCategories.contains('meetups')
+                        ? Colors.deepPurple
+                        : Colors.white,
+                    // <-- Button color
+                    // onPrimary: Colors.red, // <-- Splash color
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20, right: 8),
+                child: ElevatedButton(
+                  onPressed: () {
+                    mapManager.setSelectedCategory('dengue');
+                  },
+                  child: const Icon(Icons.bug_report, color: Colors.black),
+                  style: ElevatedButton.styleFrom(
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(16),
+                    primary: mapManager.selectedCategories.contains('dengue')
+                        ? Colors.green
+                        : Colors.white,
+                    // <-- Button color
+                    // onPrimary: Colors.red, // <-- Splash color
+                  ),
+                ),
+              ),
+            ],
+          )
         ]);
       });
     }));
