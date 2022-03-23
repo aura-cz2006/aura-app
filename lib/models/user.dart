@@ -8,4 +8,8 @@ class User {
   void updateHomeAddress(String newHomeAddress){
     homeaddress = newHomeAddress;
   }
+
+  String getHomeAddress(){
+    return homeaddress;
+  }
 }

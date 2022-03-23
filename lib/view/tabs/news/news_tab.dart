@@ -5,6 +5,8 @@ import 'package:flutter_beautiful_popup/main.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class NewsTab extends StatefulWidget {
   const NewsTab({Key? key}) : super(key: key);
