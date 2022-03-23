@@ -1,5 +1,9 @@
 import 'package:aura/managers/map_manager.dart';
+import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/view/tabs/map/layers/amenities/amenities_filter_chips.dart';
+import 'package:aura/view/tabs/map/layers/dengue/dengue_markers.dart';
+import 'package:aura/view/tabs/map/layers/meetups/meetups_markers.dart';
+import 'package:aura/view/tabs/map/layers/taxi/taxi_markers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -54,62 +58,75 @@ class _MapTabState extends State<MapTab> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Consumer<MapManager>(builder: (context, mapManager, child) {
-      List<Marker> _amenitiesMarkers =
-          mapManager.amenities.entries
-              .where((element) =>
-                  mapManager.selectedCategories.contains(element.key))
-              .toList()
-              .map((element) => element.value)
-              .expand((i) => i)
-              .map((amenity) => Point(LatLng(amenity['lat'], amenity['lng']),
-                  Icons.pin_drop, Colors.redAccent))
-              .toList()
-              .map((point) => Marker(
-                    point: point.coords,
-                    width: 60,
-                    height: 60,
-                    builder: (context) => Icon(
-                      point.icon,
-                      size: 60,
-                      color: point.color,
-                    ),
-                  ))
-              .toList();
+      List<Marker> _amenitiesMarkers = mapManager.amenities.entries
+          .where(
+              (element) => mapManager.selectedCategories.contains(element.key))
+          .toList()
+          .map((element) => element.value)
+          .expand((i) => i)
+          .map((amenity) => Point(LatLng(amenity['lat'], amenity['lng']),
+              Icons.pin_drop, Colors.redAccent))
+          .toList()
+          .map((point) => Marker(
+                point: point.coords,
+                width: 60,
+                height: 60,
+                builder: (context) => Icon(
+                  point.icon,
+                  size: 60,
+                  color: point.color,
+                ),
+              ))
+          .toList();
 
-      return Stack(children: [
-        FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(
-            center: LatLng(1.3521, 103.8198),
-            // singapore
-            // bounds: LatLngBounds.fromPoints(_pointList.map((point) => point.coords).toList()),
-            bounds: LatLngBounds.fromPoints(
-                [LatLng(1.3483, 103.6231), LatLng(1.3644, 104.0415)]),
-            // singapore west and east
-            zoom: 5,
-            minZoom: 0,
-            maxZoom: 18,
+      return Consumer2<MapManager, Meetup_Manager>(
+          builder: (context, mapManager, meetupManager, child) {
+        return Stack(children: [
+          FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              center: LatLng(1.3521, 103.8198),
+              // singapore
+              // bounds: LatLngBounds.fromPoints(_pointList.map((point) => point.coords).toList()),
+              bounds: LatLngBounds.fromPoints(
+                  [LatLng(1.3483, 103.6231), LatLng(1.3644, 104.0415)]),
+              // singapore west and east
+              zoom: 5,
+              minZoom: 0,
+              maxZoom: 18,
+            ),
+            layers: [
+              TileLayerOptions(
+                  urlTemplate:
+                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  subdomains: ['a', 'b', 'c'],
+                  attributionBuilder: (_) {
+                    return const Text("© OpenStreetMap contributors");
+                  }),
+              MarkerLayerOptions(
+                markers: _testMarkers,
+                rotate: true,
+              ),
+              MarkerLayerOptions(
+                markers: _amenitiesMarkers,
+                rotate: true,
+              ),
+              MarkerLayerOptions(
+                markers: taxiMarkers(mapManager),
+                rotate: true,
+              ),
+              MarkerLayerOptions(
+                markers: meetupsMarkers(mapManager, meetupManager),
+                rotate: true,
+              ),
+              PolygonLayerOptions(
+                polygons: denguePolygons(mapManager)
+              )
+            ],
           ),
-          layers: [
-            TileLayerOptions(
-                urlTemplate:
-                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                subdomains: ['a', 'b', 'c'],
-                attributionBuilder: (_) {
-                  return const Text("© OpenStreetMap contributors");
-                }),
-            MarkerLayerOptions(
-              markers: _testMarkers,
-              rotate: true,
-            ),
-            MarkerLayerOptions(
-              markers: _amenitiesMarkers,
-              rotate: true,
-            ),
-          ],
-        ),
-        const AmenitiesFilterChips()
-      ]);
+          const AmenitiesFilterChips()
+        ]);
+      });
     }));
   }
 }
