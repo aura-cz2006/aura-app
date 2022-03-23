@@ -49,7 +49,7 @@ final router = GoRouter(
                                 ),
                       routes: [
                         GoRoute(
-                            path: "edit",
+                            path: "editMeetup",
                             builder:
                                 (BuildContext context, GoRouterState state) =>
                                     EditMeetupView(
