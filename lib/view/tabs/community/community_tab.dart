@@ -1,6 +1,5 @@
 import 'package:aura/managers/notification_manager.dart';
 import 'package:aura/models/notification.dart' as no;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';

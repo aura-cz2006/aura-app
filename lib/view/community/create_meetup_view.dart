@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:aura/view/community/datetime_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';

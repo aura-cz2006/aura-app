@@ -3,7 +3,6 @@ import 'package:aura/managers/user_manager.dart';
 import 'package:aura/models/user.dart';
 import 'package:aura/view/community/fab_createmeetup.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
