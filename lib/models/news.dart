@@ -1,58 +1,84 @@
 import 'dart:core';
-import 'package:aura/models/geolocation.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
-class NewsItem {
-  DateTime? dateTime;
-  LatLng? location;
+abstract class NewsItem {
+  DateTime dateTime;
+  LatLng location;
 
   // constructor
-  NewsItem(
-    this.dateTime,
-    this.location,
-  );
+  NewsItem(this.dateTime, this.location);
 
-  @override
-  String toString() {
-    return 'News Item: {DateTime: ${dateTime ?? ""}, Location: ${location ?? ""}}';
+  static IconData getIcon() {
+    return Icons.newspaper;
   }
+  String getText();
 }
 
 class DengueNewsItem extends NewsItem {
-  DengueNewsItem(DateTime dateTime, LatLng? location, int numCases)
-      : super(dateTime, location);
-  int numCases = 0;
+  int numCases;
 
+  DengueNewsItem(DateTime dateTime, LatLng location, this.numCases)
+      : super(dateTime, location);
+
+  static IconData getIcon() {
+    return Icons.bug_report;
+  }
   @override
-  String toString() {
-    return 'Dengue News Item: {Datetime: ${dateTime ?? ""}, Location: ${location ?? ""}, Number of Case: ${numCases ?? ""}}';
+  String getText() {
+    return "New dengue cluster detected at $location ($numCases cases).";
   }
 }
 
-class EventNewsItem extends NewsItem {
-  EventNewsItem(DateTime? dateTime, LatLng? location)
+class EventNewsItem extends NewsItem { // todo consider start and end date
+  String eventTitle;
+  double fee = 0;
+  String websiteURL;
+
+  EventNewsItem(DateTime dateTime, LatLng location, this.eventTitle, this.fee, this.websiteURL)
       : super(dateTime, location);
-  String eventTitle = "event";
-  String toString() {
-    return 'Event News Item: {Datetime: ${dateTime ?? ""}, Location: ${location ?? ""}, Event Title: ${eventTitle ?? ""}}';
+
+  static IconData getIcon() {
+    return Icons.event;
+  }
+  @override
+  String getText() {
+    return "New event \"$eventTitle\" hosted at $location (fee: $fee).";
   }
 }
 
 class MarketNewsItem extends NewsItem {
-  MarketNewsItem(DateTime? dateTime, LatLng? location)
+  String marketName;
+  DateTime reopeningDate;
+  List<LatLng> alternativeMarkets = [];
+
+  MarketNewsItem(
+      DateTime dateTime, LatLng location, this.marketName, this.reopeningDate)
       : super(dateTime, location);
-  String marketName = "marketName";
-  String toString() {
-    return 'Event News Item: {Datetime: ${dateTime ?? ""}, Location: ${location ?? ""}, Market Name: ${marketName ?? ""}}';
+
+  static IconData getIcon() {
+    return Icons.shopping_basket;
+  }
+  @override
+  String getText() {
+    return "$marketName will be closed until ${DateFormat('yyyy-MM-dd kk:mm').format(reopeningDate)}.";
   }
 }
 
 class UpgradingNewsItem extends NewsItem {
-  UpgradingNewsItem(DateTime? dateTime, LatLng? location)
-      : super(dateTime, location);
-  String desc = "Desc";
+  String desc;
+  DateTime expectedEnd;
 
-  String toString() {
-    return 'Event News Item: {Datetime: ${dateTime ?? ""}, Location: ${location ?? ""}, Description: ${desc ?? ""}}';
+  UpgradingNewsItem(
+      DateTime dateTime, LatLng location, this.desc, this.expectedEnd)
+      : super(dateTime, location);
+
+  static IconData getIcon() {
+    return Icons.construction;
+  }
+  @override
+  String getText() {
+    return "Upgrading works at $location: $desc (expected completion: \$${DateFormat('yyyy-MM-dd kk:mm').format(expectedEnd)} ).";
   }
 }

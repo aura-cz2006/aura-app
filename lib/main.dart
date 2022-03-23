@@ -3,6 +3,7 @@ import 'package:aura/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'managers/news_manager.dart';
 import 'managers/notification_manager.dart';
 
 void main() {
@@ -11,6 +12,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => DiscussionManager()),
         ChangeNotifierProvider(create: (context) => NotificationManager()),
+        ChangeNotifierProvider(create: (context) => News_Manager()),
       ],
       child: const MyApp(),
     ),
