@@ -1,9 +1,9 @@
-import 'package:aura/models/fab_createmeetup.dart';
+import 'package:aura/view/community/fab_createmeetup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:aura/models/datetime.dart';
+import 'package:aura/view/community/datetime_picker.dart';
 
 void main() => runApp(createMeetUp());
 

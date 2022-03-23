@@ -12,14 +12,17 @@ import 'package:intl/intl.dart';
 // }
 //
 // class _myAppState extends State<myApp> {
-//   DateTime user_input = DateTime.now();
+//   DateTime user_input = DateTime.now(); // .add(Duration(days: 4));
 //
 //   @override
 //   Widget build(BuildContext context) {
 //     return MaterialApp(
 //       home: Scaffold(
 //         body: Center(
-//           child: new datetime_picker(date_reference:  ,onClicked: (DateTime val) => setState(() => user_input = val)),
+//           child: new datetime_picker(
+//               date_reference:  user_input,
+//               onClicked: (DateTime val) => setState(() => user_input = val)
+//           ),
 //         ),
 //       ),
 //     );

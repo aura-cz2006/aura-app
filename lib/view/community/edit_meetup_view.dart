@@ -7,7 +7,7 @@ import 'package:aura/models/meetup.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:aura/models/user.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:aura/models/datetime.dart';
+import 'package:aura/view/community/datetime_picker.dart';
 
 void main() {
   User user = User("USER_ID", "USERNAME");
@@ -16,20 +16,20 @@ void main() {
 
   Meetup meetup = Meetup(DateTime(2100), LatLng(10.000002, 12.00001), "ABC",
       user, 10, "Party", "I don't know", DateTime.now());
-  runApp(editMeetUp(meetupID: "1",meetup: meetup));
+  runApp(EditMeetupView(meetupID: "1",meetup: meetup));
 }
 
-class editMeetUp extends StatefulWidget {
-  Meetup meetup;
+class EditMeetupView extends StatefulWidget {
+  final Meetup meetup;
   final String meetupID;
 
-  editMeetUp({required this.meetup, required this.meetupID});
+  const EditMeetupView({required this.meetup, required this.meetupID});
 
   @override
-  _editMeetUpState createState() => _editMeetUpState();
+  _EditMeetupViewState createState() => _EditMeetupViewState();
 }
 
-class _editMeetUpState extends State<editMeetUp> {
+class _EditMeetupViewState extends State<EditMeetupView> {
   late String title = widget.meetup.title ?? '';
   late String content = widget.meetup.description ?? '';
   late DateTime selectedDate = widget.meetup.timeOfMeetUp;
