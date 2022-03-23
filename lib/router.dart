@@ -10,6 +10,7 @@ import 'package:aura/view/community/meetup_listview.dart';
 import 'package:aura/view/community/thread_list_view.dart';
 import 'package:aura/view/settings/change_home_address_screen.dart';
 import 'package:aura/view/signin/signin_screen.dart';
+import 'package:aura/view/tabs/community/create_thread_view.dart';
 import 'package:aura/view/tabs/community/notifications_view.dart';
 import 'package:aura/view/tabs/main_tab_bar.dart';
 import 'package:aura/view/settings/setting_screen.dart';
@@ -61,7 +62,13 @@ final router = GoRouter(
                 path: 'topic/:topicName',
                 builder: (BuildContext context, GoRouterState state) =>
                     ThreadListView(
-                        key: state.pageKey, topic: state.params['topicName']!)),
+                        key: state.pageKey, topic: state.params['topicName']!), routes: [
+                      GoRoute(path: "createThread",
+                          builder: (BuildContext context, GoRouterState state) =>
+                              CreateThreadView(
+                                  key: state.pageKey,
+                                  topic: state.params['topicName']!)
+                      )]),
             GoRoute(
                 path: 'thread/:threadId',
                 builder: (BuildContext context, GoRouterState state) =>
