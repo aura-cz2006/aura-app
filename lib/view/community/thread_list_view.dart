@@ -1,25 +1,28 @@
 import 'package:aura/models/user.dart';
-import 'package:provider/provider.dart';
+import 'package:aura/widgets/app_bar_back_button.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:aura/managers/user_manager.dart';
 
 import 'package:aura/managers/thread_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(ThreadListView(
-    active_thread_manager: Thread_Manager(),
-    curr_user: User('1', 'Ryan'),
-    topic: 'Nature'));
+
+void main() { runApp(MultiProvider(
+providers: [
+ChangeNotifierProvider(create: (context) => Thread_Manager()),
+ChangeNotifierProvider(create: (context) => User_Manager()),
+],
+child: ThreadListView(
+    topic: 'Nature')));}
 
 class ThreadListView extends StatefulWidget {
-  final Thread_Manager active_thread_manager;
-  final User curr_user;
   final String topic;
 
   const ThreadListView(
       {Key? key,
-      required this.active_thread_manager,
-      required this.curr_user,
       required this.topic})
       : super(key: key);
 
@@ -28,8 +31,7 @@ class ThreadListView extends StatefulWidget {
 }
 
 class ThreadListViewState extends State<ThreadListView> {
-  late var thread_list =
-      widget.active_thread_manager.getListOfThreadsSortedByLikes(widget.topic);
+  late var thread_list = [];
 
   var dropdownValue = 'Most Likes'; // default sort
   @override
@@ -37,12 +39,14 @@ class ThreadListViewState extends State<ThreadListView> {
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
-            iconTheme: const IconThemeData(
-              color: Colors.black,
-            ),
-            title: const Text("Specific topic"),
-          ),
-          body: Column(children: [
+              iconTheme: const IconThemeData(
+                color: Colors.black,
+              ),
+              title: Text("${widget.topic}"), // todo: use friendly text here
+              leading: AppBarBackButton()),
+          body: Consumer2<Thread_Manager, User_Manager>(
+            builder: (context, threadMgr, userMgr, child){
+          return Column(children: [
             Row(
               children: [
                 const SizedBox(width: 16),
@@ -62,10 +66,10 @@ class ThreadListViewState extends State<ThreadListView> {
                     setState(() {
                       dropdownValue = newValue!;
                       if (newValue == 'Most Likes') {
-                        thread_list = widget.active_thread_manager
+                        thread_list = threadMgr
                             .getListOfThreadsSortedByLikes(widget.topic);
                       } else if (newValue == 'Most Recent') {
-                        thread_list = widget.active_thread_manager
+                        thread_list = threadMgr
                             .getListOfThreadsSortedByTime(widget.topic);
                       }
                     });
@@ -84,14 +88,16 @@ class ThreadListViewState extends State<ThreadListView> {
               child: ListView(
                   shrinkWrap: true,
                   physics: const ScrollPhysics(),
-                  children: (thread_list)
+                  children: ((thread_list.isEmpty)?threadMgr.getListOfThreadsSortedByLikes(widget.topic):thread_list)
                       .map((t) => Card(
                               child: Column(children: [
                             const SizedBox(height: 8),
                             SizedBox(
                                 child: ListTile(
                                     title: Text(t.title ?? "Untitled thread"),
-                                    onTap: null,
+                                    onTap: () => context.push(
+                                        // ? can we use an arrow function here? will it affect performance???
+                                        "/tabs/community/thread/${t.id}"),
                                     subtitle: Container(
                                         margin: const EdgeInsets.only(
                                           top: 5,
@@ -110,15 +116,18 @@ class ThreadListViewState extends State<ThreadListView> {
                                       child: LikeButton(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
-                                        isLiked: t.isLikedBy(widget.curr_user.id),
+                                        isLiked:
+                                            t.isLikedBy(userMgr.active_user_id),
                                         likeCount: t.numLikes(),
                                         onTap: (bool isLiked) async {
                                           if (isLiked) {
-                                            widget.active_thread_manager.removeLike(
-                                                t.id,widget.curr_user.id); // TODO use manager function
+                                            threadMgr.removeLike(
+                                                t.id,
+                                                userMgr.active_user_id);
                                           } else {
-                                            widget.active_thread_manager
-                                                .addLike(t.id,widget.curr_user.id);
+                                            threadMgr
+                                                .addLike(
+                                                    t.id, userMgr.active_user_id);
                                           }
                                           return !isLiked;
                                         },
@@ -157,28 +166,34 @@ class ThreadListViewState extends State<ThreadListView> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 const SizedBox(width: 16),
-                                Text("Posted by: ${t.userID.username}",//TODO: Consumer
-                                    style: DefaultTextStyle.of(context)
-                                        .style
-                                        .apply(
-                                            color: Colors.grey[700],
-                                            fontStyle: FontStyle.italic)),
+                                Text(
+                                  "Posted by: ${userMgr.getUsernameByID(t.userID)}", //TODO: lookup username via consumer
+                                  // todo: fix/change how we use DefaultTextStyle
+                                  // style: DefaultTextStyle.of(context)
+                                  //     .style
+                                  //     .apply(
+                                  //         color: Colors.grey[700],
+                                  //         fontStyle: FontStyle.italic)
+                                ),
                                 const SizedBox(width: 16),
                                 Text(
-                                    DateFormat('yyyy-MM-dd kk:mm')
-                                        .format(t.timestamp),
-                                    style: DefaultTextStyle.of(context)
-                                        .style
-                                        .apply(
-                                            color: Colors.grey[700],
-                                            fontStyle: FontStyle.italic)),
+                                  DateFormat('yyyy-MM-dd kk:mm').format(t
+                                      .timestamp), // TODO: lookup username via consumer
+                                  // todo: fix/change how we use DefaultTextStyle
+                                  // style: DefaultTextStyle.of(context)
+                                  //     .style
+                                  //     .apply(
+                                  //         color: Colors.grey[700],
+                                  //         fontStyle: FontStyle.italic)
+                                ),
                               ],
                             ),
                             const SizedBox(height: 16),
                           ])))
                       .toList()),
             )
-          ])),
+          ]);})
+      ),
     );
   }
 }

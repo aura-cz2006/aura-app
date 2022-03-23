@@ -1,9 +1,10 @@
+import 'package:aura/models/comment.dart';
 import 'package:aura/models/thread.dart';
 import 'package:aura/util/manager.dart';
 
 class Thread_Manager extends Manager {
   var thread_list = [
-    Thread('1', 'Otters spotted at Marina Bay Sands!', '2',
+    Thread('1', 'Otters spotted at Marina Bay Sands!', '1',
         'what a rare sight!', "Nature", DateTime.now()),
     Thread(
         '2',
@@ -12,13 +13,8 @@ class Thread_Manager extends Manager {
         'what a gorgeous specimen! \nI love plants! \nBotanics is my favourite hobby, I could go on and on about it for days \nIn short, I love plants!',
         "Nature",
         DateTime.now().add(const Duration(days: 2))),
-    Thread(
-        '3',
-        'Delicious Japanese food at Ion Orchard',
-        '1',
-        'Yummy and affordable',
-        "Food",
-        DateTime.now()),
+    Thread('3', 'Delicious Japanese food at Ion Orchard', '1',
+        'Yummy and affordable', "Food", DateTime.now()),
     Thread('4', 'New SSD out on the market!', '3',
         'so much memory at such an affordable price!', "IT", DateTime.now()),
     Thread('5', 'New Muay Thai facility in NTU', '5',
@@ -46,8 +42,9 @@ class Thread_Manager extends Manager {
 
   List<Thread> getThreadsByTopic(String topic) {
     List<Thread> filtered_thread_list = [];
-    for (var each in thread_list){
-      if (each.topic == topic){
+    for (var each in thread_list) {
+      if (each.topic.toLowerCase() == topic.toLowerCase()) {
+        // todo: move this lowercase elsewhere (i.e. lowercase the topic name in the manager)
         filtered_thread_list.add(each);
       }
     }
@@ -55,20 +52,19 @@ class Thread_Manager extends Manager {
   }
 
   Thread? getThreadByID(String thread_id) {
-    for (var each in thread_list ?? []) {
+    for (var each in thread_list) {
       if (each.id == thread_id) return each;
     }
   }
 
-  void editThreadTitle(String thread_id, String new_title) {
-    var threadforEdit = getThreadByID(thread_id);
-    threadforEdit!.title = new_title;
-    notifyListeners();
+  List<Comment> getCommentsForThread(String thread_id) {
+    return getThreadByID(thread_id)!.comments;
   }
 
-  void editThreadTopic(String thread_id, String new_content) {
+  void editThread(String thread_id, String new_title, String new_content) {
     var threadforEdit = getThreadByID(thread_id);
-    threadforEdit!.content = new_content;
+    threadforEdit!.title = new_title;
+    threadforEdit.content = new_content;
     notifyListeners();
   }
 
@@ -106,8 +102,13 @@ class Thread_Manager extends Manager {
     return thread.numLikes();
   }
 
-  void addThread(String title, String content, String topic, String UserID){
+  void addThread(String title, String content, String topic, String UserID) {
     thread_list.add(Thread('1', title, UserID, content, topic, DateTime.now()));
+    notifyListeners();
+  }
+
+  void removeThread(String threadID) {
+    thread_list.remove(getThreadByID(threadID));
     notifyListeners();
   }
 }

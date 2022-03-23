@@ -1,10 +1,10 @@
 import 'package:aura/models/user.dart';
 
 class Comment {
-  String ID;
+  String commentID;
   String userID;
   DateTime timestamp;
   String? text;
 
-  Comment(this.ID, this.userID, this.timestamp, this.text);
+  Comment(this.commentID, this.userID, this.timestamp, this.text);
 }

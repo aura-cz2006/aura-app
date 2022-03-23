@@ -1,15 +1,22 @@
 import 'package:aura/managers/discussion_manager.dart';
-import 'package:aura/view/community/community_tab.dart';
-import 'package:aura/view/map/map_tab.dart';
-import 'package:aura/view/news/news_tab.dart';
+import 'package:aura/managers/user_manager.dart';
+import 'package:aura/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'managers/notification_manager.dart';
+import 'managers/thread_manager.dart';
+import 'managers/meetup_manager.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => DiscussionManager()),
+        ChangeNotifierProvider(create: (context) => DiscussionManager()), // todo replace w thread manager
+        ChangeNotifierProvider(create: (context) => NotificationManager()),
+        ChangeNotifierProvider(create: (context) => Thread_Manager()),
+        ChangeNotifierProvider(create: (context) => Meetup_Manager()),
+        ChangeNotifierProvider(create: (context) => User_Manager()),
       ],
       child: const MyApp(),
     ),
@@ -19,10 +26,9 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Aura',
       theme: ThemeData(
           appBarTheme: const AppBarTheme(
@@ -52,57 +58,8 @@ class MyApp extends StatelessWidget {
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   decorationColor: Colors.red)))),
-      home: const TabBar(),
+      routerDelegate: router.routerDelegate,
+      routeInformationParser: router.routeInformationParser,
     );
-  }
-}
-
-/* Navigation Tab Bar */
-class TabBar extends StatefulWidget {
-  const TabBar({Key? key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _TabBarState();
-}
-
-
-class _TabBarState extends State<TabBar> {
-  int selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: IndexedStack(
-          index: selectedIndex,
-          children: const <Widget>[
-            CommunityTab(),
-            MapTab(),
-            NewsTab(),
-          ],
-        ),
-        bottomNavigationBar: NavigationBar(
-            selectedIndex: selectedIndex,
-            onDestinationSelected: (int index) {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-            destinations: const [
-              NavigationDestination(
-                selectedIcon: Icon(Icons.groups),
-                icon: Icon(Icons.groups_outlined),
-                label: 'Community',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.map),
-                icon: Icon(Icons.map_outlined),
-                label: 'Map',
-              ),
-              NavigationDestination(
-                selectedIcon: Icon(Icons.podcasts),
-                icon: Icon(Icons.podcasts_outlined),
-                label: 'News',
-              ),
-            ]));
   }
 }

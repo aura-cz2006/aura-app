@@ -1,43 +1,30 @@
 import 'dart:core';
+import 'package:aura/managers/meetup_manager.dart';
+import 'package:aura/managers/user_manager.dart';
+import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import 'package:aura/models/meetup.dart';
-import 'package:aura/models/user.dart';
-import 'package:aura/models/comment.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:like_button/like_button.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  User user = User("USER_ID", "USERNAME");
-  Meetup test = Meetup(
-    DateTime(2023, 03, 21, 09, 20),
-    LatLng(0, 0),
-    "MEETUP_ID",
-    user,
-    10,
-    "This is the title of the meetup",
-    "This is the meetup description.",
-    DateTime.now(),
-  );
-  for (int i = 0; i < 5; i += 1) {
-    test.addComment(
-        Comment("C1", user, DateTime.now(), "$i) This is a comment."));
-    test.addComment(
-        Comment("C2", user, DateTime.now(), "$i) This is another comment."));
-    test.addComment(
-        Comment("C3", user, DateTime.now(), "$i) This is the last comment."));
-  }
-  User curr = User("CURR_UID", "CURR_USERNAME");
-  runApp(DetailedMeetupView(meetup: test, currUser: user)); // curr
+void main() {// viewer
+  String meetupID = "1";
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => Meetup_Manager()),
+      ChangeNotifierProvider(create: (context) => User_Manager()),
+    ],
+    child: DetailedMeetupView(meetupID: meetupID),
+  )); // curr
 }
 
 class DetailedMeetupView extends StatefulWidget {
-  final Meetup meetup;
-  final User currUser;
+  final String meetupID;
 
   const DetailedMeetupView(
-      {Key? key, required this.meetup, required this.currUser})
+      {Key? key, required this.meetupID})
       : super(key: key);
 
   @override
@@ -59,65 +46,68 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
     return MaterialApp(
         // TODO: remove
         home: Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
-        title: const Text('Meetup'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-              child: ListView(children: <Widget>[
-            DisplayFullMeetup(meetup: widget.meetup, currUser: widget.currUser),
-            DisplayMeetupComments(
-                meetup: widget.meetup, currUser: widget.currUser)
-          ])),
-          Row(children: [
-            Expanded(
-              child: TextField(
-                controller: textCtrl,
-                autocorrect: true,
-                decoration: InputDecoration(
-                  labelText: "Leave a comment",
-                  labelStyle: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[750],
-                      fontStyle: FontStyle.italic),
-                  fillColor: Colors.blueGrey[50],
-                  filled: true,
-                ),
-                // validator: (String? value) { // TODO? validate for censored text
-                //   return (value != null && value.contains('@')) ? 'Do not use the @ char.' : null;
-                // },
+            appBar: AppBar(
+              iconTheme: const IconThemeData(
+                color: Colors.black,
               ),
+              leading: const AppBarBackButton(),
+              title: const Text('Meetup'),
             ),
-            IconButton(
-              icon: Icon(Icons.send, color: Colors.grey[900]),
-              onPressed: () {
-                // TODO: assign unique comment ID
-                setState(() {
-                  widget.meetup.addComment(Comment("CommID", widget.currUser,
-                      DateTime.now(), textCtrl.text));
-                  textCtrl.clear(); // clear text
-                  FocusManager.instance.primaryFocus
-                      ?.unfocus(); // exit keyboard
-                });
-              },
-            )
-          ]),
-        ],
-      ),
-    ));
+            body: Consumer2<Meetup_Manager, User_Manager>(
+                builder: (context, meetupMgr, userMgr, child) {
+              return Column(
+                children: <Widget>[
+                  Expanded(
+                      child: ListView(children: <Widget>[
+                    DisplayFullMeetup(
+                        meetupID: widget.meetupID),
+                    DisplayMeetupComments(
+                        meetupID: widget.meetupID)
+                  ])),
+                  Row(children: [
+                    Expanded(
+                      child: TextField(
+                        controller: textCtrl,
+                        autocorrect: true,
+                        decoration: InputDecoration(
+                          labelText: "Leave a comment",
+                          labelStyle: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey[750],
+                              fontStyle: FontStyle.italic),
+                          fillColor: Colors.blueGrey[50],
+                          filled: true,
+                        ),
+                        // validator: (String? value) { // TODO? validate for censored text
+                        //   return (value != null && value.contains('@')) ? 'Do not use the @ char.' : null;
+                        // },
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.send, color: Colors.grey[900]),
+                      onPressed: () {
+                        setState(() {
+                          meetupMgr.addComment(widget.meetupID,
+                              userMgr.active_user_id, textCtrl.text);
+                          textCtrl.clear(); // clear text
+                          FocusManager.instance.primaryFocus
+                              ?.unfocus(); // exit keyboard
+                        });
+                      },
+                    )
+                  ]),
+                ],
+              );
+            })));
   }
 }
 
 class DisplayFullMeetup extends StatefulWidget {
-  final Meetup meetup;
-  final User currUser;
+  final String meetupID;
+
 
   const DisplayFullMeetup(
-      {Key? key, required this.meetup, required this.currUser})
+      {Key? key, required this.meetupID})
       : super(key: key);
 
   @override
@@ -125,189 +115,271 @@ class DisplayFullMeetup extends StatefulWidget {
 }
 
 class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
-  Future<bool> _handleTapRSVP(bool isLiked) async {
-    setState(() {
-      if (isLiked) {
-        widget.meetup.removeRsvpAttendee(widget.currUser);
-      } else {
-        widget.meetup.addRsvpAttendee(widget.currUser);
-      }
+  @override
+  Widget build(BuildContext context) {
+    return Consumer2<Meetup_Manager, User_Manager>(
+        builder: (context, meetupMgr, userMgr, child) {
+      return Center(
+        child: Card(
+          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+            ListTile(
+              title: Text(
+                  meetupMgr.getMeetupByID(widget.meetupID).title ??
+                      "Untitled Meetup",
+                  style: DefaultTextStyle.of(context)
+                      .style
+                      .apply(fontSizeFactor: 1.8, fontWeightDelta: 2)),
+              trailing: (userMgr.active_user_id ==
+                          meetupMgr.getMeetupByID(widget.meetupID).userID &&
+                      meetupMgr.canEditMeetup(widget.meetupID))
+                  ? PopupMenuButton(
+                      onSelected: (value) {
+                        setState(() {
+                          if (value == "edit") {
+                            context
+                                .push("${GoRouter.of(context).location}/edit");
+                          } else if (value == "delete") {
+                            meetupMgr.cancelMeetup(widget.meetupID);
+                            context.pop();
+                          }
+                        });
+                      },
+                      itemBuilder: (context) => [
+                            PopupMenuItem(
+                              child: Row(
+                                children: const [
+                                  Icon(Icons.edit, size: 20),
+                                  SizedBox(width: 8),
+                                  Text("Edit"),
+                                ],
+                              ),
+                              value: "edit",
+                            ),
+                            PopupMenuItem(
+                              child: Row(
+                                children: const [
+                                  Icon(Icons.delete, size: 20),
+                                  SizedBox(width: 8),
+                                  Text("Delete"),
+                                ],
+                              ),
+                              value: "delete",
+                            ),
+                          ])
+                  : null,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                const SizedBox(width: 16),
+                Text(
+                    userMgr.getUsernameByID(
+                        meetupMgr.getMeetupByID(widget.meetupID).userID)!,
+                    style: DefaultTextStyle.of(context).style.apply(
+                        color: Colors.grey[700], fontStyle: FontStyle.italic)),
+                const SizedBox(width: 16),
+                Text(
+                    "Posted at ${DateFormat('yyyy-MM-dd kk:mm').format(meetupMgr.getMeetupByID(widget.meetupID).createdAt)}",
+                    style: DefaultTextStyle.of(context).style.apply(
+                        color: Colors.grey[700], fontStyle: FontStyle.italic)),
+              ],
+            ),
+            ListTile(
+              title: Text(
+                  meetupMgr.getMeetupByID(widget.meetupID).description ?? "",
+                  softWrap: true),
+            ),
+            // ListTile(
+            //   leading: const Icon(Icons.people),
+            //   title: meetupMgr.isCancelled(widget.meetupID)
+            //       ? const Text("NO ATTENDEES",
+            //           style: TextStyle(
+            //               color: Colors.red, fontWeight: FontWeight.bold))
+            //       : Text("${meetupMgr.getCurrNumAttendees(widget.meetupID)} "
+            //           "/ ${meetupMgr.getMeetupByID(widget.meetupID).maxAttendees} ATTENDEES"),
+            // ),
+            ListTile(
+              // TODO: display location address instead of coordinates
+              leading: const Icon(Icons.pin_drop),
+              title: Text(
+                  "LAT ${meetupMgr.getMeetupByID(widget.meetupID).location.latitude}, LONG ${meetupMgr.getMeetupByID(widget.meetupID).location.longitude}"),
+            ),
+            ListTile(
+              leading: const Icon(Icons.access_time_filled),
+              title: Text(DateFormat('yyyy-MM-dd kk:mm').format(
+                  meetupMgr.getMeetupByID(widget.meetupID).timeOfMeetUp)),
+            ),
+            Row(
+              children: (meetupMgr.hasElapsed(widget.meetupID) ||
+                      (meetupMgr.isCancelled(widget.meetupID)) ||
+                      (meetupMgr.maxAttendeesReached(widget.meetupID)))
+                  ? [
+                      // no rsvp for elapsed / cancelled / full capacity meetups
+                      const SizedBox(width: 16),
+                      Row(
+                        children: [
+                          const Text("RSVP: ",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          const SizedBox(width: 12),
+                          SizedBox(
+                            width: 250,
+                            child: Text(
+                                (meetupMgr.isCancelled(widget.meetupID)
+                                        ? "This meetup has been cancelled."
+                                        : meetupMgr.maxAttendeesReached(
+                                                widget.meetupID)
+                                            ? "Maximum number of attendees has been reached."
+                                            : "This meetup has elapsed.") +
+                                    "\nNo more RSVPs are allowed.",
+                                softWrap: true,
+                                style: const TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                        ],
+                      ),
+                    ]
+                  : [
+                      // enable RSVP for upcoming meetup
+                      const SizedBox(width: 16),
+                      const Text("RSVP: ",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
+                      const SizedBox(width: 12),
+                      LikeButton(
+                        size: 35,
+                        isLiked: meetupMgr.isAttending(
+                            widget.meetupID, userMgr.active_user_id),
+                        likeCount:
+                            meetupMgr.getCurrNumAttendees(widget.meetupID),
+                        onTap: (bool isLiked) async {
+                          setState(() {
+                            if (isLiked) {
+                              meetupMgr.removeRsvpAttendee(
+                                  widget.meetupID,userMgr.active_user_id);
+                            } else {
+                              meetupMgr.addRsvpAttendee(
+                                  widget.meetupID, userMgr.active_user_id);
+                            }
+                          });
+                          return !isLiked;
+                        },
+                        circleColor: const CircleColor(
+                            start: Colors.lightGreen, end: Colors.green),
+                        bubblesColor: const BubblesColor(
+                          dotPrimaryColor: Colors.lightGreenAccent,
+                          dotSecondaryColor: Colors.lightGreen,
+                        ),
+                        likeBuilder: (bool isLiked) {
+                          return Icon(
+                            isLiked ? Icons.check_circle : Icons.close,
+                            color: isLiked ? Colors.green : Colors.grey[700],
+                            size: 30,
+                          );
+                        },
+                        countBuilder: (int? count, bool isLiked, String text) {
+                          String? message;
+                          var color;
+                          color = isLiked ? Colors.green : Colors.grey[700];
+                          message = " " +
+                              (isLiked
+                                  ? "Yes, I will be there!"
+                                  : "Sorry, I will not be there.");
+                          return Text(
+                            (message),
+                            style: TextStyle(color: color, fontSize: 18),
+                          );
+                        },
+                      ),
+                    ],
+            ),
+            DisplayAttendees(
+              isCancelled: meetupMgr.isCancelled(widget.meetupID),
+              currNumAttendees: meetupMgr.getCurrNumAttendees(widget.meetupID),
+              maxAttendees:
+                  meetupMgr.getMeetupByID(widget.meetupID).maxAttendees,
+              attendeeList: meetupMgr
+                  .getAttendeeIDList(widget.meetupID)
+                  .map((String userID) => userMgr.getUsernameByID(userID)!)
+                  .toList(),
+            ),
+            // const SizedBox(height: 16),
+          ]),
+        ),
+      );
     });
-    return !isLiked;
   }
+}
+
+class DisplayAttendees extends StatefulWidget {
+  final bool isCancelled;
+  final int currNumAttendees;
+  final int maxAttendees;
+  final List<String> attendeeList;
+
+  const DisplayAttendees(
+      {Key? key,
+      required this.isCancelled,
+      required this.currNumAttendees,
+      required this.maxAttendees,
+      required this.attendeeList})
+      : super(key: key);
+
+  @override
+  State<DisplayAttendees> createState() => _DisplayAttendeesState();
+}
+
+class _DisplayAttendeesState extends State<DisplayAttendees> {
+  bool _expanded = false;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Card(
-        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          ListTile(
-            title: Text(widget.meetup.title ?? "Untitled Meetup",
-                style: DefaultTextStyle.of(context)
-                    .style
-                    .apply(fontSizeFactor: 1.8, fontWeightDelta: 2)),
-            trailing: (widget.currUser.id == widget.meetup.creator.id &&
-                    DateTime.now().isBefore(widget.meetup.timeOfMeetUp
-                        .subtract(Duration(hours: 3))))
-                ? PopupMenuButton(
-                    onSelected: (value) {
-                      setState(() {
-                        if (value == "edit") {
-                          // TODO: navigate to edit meetup screen
-                        } else if (value == "delete") {
-                          widget.meetup
-                              .cancel(); // TODO: use manager function to delete meetup
-                        }
-                      });
-                    },
-                    itemBuilder: (context) => [
-                          PopupMenuItem(
-                            child: Row(
-                              children: const [
-                                Icon(Icons.edit, size: 20),
-                                SizedBox(width: 8),
-                                Text("Edit"),
-                              ],
-                            ),
-                            value: "edit",
-                          ),
-                          PopupMenuItem(
-                            child: Row(
-                              children: const [
-                                Icon(Icons.delete, size: 20),
-                                SizedBox(width: 8),
-                                Text("Delete"),
-                              ],
-                            ),
-                            value: "delete",
-                          ),
-                        ])
-                : null,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(width: 16),
-              Text(widget.meetup.creator.username,
-                  style: DefaultTextStyle.of(context).style.apply(
-                      color: Colors.grey[700], fontStyle: FontStyle.italic)),
-              const SizedBox(width: 16),
-              Text(
-                  "Posted at ${DateFormat('yyyy-MM-dd kk:mm').format(widget.meetup.createdAt)}",
-                  style: DefaultTextStyle.of(context).style.apply(
-                      color: Colors.grey[700], fontStyle: FontStyle.italic)),
-            ],
-          ),
-          ListTile(
-            title: Text(widget.meetup.description ?? "", softWrap: true),
-          ),
-          ListTile(
-            leading: const Icon(Icons.people),
-            title: Text("${widget.meetup.currNumAttendees()} "
-                "/ ${widget.meetup.maxAttendees} ATTENDEES"),
-          ),
-          // const Divider(
-          //   thickness: 1,
-          //   color: Colors.grey,
-          // ),
-          ListTile(
-            // TODO: display location address instead of coordinates
-            leading: const Icon(Icons.pin_drop),
-            title: Text(
-                "LAT ${widget.meetup.location.latitude}, LONG ${widget.meetup.location.longitude}"),
-          ),
-          ListTile(
-            leading: const Icon(Icons.access_time_filled),
-            title: Text(DateFormat('yyyy-MM-dd kk:mm')
-                .format(widget.meetup.timeOfMeetUp)),
-          ),
-          Row(
-            children: (widget.meetup.timeOfMeetUp.isBefore(DateTime.now()) ||
-                    widget.meetup.isCancelled ||
-                    widget.meetup.maxAttendeesReached())
-                ? [
-                    // meetup is past or meetup is cancelled: display error
-                    const SizedBox(width: 16),
-                    Row(
-                      children: [
-                        const Text("RSVP: ",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
-                        SizedBox(width: 12),
-                        SizedBox(
-                          width: 250,
-                          child: Text(
-                              (widget.meetup.isCancelled
-                                      ? "This meetup has been cancelled."
-                                      : widget.meetup.maxAttendeesReached()
-                                          ? "Maximum number of attendees has been reached."
-                                          : "This meetup has elapsed.") +
-                                  "\nNo more RSVPs are allowed.",
-                              softWrap: true,
-                              style: const TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ],
-                    ),
-                  ]
-                : [
-                    // meetup is upcoming: display RSVP
-                    const SizedBox(width: 16),
-                    const Text("RSVP: ",
+    return (ExpansionPanelList(
+      elevation: 0,
+      expansionCallback: (panelIndex, isExpanded) {
+        setState(() {
+          _expanded = !_expanded;
+        });
+      },
+      children: [
+        ExpansionPanel(
+            isExpanded: _expanded,
+            canTapOnHeader: true,
+            headerBuilder: (BuildContext context, bool isExpanded) {
+              return ListTile(
+                leading: const Icon(Icons.people),
+                title: widget.isCancelled
+                    ? const Text("NO ATTENDEES",
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(width: 12),
-                    LikeButton(
-                      size: 35,
-                      isLiked: widget.meetup.isAttending(widget.currUser),
-                      likeCount: widget.meetup.currNumAttendees(),
-                      onTap: _handleTapRSVP,
-                      circleColor: const CircleColor(
-                          start: Colors.lightGreen, end: Colors.green),
-                      bubblesColor: const BubblesColor(
-                        dotPrimaryColor: Colors.lightGreenAccent,
-                        dotSecondaryColor:
-                            Colors.lightGreen, // TODO these colours kinda suck
-                      ),
-                      likeBuilder: (bool isLiked) {
-                        return Icon(
-                          isLiked ? Icons.check_circle : Icons.close,
-                          // isLiked ? Icons.person_add : Icons.person_remove,
-                          color: isLiked ? Colors.green : Colors.grey[700],
-                          size: 30,
-                        );
-                      },
-                      countBuilder: (int? count, bool isLiked, String text) {
-                        String? message;
-                        var color;
-                        color = isLiked ? Colors.green : Colors.grey[700];
-                        message = " " +
-                            (isLiked
-                                ? "Yes, I will be there!"
-                                : "Sorry, I will not be there.");
-                        return Text(
-                          (message),
-                          style: TextStyle(color: color, fontSize: 18),
-                        );
-                      },
-                    ),
-                  ],
-          ),
-          const SizedBox(height: 16),
-        ]),
-      ),
-    );
+                            color: Colors.red, fontWeight: FontWeight.bold))
+                    : Text("${widget.currNumAttendees} "
+                        "/ ${widget.maxAttendees}    ATTENDEES"),
+              );
+            },
+            body: SizedBox(
+              height: widget.attendeeList.length * 60,
+              child: ListView(
+                physics: const ScrollPhysics(),
+                itemExtent: 60,
+                children: widget.attendeeList
+                    .map((String userName) => ListTile(
+                          title: Text(userName),
+                        ))
+                    .toList(),
+              ),
+            ))
+      ],
+    ));
   }
 }
 
 class DisplayMeetupComments extends StatefulWidget {
-  final Meetup meetup;
-  final User currUser;
+  final String meetupID;
 
   const DisplayMeetupComments(
-      {Key? key, required this.meetup, required this.currUser})
+      {Key? key, required this.meetupID})
       : super(key: key);
 
   @override
@@ -315,45 +387,47 @@ class DisplayMeetupComments extends StatefulWidget {
 }
 
 class _DisplayMeetupCommentsState extends State<DisplayMeetupComments> {
-  late List<Comment> comments = widget.meetup.comments;
-
   @override
   Widget build(BuildContext context) {
-    return ListView(
-        shrinkWrap: true,
-        physics: const ScrollPhysics(),
-        children: comments
-            .map((c) => ListTile(
-                  title: Text(c.text ?? ""),
-                  subtitle: Text(
-                      "${c.author.username}\t\t${DateFormat('yyyy-MM-dd kk:mm').format(c.timestamp)}",
-                      style: DefaultTextStyle.of(context).style.apply(
-                          color: Colors.grey[700],
-                          fontStyle: FontStyle.italic)),
-                  trailing: (widget.currUser.id == c.author.id)
-                      ? PopupMenuButton(
-                          onSelected: (value) {
-                            setState(() {
-                              if (value == "delete") {
-                                widget.meetup.removeComment(
-                                    c); // TODO: use manager function to delete comment
-                              }
-                            });
-                          },
-                          itemBuilder: (context) => [
-                                PopupMenuItem(
-                                  child: Row(
-                                    children: const [
-                                      Icon(Icons.delete, size: 20),
-                                      SizedBox(width: 8),
-                                      Text("Delete"),
-                                    ],
+    return Consumer2<Meetup_Manager, User_Manager>(
+        builder: (context, meetupMgr, userMgr, child) {
+      return ListView(
+          shrinkWrap: true,
+          physics: const ScrollPhysics(),
+          children: meetupMgr
+              .getCommentsForMeetup(widget.meetupID)
+              .map((c) => ListTile(
+                    title: Text(c.text ?? ""),
+                    subtitle: Text(
+                        "${userMgr.getUsernameByID(c.userID)}    ${DateFormat('yyyy-MM-dd kk:mm').format(c.timestamp)}",
+                        style: DefaultTextStyle.of(context).style.apply(
+                            color: Colors.grey[700],
+                            fontStyle: FontStyle.italic)),
+                    trailing: (userMgr.active_user_id == c.userID)
+                        ? PopupMenuButton(
+                            onSelected: (value) {
+                              setState(() {
+                                if (value == "delete") {
+                                  meetupMgr.removeComment(
+                                      widget.meetupID, c.commentID);
+                                }
+                              });
+                            },
+                            itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    child: Row(
+                                      children: const [
+                                        Icon(Icons.delete, size: 20),
+                                        SizedBox(width: 8),
+                                        Text("Delete"),
+                                      ],
+                                    ),
+                                    value: "delete",
                                   ),
-                                  value: "delete",
-                                ),
-                              ])
-                      : null,
-                ))
-            .toList());
+                                ])
+                        : null,
+                  ))
+              .toList());
+    });
   }
 }

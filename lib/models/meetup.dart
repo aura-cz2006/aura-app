@@ -1,4 +1,4 @@
-import 'package:aura/models/user.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:aura/models/comment.dart';
 
@@ -36,7 +36,7 @@ class Meetup {
   }
 
   void removeComment(String commentID){
-    Comment comment = comments.firstWhere((c) => c.ID == commentID);
+    Comment comment = comments.firstWhere((c) => c.commentID == commentID);
     comments.remove(comment);
   }
 
@@ -50,5 +50,17 @@ class Meetup {
 
   bool maxAttendeesReached() {
     return (currNumAttendees() == maxAttendees);
+  }
+
+  bool canEdit() {
+    return DateTime.now().isBefore(timeOfMeetUp.subtract(const Duration(hours: 3)));
+  }
+
+  bool hasElapsed() {
+    return timeOfMeetUp.isBefore(DateTime.now());
+  }
+
+  String getSummary() {// TODO replace latlong display w address
+    return "$title \nLocation: LAT ${location.latitude}, LONG ${location.longitude} \nTime: ${DateFormat('yyyy-MM-dd kk:mm').format(timeOfMeetUp)}";
   }
 }
