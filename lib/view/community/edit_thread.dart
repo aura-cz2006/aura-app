@@ -1,13 +1,10 @@
 import 'dart:core';
 import 'package:aura/managers/thread_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-import 'package:aura/models/thread.dart';
-import 'package:aura/models/user.dart';
-import 'package:aura/models/comment.dart';
-import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
+
 
 void main() {
   String threadID = "1";
