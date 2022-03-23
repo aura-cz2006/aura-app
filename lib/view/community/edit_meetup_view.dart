@@ -15,7 +15,7 @@ void main() {
   //     "This is the thread content.", DateTime.now());
 
   Meetup meetup = Meetup(DateTime(2100), LatLng(10.000002, 12.00001), "ABC",
-      user, 10, "Party", "I don't know", DateTime.now());
+      "1", 10, "Party", "I don't know", DateTime.now());
   runApp(EditMeetupView(meetupID: "1",meetup: meetup));
 }
 

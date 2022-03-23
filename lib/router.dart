@@ -3,7 +3,7 @@ import 'package:aura/models/thread.dart';
 import 'package:aura/models/user.dart';
 import 'package:aura/view/community/detailed_meetup_view.dart';
 import 'package:aura/view/community/detailed_thread_view.dart';
-import 'package:aura/view/community/edit_thread.dart';
+import 'package:aura/view/community/edit_thread_view.dart';
 import 'package:aura/view/community/meetup_listview.dart';
 import 'package:aura/view/community/thread_list_view.dart';
 import 'package:aura/view/settings/change_home_address_screen.dart';
