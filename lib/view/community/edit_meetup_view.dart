@@ -1,56 +1,42 @@
 import 'dart:core';
-// import 'package:aura/managers/meetup_manager.dart';
-// import 'package:aura/managers/user_manager.dart';
+
+import 'package:aura/managers/meetup_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:aura/models/meetup.dart';
+import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:aura/models/user.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:aura/view/community/datetime_picker.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  User user = User("USER_ID", "USERNAME");
-  // Thread test = Thread("TEST_ID", "This is the Title.", user,
-  //     "This is the thread content.", DateTime.now());
-
-  Meetup meetup = Meetup(DateTime(2100), LatLng(10.000002, 12.00001), "ABC",
-      "1", 10, "Party", "I don't know", DateTime.now());
-  runApp(EditMeetupView(meetupID: "1",meetup: meetup));
+  String meetupID = "1";
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (context) => Meetup_Manager()),
+    ], child: EditMeetupView(meetupID: meetupID)),
+  );
 }
 
 class EditMeetupView extends StatefulWidget {
-  final Meetup meetup;
   final String meetupID;
 
-  const EditMeetupView({required this.meetup, required this.meetupID});
+  const EditMeetupView({required this.meetupID});
 
   @override
   _EditMeetupViewState createState() => _EditMeetupViewState();
 }
 
 class _EditMeetupViewState extends State<EditMeetupView> {
-  late String title = widget.meetup.title ?? '';
-  late String content = widget.meetup.description ?? '';
-  late DateTime selectedDate = widget.meetup.timeOfMeetUp;
-  late int size = widget.meetup.maxAttendees;
-  late LatLng location = widget.meetup.location;
+  DateTime selectedDate = DateTime.now();
 
   final titleController = TextEditingController(); //Saves edited title
-  final contentController = TextEditingController(); //Saves edited content
+  final descriptionController = TextEditingController(); //Saves edited content
   final locationController = TextEditingController();
-  final sizeController = TextEditingController();
-  //Saves edited content
+  final maxAttendeesController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    titleController.text = title; //Prefill title with original thread title
-    contentController.text =
-        content; //Prefill content with original content title
-    locationController.text = latlngToString(location);
-    sizeController.text = size.toString();
-    selectedDate = widget.meetup.timeOfMeetUp;
+  TextEditingController _setControllerText(
+      TextEditingController ctrl, String text) {
+    ctrl.text = text;
+    return ctrl;
   }
 
   @override
@@ -68,10 +54,10 @@ class _EditMeetupViewState extends State<EditMeetupView> {
           child: Column(
             children: [
               Padding(padding: EdgeInsets.all(5), child: titleField()),
-              Padding(padding: EdgeInsets.all(5), child: sizeField()),
+              Padding(padding: EdgeInsets.all(5), child: maxAttendeesField()),
               Padding(padding: EdgeInsets.all(5), child: selectTime()),
               Padding(padding: EdgeInsets.all(5), child: locationField()),
-              Padding(padding: EdgeInsets.all(5), child: contentField()),
+              Padding(padding: EdgeInsets.all(5), child: descriptionField()),
               Padding(padding: EdgeInsets.all(5), child: submitButton(context))
             ],
           ),
@@ -80,95 +66,112 @@ class _EditMeetupViewState extends State<EditMeetupView> {
     );
   }
 
-  Widget locationField() => TextFormField(
+  Widget locationField() {
+    return Consumer<Meetup_Manager>(builder: (context, meetupMgr, child) {
+      return TextFormField(
         keyboardType: TextInputType.multiline,
         maxLines: null,
-        controller: locationController,
-        decoration: InputDecoration(
+        controller: _setControllerText(locationController,
+            latlngToString(meetupMgr.getMeetupByID(widget.meetupID).location)),
+        decoration: const InputDecoration(
             labelText: "Location",
             hintText: "Enter the location of meet up here",
             border: OutlineInputBorder()),
       );
+    });
+  }
 
-  Widget selectTime() => Row(
+  Widget selectTime() {
+    return Consumer<Meetup_Manager>(builder: (context, meetupMgr, child) {
+      return Row(
         children: [
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 5, left: 5, right: 15, bottom: 5),
             child: Text("Time & Date", style: TextStyle(fontSize: 20)),
           ),
           Padding(
-              padding: EdgeInsets.only(top: 5, left: 15, right: 5, bottom: 5),
-              child: new datetime_picker(
-                  date_reference: selectedDate,
+              padding:
+                  const EdgeInsets.only(top: 5, left: 15, right: 5, bottom: 5),
+              child: datetime_picker(
+                  date_reference:
+                      meetupMgr.getMeetupByID(widget.meetupID).timeOfMeetUp,
                   onClicked: (DateTime val) =>
                       setState(() => selectedDate = val))),
         ],
       );
+    });
+  }
 
-  Widget sizeField() => TextFormField(
+  Widget maxAttendeesField() { //todo raise error if new value < currNumAttendees
+    return Consumer<Meetup_Manager>(builder: (context, meetupMgr, child) {
+      return TextFormField(
         // onChanged: (value) => setState(() => this.title = value), //og.title = value
-        controller: sizeController,
-        decoration: InputDecoration(
+        controller: _setControllerText(maxAttendeesController,
+            meetupMgr.getMeetupByID(widget.meetupID).maxAttendees.toString()),
+        decoration: const InputDecoration(
             labelText: "Participant size",
             hintText: "Enter the size of participant",
             border: OutlineInputBorder()),
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.next,
       );
+    });
+  }
 
-  Widget titleField() => TextFormField(
+  Widget titleField() {
+    return Consumer<Meetup_Manager>(builder: (context, meetupMgr, child) {
+      return TextFormField(
         // onChanged: (value) => setState(() => this.title = value), //og.title = value
-        controller: titleController,
-        decoration: InputDecoration(
+        controller: _setControllerText(titleController,
+            meetupMgr.getMeetupByID(widget.meetupID).title ?? ""),
+        decoration: const InputDecoration(
             labelText: "Title",
             hintText: "Enter the title of your post here",
             border: OutlineInputBorder()),
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.next,
       );
+    });
+  }
 
-  Widget contentField() => TextFormField(
+  Widget descriptionField() {
+    return Consumer<Meetup_Manager>(builder: (context, meetupMgr, child) {
+      return TextFormField(
         keyboardType: TextInputType.multiline,
         maxLines: null,
-        controller: contentController,
-        decoration: InputDecoration(
+        controller: _setControllerText(descriptionController,
+            meetupMgr.getMeetupByID(widget.meetupID).description ?? ""),
+        decoration: const InputDecoration(
             labelText: "Content",
             hintText: "Enter the content of your post here",
             border: OutlineInputBorder()),
       );
+    });
+  }
 
   Widget submitButton(BuildContext context) {
     return Align(
-      child: SizedBox(
-        width: 100,
-        height: 50,
-        child: Card(
-          child: ElevatedButton(
-            child: Text("Submit"),
-            onPressed: () {
-              setState(() {
-                print(Text('''Title: ${titleController.text}
-                Date&Time: ${selectedDate}
-                Location: 1.3483, 103.6831
-                Content: ${contentController.text}
-                '''));
-                //Edit Meetup
-                /*meetupMgr.editMeetUp(
-                    widget.meetupID,
-                    titleController.text,
-                    contentController.text,
-                    int.parse(sizeController.text),
-                    selectedDate,
-                    LatLng(12.1,21.3),      //
-                    content,
-                    userManager.userID //Not yet available
-                  );*/
-                Navigator.pop(context);
-              });
-            },
-          ),
-        ),
-      ),
+      child: Consumer<Meetup_Manager>(
+        builder: (context, meetupMgr, child) {
+          return SizedBox(
+            width: 100,
+            height: 50,
+            child: Card(
+              child: ElevatedButton(
+                child: Text("Submit"),
+                onPressed: () {
+                  setState(() {
+                    var new_location = LatLng(12.1,21.3); // todo read new location
+                    meetupMgr.editMeetup(widget.meetupID, selectedDate, titleController.text,
+                        descriptionController.text, new_location, int.parse(maxAttendeesController.text));
+                    context.pop();
+                  });
+                },
+              ),
+            ),
+          );
+    }
+    ),
     );
   }
 
@@ -176,9 +179,9 @@ class _EditMeetupViewState extends State<EditMeetupView> {
   void dispose() {
     // Clean up the controller when the widget is disposed.
     titleController.dispose();
-    contentController.dispose();
+    descriptionController.dispose();
     locationController.dispose();
-    sizeController.dispose();
+    maxAttendeesController.dispose();
     super.dispose();
   }
 }
