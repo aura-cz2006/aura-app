@@ -51,7 +51,7 @@ class Meetup_Manager extends Manager {
       }
     }
     validList
-        .sort((a, b) => a.currNumAttendees().compareTo(b.currNumAttendees()));
+        .sort((a, b) => b.currNumAttendees().compareTo(a.currNumAttendees()));
     for (var each in temp_list) {
       validList.add(each);
     }

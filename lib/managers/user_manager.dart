@@ -2,6 +2,9 @@ import 'package:aura/models/user.dart';
 import 'package:aura/util/manager.dart';
 
 class User_Manager extends Manager {
+
+  String active_user_id = "1";
+
   var user_list = [
     User('1', 'Ryan'),
     User('2', 'Nicole'),
@@ -10,6 +13,7 @@ class User_Manager extends Manager {
     User('5', 'Jamie'),
     User('6', 'Fath')
   ];
+
 
   User? getUser(String id){
     for (var each in user_list){

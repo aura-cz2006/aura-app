@@ -8,23 +8,33 @@ import 'package:badges/badges.dart';
 import 'package:aura/managers/discussion_manager.dart';
 
 Map<String, Map<String, dynamic>> topics = {
+  "meetups": {
+    "type": "meetup",
+    "bgImage": "assets/topics_meetup.jpg",
+    "name": "Meetups",
+  },
   "general": {
+    "type": "topic",
     "bgImage": "assets/General_discussion_topics.jpg",
     "name": "General Discussion",
   },
   "food": {
+    "type": "topic",
     "bgImage": "assets/topics_food.jpg",
     "name": "Food",
   },
   "tech": {
+    "type": "topic",
     "bgImage": "assets/IT_topics.jpg",
     "name": "IT",
   },
   "sports": {
+    "type": "topic",
     "bgImage": "assets/Sports_topic.webp",
     "name": "Sports",
   },
   "nature": {
+    "type": "topic",
     "bgImage": "assets/Nature_topic.jpeg",
     "name": "Nature",
   }
@@ -39,7 +49,7 @@ class CommunityTab extends StatefulWidget {
 
 class _CommunityTabState extends State<CommunityTab> {
   List<no.Notification> notifications =
-      []; // TODO: get notifications from controller
+  []; // TODO: get notifications from controller
 
   void _tapNotifs() {
     context.push("tabs/community/notifications");
@@ -52,7 +62,8 @@ class _CommunityTabState extends State<CommunityTab> {
         title: const Text('Community'),
         actions: [
           Consumer<NotificationManager>(
-              builder: (context, notificationData, child) => Badge(
+              builder: (context, notificationData, child) =>
+                  Badge(
                     position: BadgePosition.topEnd(top: 8, end: 3),
                     badgeContent: Text(
                       notificationData.getNumUnreadNotifications().toString(),
@@ -77,13 +88,20 @@ class _CommunityTabState extends State<CommunityTab> {
       ),
       body: Center(child: Consumer<DiscussionManager>(
           builder: (context, discussionManager, child) {
-        return ListView(
-          children: topics.entries
-              .map<Widget>((entry) => Card(
+            return ListView(
+              children: topics.entries
+                  .map<Widget>((entry) =>
+                  Card(
                     child: InkWell(
                         onTap: () {
+                          String newRoute = entry.value['type']! == "meetup" ?
+                          "/tabs/community/meetups"
+                              :
+                          "/tabs/community/topic/${(entry
+                              .value['name'] as String).toLowerCase()}";
+
                           context.push(
-                              "/tabs/community/topic/${(entry.value['name'] as String).toLowerCase()}");
+                              newRoute);
                         },
                         child: Container(
                           margin: const EdgeInsets.all(4),
@@ -111,9 +129,9 @@ class _CommunityTabState extends State<CommunityTab> {
                           ),
                         )),
                   ))
-              .toList(),
-        );
-      })),
+                  .toList(),
+            );
+          })),
     );
   }
 }

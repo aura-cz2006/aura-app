@@ -6,27 +6,25 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import 'package:aura/models/user.dart';
 import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  String userID = "1"; // viewer
   String threadID = "1";
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => Thread_Manager()),
       ChangeNotifierProvider(create: (context) => User_Manager()),
-    ], child: DetailedThreadView(threadID: threadID, currUserID: userID)),
+    ], child: DetailedThreadView(threadID: threadID)),
   );
 }
 
 class DetailedThreadView extends StatefulWidget {
   final String threadID;
-  final String currUserID;
+
 
   const DetailedThreadView(
-      {Key? key, required this.threadID, required this.currUserID})
+      {Key? key, required this.threadID})
       : super(key: key);
 
   @override
@@ -63,9 +61,9 @@ class _DetailedThreadViewState extends State<DetailedThreadView> {
               Expanded(
                 child: ListView(children: <Widget>[
                   DisplayFullThread(
-                      threadID: widget.threadID, currUserID: widget.currUserID),
+                      threadID: widget.threadID),
                   DisplayThreadComments(
-                      threadID: widget.threadID, currUserID: widget.currUserID),
+                      threadID: widget.threadID),
                   Row(children: [
                     Expanded(
                         child: TextField(
@@ -90,7 +88,7 @@ class _DetailedThreadViewState extends State<DetailedThreadView> {
                       onPressed: () {
                         setState(() {
                           threadMgr.addComment(widget.threadID,
-                              widget.currUserID, textCtrl.text);
+                              userMgr.active_user_id, textCtrl.text);
                           textCtrl.clear(); // clear text
                           FocusManager.instance.primaryFocus
                               ?.unfocus(); // exit keyboard
@@ -110,10 +108,10 @@ class _DetailedThreadViewState extends State<DetailedThreadView> {
 
 class DisplayFullThread extends StatefulWidget {
   final String threadID;
-  final String currUserID;
+
 
   const DisplayFullThread(
-      {Key? key, required this.threadID, required this.currUserID})
+      {Key? key, required this.threadID})
       : super(key: key);
 
   @override
@@ -137,8 +135,8 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                     style: DefaultTextStyle.of(context)
                         .style
                         .apply(fontSizeFactor: 1.8, fontWeightDelta: 2)),
-                trailing: (widget.currUserID ==
-                        threadMgr.getThreadByID(widget.threadID)!.id)
+                trailing: (userMgr.active_user_id ==
+                        threadMgr.getThreadByID(widget.threadID)!.userID)
                     ? PopupMenuButton(
                         onSelected: (value) {
                           setState(() {
@@ -180,7 +178,7 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                 children: <Widget>[
                   const SizedBox(width: 16),
                   Text(
-                      userMgr.getUsernameByID(widget.currUserID) ??
+                      userMgr.getUsernameByID(userMgr.active_user_id) ??
                           "UNKNOWN USER",
                       style: DefaultTextStyle.of(context).style.apply(
                           color: Colors.grey[700],
@@ -205,14 +203,14 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                   const SizedBox(width: 16),
                   LikeButton(
                     isLiked:
-                        threadMgr.isLikedBy(widget.threadID, widget.currUserID),
+                        threadMgr.isLikedBy(widget.threadID, userMgr.active_user_id),
                     likeCount: threadMgr.getNumLikes(widget.threadID),
                     onTap: (bool isLiked) async {
                       if (isLiked) {
                         threadMgr.removeLike(
-                            widget.threadID, widget.currUserID);
+                            widget.threadID, userMgr.active_user_id);
                       } else {
-                        threadMgr.addLike(widget.threadID, widget.currUserID);
+                        threadMgr.addLike(widget.threadID, userMgr.active_user_id);
                       }
                       return !isLiked;
                     },
@@ -252,10 +250,10 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
 
 class DisplayThreadComments extends StatefulWidget {
   final String threadID;
-  final String currUserID;
+
 
   const DisplayThreadComments(
-      {Key? key, required this.threadID, required this.currUserID})
+      {Key? key, required this.threadID})
       : super(key: key);
 
   @override
@@ -279,7 +277,7 @@ class _DisplayThreadCommentsState extends State<DisplayThreadComments> {
                         style: DefaultTextStyle.of(context).style.apply(
                             color: Colors.grey[700],
                             fontStyle: FontStyle.italic)),
-                    trailing: (widget.currUserID == c.userID)
+                    trailing: (userMgr.active_user_id == c.userID)
                         ? PopupMenuButton(
                             onSelected: (value) {
                               setState(() {

@@ -1,15 +1,16 @@
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/managers/notification_manager.dart';
 import 'package:aura/managers/thread_manager.dart';
+import 'package:aura/managers/user_manager.dart';
 import 'package:aura/models/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
 class NotificationsView extends StatefulWidget {
-  final String currUserID;
 
-  const NotificationsView({Key? key, required this.currUserID})
+
+  const NotificationsView({Key? key})
       : super(key: key);
 
   @override
@@ -26,8 +27,8 @@ class _NotificationsViewState extends State<NotificationsView> {
         ),
         title: const Text('Notifications'),
       ),
-      body: Consumer3<NotificationManager, Thread_Manager, Meetup_Manager>(
-          builder: (context, notifMgr, threadMgr, meetupMgr, child) {
+      body: Consumer4<NotificationManager, Thread_Manager, Meetup_Manager, User_Manager>(
+          builder: (context, notifMgr, threadMgr, meetupMgr, userMgr, child) {
         return ListView(
             children: notifMgr.notifications
                 .map((n) => ListTile(

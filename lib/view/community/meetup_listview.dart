@@ -1,4 +1,5 @@
 import 'package:aura/managers/meetup_manager.dart';
+import 'package:aura/managers/user_manager.dart';
 import 'package:aura/models/user.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,9 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
-
-void main() => runApp(MeetUpListView());
+void main() {
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => Meetup_Manager()),
+    ChangeNotifierProvider(create: (context) => User_Manager()),
+  ], child: MeetUpListView()));
+}
 
 class MeetUpListView extends StatefulWidget {
   const MeetUpListView({Key? key}) : super(key: key);
@@ -18,24 +24,25 @@ class MeetUpListView extends StatefulWidget {
 }
 
 class _MeetUpListViewState extends State<MeetUpListView> {
-  Meetup_Manager active_meetup_manager = Meetup_Manager();
-  User curr_user = User('1', 'Ryan');
-  late var meetup_list =
-      active_meetup_manager.getMeetupsSortedByCreationDateTime();
+  // Meetup_Manager active_meetup_manager = Meetup_Manager();
+  // User curr_user = User('1', 'Ryan');
+  late var meetup_list = [];
   var dropdownValue = 'Most Recent';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(
-              iconTheme: const IconThemeData(
-                color: Colors.black,
-              ),
-              leading: const AppBarBackButton(),
-              title: const Text("Meetups"),
+      home: Scaffold(
+          appBar: AppBar(
+            iconTheme: const IconThemeData(
+              color: Colors.black,
             ),
-            body: Column(children: [
+            leading: const AppBarBackButton(),
+            title: const Text("Meetups"),
+          ),
+          body: Consumer2<Meetup_Manager, User_Manager>(
+              builder: (context, meetupMgr, userMgr, child) {
+            return Column(children: [
               Row(
                 children: [
                   const SizedBox(width: 16),
@@ -55,14 +62,14 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                       setState(() {
                         dropdownValue = newValue!;
                         if (newValue == 'Most Recent') {
-                          meetup_list = active_meetup_manager
-                              .getMeetupsSortedByCreationDateTime();
+                          meetup_list =
+                              meetupMgr.getMeetupsSortedByCreationDateTime();
                         } else if (newValue == 'Starting Soon') {
-                          meetup_list = active_meetup_manager
-                              .getMeetupsSortedByTimeOfMeetUp();
+                          meetup_list =
+                              meetupMgr.getMeetupsSortedByTimeOfMeetUp();
                         } else if (newValue == 'Most Attendees') {
-                          meetup_list = active_meetup_manager
-                              .getMeetupsSortedByMostAttendees();
+                          meetup_list =
+                              meetupMgr.getMeetupsSortedByMostAttendees();
                         }
                       });
                     },
@@ -81,7 +88,9 @@ class _MeetUpListViewState extends State<MeetUpListView> {
               ),
               Expanded(
                 child: ListView(
-                    children: (meetup_list)
+                    children: ((meetup_list.isEmpty)
+                            ? meetupMgr.getMeetupsSortedByCreationDateTime()
+                            : meetup_list)
                         .map(
                           (m) => Card(
                             child: Column(children: [
@@ -89,17 +98,18 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                               SizedBox(
                                   child: ListTile(
                                 title: Text(
-                                    m.title! +
-                                        " on " +
-                                        DateFormat('MM-dd kk:mm')
-                                            .format(m.timeOfMeetUp),
-                                    // style: DefaultTextStyle.of(context)
-                                    //     .style
-                                    //     .apply(
-                                    //       color: Colors.grey[700],
-                                    //     )
+                                  m.title! +
+                                      " on " +
+                                      DateFormat('MM-dd kk:mm')
+                                          .format(m.timeOfMeetUp),
+                                  // style: DefaultTextStyle.of(context)
+                                  //     .style
+                                  //     .apply(
+                                  //       color: Colors.grey[700],
+                                  //     )
                                 ),
-                                onTap: () => context.push("/tabs/community/meetups/${m.meetupID}"),
+                                onTap: () => context.push(
+                                    "/tabs/community/meetups/${m.meetupID}"),
                                 subtitle: Container(
                                   margin: const EdgeInsets.only(
                                     top: 5,
@@ -113,14 +123,16 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                   alignment: const Alignment(1.0, 0.0),
                                   child: LikeButton(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    isLiked: m.isAttending(curr_user.id),
+                                    isLiked:
+                                        m.isAttending(userMgr.active_user_id),
                                     onTap: (bool isLiked) async {
                                       setState(() {
                                         if (isLiked) {
-                                          m.removeRsvpAttendee(curr_user
-                                              .id); // TODO use manager function
+                                          m.removeRsvpAttendee(userMgr
+                                              .active_user_id); // TODO use manager function
                                         } else {
-                                          m.addRsvpAttendee(curr_user.id);
+                                          m.addRsvpAttendee(
+                                              userMgr.active_user_id);
                                         }
                                       });
                                       return !isLiked;
@@ -165,7 +177,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                 children: <Widget>[
                                   const SizedBox(width: 16),
                                   Text(
-                                    "Posted by: ${m.userID}",
+                                    "Posted by: ${userMgr.getUsernameByID(m.userID)}",
                                     // todo: lookup username
                                     // todo: fix/replace DefaultTextStyle !
                                     //     style: DefaultTextStyle.of(context)
@@ -192,6 +204,8 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                         )
                         .toList()),
               ),
-            ])));
+            ]);
+          })),
+    );
   }
 }

@@ -2,25 +2,27 @@ import 'package:aura/models/user.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:aura/managers/user_manager.dart';
 
 import 'package:aura/managers/thread_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(ThreadListView(
-    active_thread_manager: Thread_Manager(),
-    curr_user: User('1', 'Ryan'),
-    topic: 'Nature'));
+
+void main() { runApp(MultiProvider(
+providers: [
+ChangeNotifierProvider(create: (context) => Thread_Manager()),
+ChangeNotifierProvider(create: (context) => User_Manager()),
+],
+child: ThreadListView(
+    topic: 'Nature')));}
 
 class ThreadListView extends StatefulWidget {
-  final Thread_Manager active_thread_manager;
-  final User curr_user;
   final String topic;
 
   const ThreadListView(
       {Key? key,
-      required this.active_thread_manager,
-      required this.curr_user,
       required this.topic})
       : super(key: key);
 
@@ -29,8 +31,7 @@ class ThreadListView extends StatefulWidget {
 }
 
 class ThreadListViewState extends State<ThreadListView> {
-  late var thread_list =
-      widget.active_thread_manager.getListOfThreadsSortedByLikes(widget.topic);
+  late var thread_list = [];
 
   var dropdownValue = 'Most Likes'; // default sort
   @override
@@ -43,7 +44,9 @@ class ThreadListViewState extends State<ThreadListView> {
               ),
               title: Text("${widget.topic}"), // todo: use friendly text here
               leading: AppBarBackButton()),
-          body: Column(children: [
+          body: Consumer2<Thread_Manager, User_Manager>(
+            builder: (context, threadMgr, userMgr, child){
+          return Column(children: [
             Row(
               children: [
                 const SizedBox(width: 16),
@@ -63,10 +66,10 @@ class ThreadListViewState extends State<ThreadListView> {
                     setState(() {
                       dropdownValue = newValue!;
                       if (newValue == 'Most Likes') {
-                        thread_list = widget.active_thread_manager
+                        thread_list = threadMgr
                             .getListOfThreadsSortedByLikes(widget.topic);
                       } else if (newValue == 'Most Recent') {
-                        thread_list = widget.active_thread_manager
+                        thread_list = threadMgr
                             .getListOfThreadsSortedByTime(widget.topic);
                       }
                     });
@@ -85,7 +88,7 @@ class ThreadListViewState extends State<ThreadListView> {
               child: ListView(
                   shrinkWrap: true,
                   physics: const ScrollPhysics(),
-                  children: (thread_list)
+                  children: ((thread_list.isEmpty)?threadMgr.getListOfThreadsSortedByLikes(widget.topic):thread_list)
                       .map((t) => Card(
                               child: Column(children: [
                             const SizedBox(height: 8),
@@ -114,18 +117,17 @@ class ThreadListViewState extends State<ThreadListView> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         isLiked:
-                                            t.isLikedBy(widget.curr_user.id),
+                                            t.isLikedBy(userMgr.active_user_id),
                                         likeCount: t.numLikes(),
                                         onTap: (bool isLiked) async {
                                           if (isLiked) {
-                                            widget.active_thread_manager.removeLike(
+                                            threadMgr.removeLike(
                                                 t.id,
-                                                widget.curr_user
-                                                    .id); // TODO use manager function
+                                                userMgr.active_user_id);
                                           } else {
-                                            widget.active_thread_manager
+                                            threadMgr
                                                 .addLike(
-                                                    t.id, widget.curr_user.id);
+                                                    t.id, userMgr.active_user_id);
                                           }
                                           return !isLiked;
                                         },
@@ -165,7 +167,7 @@ class ThreadListViewState extends State<ThreadListView> {
                               children: <Widget>[
                                 const SizedBox(width: 16),
                                 Text(
-                                  "Posted by: ${t.userID}", //TODO: lookup username via consumer
+                                  "Posted by: ${userMgr.getUsernameByID(t.userID)}", //TODO: lookup username via consumer
                                   // todo: fix/change how we use DefaultTextStyle
                                   // style: DefaultTextStyle.of(context)
                                   //     .style
@@ -190,7 +192,8 @@ class ThreadListViewState extends State<ThreadListView> {
                           ])))
                       .toList()),
             )
-          ])),
+          ]);})
+      ),
     );
   }
 }
