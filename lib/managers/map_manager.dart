@@ -1,4 +1,6 @@
+import 'package:aura/models/taxi.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 
 Map<String, dynamic> MapCategory = {};
 
@@ -44,4 +46,23 @@ class MapManager extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  // * layers
+  List<String> selectedLayers = [];
+
+  void toggleLayer(String layerName) {
+    if (selectedLayers.contains(layerName)) {
+      selectedLayers.removeWhere((element) => element == layerName);
+    } else {
+      selectedLayers.add(layerName);
+    }
+  }
+
+  // * taxis
+
+  List<Taxi> taxis = [
+    Taxi("1", LatLng(1.341285, 103.683926), 30, "ComfortDelgro",
+        Colors.blueAccent)
+  ];
+
 }
