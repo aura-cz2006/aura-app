@@ -105,6 +105,17 @@ class Meetup_Manager extends Manager {
     return getMeetupByID(meetupID).canEdit();
   }
 
+  void editMeetup(String meetup_id, DateTime new_date, String new_title,
+      String new_desc, LatLng new_location, int new_max_attendees) {
+    var meetupForEdit = getMeetupByID(meetup_id);
+    meetupForEdit.timeOfMeetUp = new_date;
+    meetupForEdit.title = new_title;
+    meetupForEdit.description = new_desc;
+    meetupForEdit.location = new_location;
+    meetupForEdit.maxAttendees = new_max_attendees; // todo check constraint
+    notifyListeners();
+  }
+
   bool hasElapsed(String meetupID) {
     return getMeetupByID(meetupID).hasElapsed();
   }
