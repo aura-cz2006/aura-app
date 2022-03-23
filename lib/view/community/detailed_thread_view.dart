@@ -136,7 +136,7 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                         .style
                         .apply(fontSizeFactor: 1.8, fontWeightDelta: 2)),
                 trailing: (userMgr.active_user_id ==
-                        threadMgr.getThreadByID(widget.threadID)!.id)
+                        threadMgr.getThreadByID(widget.threadID)!.userID)
                     ? PopupMenuButton(
                         onSelected: (value) {
                           setState(() {
