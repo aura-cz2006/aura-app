@@ -4,6 +4,7 @@ import 'package:aura/models/user.dart';
 import 'package:aura/view/community/create_meetup_view.dart';
 import 'package:aura/view/community/detailed_meetup_view.dart';
 import 'package:aura/view/community/detailed_thread_view.dart';
+import 'package:aura/view/community/edit_meetup_view.dart';
 import 'package:aura/view/community/edit_thread_view.dart';
 import 'package:aura/view/community/meetup_listview.dart';
 import 'package:aura/view/community/thread_list_view.dart';
@@ -15,13 +16,7 @@ import 'package:aura/view/settings/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-Thread sampleThread = Thread(
-    '2',
-    'Rafflesia spotted at Raffles City',
-    '4',
-    'what a gorgeous specimen! \nI love plants! \nBotanics is my favourite hobby, I could go on and on about it for days \nIn short, I love plants!',
-    "Nature",
-    DateTime.now().add(const Duration(days: 2)));
+
 
 final router = GoRouter(
     initialLocation: "/sign-in",
@@ -57,8 +52,8 @@ final router = GoRouter(
                             path: "edit",
                             builder:
                                 (BuildContext context, GoRouterState state) =>
-                                    EditThreadView(
-                                        threadID: state.params['threadID']!))
+                                    EditMeetupView(
+                                        meetupID: state.params['meetupId']!))
                         // todo: replace this with editMeetupThread
                       ])
                 ]),
