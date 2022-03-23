@@ -4,7 +4,7 @@ import 'package:aura/util/manager.dart';
 
 class Thread_Manager extends Manager {
   var thread_list = [
-    Thread('1', 'Otters spotted at Marina Bay Sands!', '2',
+    Thread('1', 'Otters spotted at Marina Bay Sands!', '1',
         'what a rare sight!', "Nature", DateTime.now()),
     Thread(
         '2',

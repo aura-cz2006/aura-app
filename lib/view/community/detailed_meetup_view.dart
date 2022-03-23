@@ -9,24 +9,22 @@ import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  String userID = "1"; // viewer
+void main() {// viewer
   String meetupID = "1";
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => Meetup_Manager()),
       ChangeNotifierProvider(create: (context) => User_Manager()),
     ],
-    child: DetailedMeetupView(meetupID: meetupID, currUserID: userID),
+    child: DetailedMeetupView(meetupID: meetupID),
   )); // curr
 }
 
 class DetailedMeetupView extends StatefulWidget {
   final String meetupID;
-  final String currUserID;
 
   const DetailedMeetupView(
-      {Key? key, required this.meetupID, required this.currUserID})
+      {Key? key, required this.meetupID})
       : super(key: key);
 
   @override
@@ -62,11 +60,9 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
                   Expanded(
                       child: ListView(children: <Widget>[
                     DisplayFullMeetup(
-                        meetupID: widget.meetupID,
-                        currUserID: widget.currUserID),
+                        meetupID: widget.meetupID),
                     DisplayMeetupComments(
-                        meetupID: widget.meetupID,
-                        currUserID: widget.currUserID)
+                        meetupID: widget.meetupID)
                   ])),
                   Row(children: [
                     Expanded(
@@ -92,7 +88,7 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
                       onPressed: () {
                         setState(() {
                           meetupMgr.addComment(widget.meetupID,
-                              widget.currUserID, textCtrl.text);
+                              userMgr.active_user_id, textCtrl.text);
                           textCtrl.clear(); // clear text
                           FocusManager.instance.primaryFocus
                               ?.unfocus(); // exit keyboard
@@ -108,10 +104,10 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
 
 class DisplayFullMeetup extends StatefulWidget {
   final String meetupID;
-  final String currUserID;
+
 
   const DisplayFullMeetup(
-      {Key? key, required this.meetupID, required this.currUserID})
+      {Key? key, required this.meetupID})
       : super(key: key);
 
   @override
@@ -133,7 +129,7 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                   style: DefaultTextStyle.of(context)
                       .style
                       .apply(fontSizeFactor: 1.8, fontWeightDelta: 2)),
-              trailing: (widget.currUserID ==
+              trailing: (userMgr.active_user_id ==
                           meetupMgr.getMeetupByID(widget.meetupID).userID &&
                       meetupMgr.canEditMeetup(widget.meetupID))
                   ? PopupMenuButton(
@@ -255,17 +251,17 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                       LikeButton(
                         size: 35,
                         isLiked: meetupMgr.isAttending(
-                            widget.meetupID, widget.currUserID),
+                            widget.meetupID, userMgr.active_user_id),
                         likeCount:
                             meetupMgr.getCurrNumAttendees(widget.meetupID),
                         onTap: (bool isLiked) async {
                           setState(() {
                             if (isLiked) {
                               meetupMgr.removeRsvpAttendee(
-                                  widget.meetupID, widget.currUserID);
+                                  widget.meetupID,userMgr.active_user_id);
                             } else {
                               meetupMgr.addRsvpAttendee(
-                                  widget.meetupID, widget.currUserID);
+                                  widget.meetupID, userMgr.active_user_id);
                             }
                           });
                           return !isLiked;
@@ -381,10 +377,9 @@ class _DisplayAttendeesState extends State<DisplayAttendees> {
 
 class DisplayMeetupComments extends StatefulWidget {
   final String meetupID;
-  final String currUserID;
 
   const DisplayMeetupComments(
-      {Key? key, required this.meetupID, required this.currUserID})
+      {Key? key, required this.meetupID})
       : super(key: key);
 
   @override
@@ -408,7 +403,7 @@ class _DisplayMeetupCommentsState extends State<DisplayMeetupComments> {
                         style: DefaultTextStyle.of(context).style.apply(
                             color: Colors.grey[700],
                             fontStyle: FontStyle.italic)),
-                    trailing: (widget.currUserID == c.userID)
+                    trailing: (userMgr.active_user_id == c.userID)
                         ? PopupMenuButton(
                             onSelected: (value) {
                               setState(() {
