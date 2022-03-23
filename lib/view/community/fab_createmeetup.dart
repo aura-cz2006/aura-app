@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:aura/view/community/create_meetup.dart';
+import 'package:aura/view/community/create_meetup_view.dart';
 
 void main() => runApp(FAB());
 

@@ -19,6 +19,7 @@ class Meetup_Manager extends Manager {
         '6', 2, 'Anime', 'I love Attack on Titan.', DateTime.now()),
   ];
 
+
   List<Meetup> getValidMeetups() {
     List<Meetup> validList = [];
     for (var each in meet_up_list) {
@@ -120,4 +121,11 @@ class Meetup_Manager extends Manager {
   List<String> getAttendeeIDList(String meetupID) {
     return getMeetupByID(meetupID).rsvpAttendees;
   }
+
+  void addMeetup(DateTime timeofMeetup, LatLng location, String userID, int maxAttendees, String title, String description){
+    Meetup meetup_to_add = Meetup(timeofMeetup, location, '1', userID, maxAttendees, title, description, DateTime.now());
+    meet_up_list.add(meetup_to_add);
+    notifyListeners();
+  }
+
 }

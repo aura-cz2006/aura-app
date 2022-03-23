@@ -4,6 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:aura/view/community/datetime_picker.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
+import 'package:aura/managers/meetup_manager.dart';
+import 'package:aura/managers/user_manager.dart';
+import 'package:go_router/go_router.dart';
 
 void main() => runApp(createMeetUp());
 
@@ -16,9 +21,9 @@ class createMeetUp extends StatefulWidget {
 
 class _createMeetUpState extends State<createMeetUp> {
   final titleController = TextEditingController(); //Saves edited title
-  final contentController = TextEditingController(); //Saves edited content
+  final descriptionController = TextEditingController(); //Saves edited content
   final locationController = TextEditingController();
-  final sizeController = TextEditingController();
+  final attendeeController = TextEditingController();
   DateTime selectedDate = DateTime.now();
 
   @override
@@ -30,13 +35,14 @@ class _createMeetUpState extends State<createMeetUp> {
             automaticallyImplyLeading: true,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context, false),
+              onPressed: () =>
+                  Navigator.pop(context, false), //todo: app back button
             )),
         body: Center(
           child: ListView(
             children: [
               Padding(padding: EdgeInsets.all(5), child: titleField()),
-              Padding(padding: EdgeInsets.all(5), child: sizeField()),
+              Padding(padding: EdgeInsets.all(5), child: attendeeField()),
               Padding(padding: EdgeInsets.all(5), child: selectTime()),
               Padding(padding: EdgeInsets.all(5), child: locationField()),
               Padding(padding: EdgeInsets.all(5), child: contentField()),
@@ -62,7 +68,8 @@ class _createMeetUpState extends State<createMeetUp> {
         children: [
           Padding(
             padding: EdgeInsets.only(top: 5, left: 5, right: 15, bottom: 5),
-            child: Text("Time & Date", style: TextStyle(fontSize: 20)),
+            child:
+                Text("Date & Time of Meetup: ", style: TextStyle(fontSize: 20)),
           ),
           Padding(
               padding: EdgeInsets.only(top: 5, left: 15, right: 5, bottom: 5),
@@ -73,16 +80,16 @@ class _createMeetUpState extends State<createMeetUp> {
         ],
       );
 
-  Widget sizeField() => TextFormField(
-    // onChanged: (value) => setState(() => this.title = value), //og.title = value
-    controller: sizeController,
-    decoration: InputDecoration(
-        labelText: "Participant size",
-        hintText: "Enter the size of participant",
-        border: OutlineInputBorder()),
-    keyboardType: TextInputType.number,
-    textInputAction: TextInputAction.next,
-  );
+  Widget attendeeField() => TextFormField(
+        // onChanged: (value) => setState(() => this.title = value), //og.title = value
+        controller: attendeeController,
+        decoration: InputDecoration(
+            labelText: "Participant size",
+            hintText: "Enter the size of participant",
+            border: OutlineInputBorder()),
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.next,
+      );
 
   Widget titleField() => TextFormField(
         // onChanged: (value) => setState(() => this.title = value), //og.title = value
@@ -98,7 +105,7 @@ class _createMeetUpState extends State<createMeetUp> {
   Widget contentField() => TextFormField(
         keyboardType: TextInputType.multiline,
         maxLines: null,
-        controller: contentController,
+        controller: descriptionController,
         decoration: InputDecoration(
             labelText: "Content",
             hintText: "Enter the content of your post here",
@@ -107,45 +114,46 @@ class _createMeetUpState extends State<createMeetUp> {
 
   Widget submitButton(BuildContext context) {
     return Align(
-      child: SizedBox(
-        width: 100,
-        height: 50,
-        child: Card(
-          child: ElevatedButton(
+        child: SizedBox(
+      width: 100,
+      height: 50,
+      child: Card(
+        child: Consumer2<Meetup_Manager, User_Manager>(
+            builder: (context, meetupMgr, userMgr, child) {
+          return ElevatedButton(
             child: Text("Submit"),
             onPressed: () {
               setState(() {
                 print(Text('''Title: ${titleController.text}
                 Date&Time: ${selectedDate}
                 Location: 1.3483, 103.6831
-                Content: ${contentController.text}
+                Content: ${descriptionController.text}
                 '''));
                 //Create thread
-                /*meetup_manager.addMeetUp(
-                    titleController.text,
-                    contentController.text,
-                    sizeController.text
-                    selectedDate,
-                    location,
-                    content,
-                    userManager.userID //Not yet available
-                  );*/
-                // Navigator.pop(context); //Return to previous, but updated threadlistview*/
+                meetupMgr.addMeetup(
+                  selectedDate,
+                  LatLng(1.1, 2.2),
+                  userMgr.active_user_id,
+                  int.parse(attendeeController.text),
+                  titleController.text,
+                  descriptionController.text,
+                );
+                context.pop();
               });
             },
-          ),
-        ),
+          );
+        }),
       ),
-    );
+    ));
   }
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     titleController.dispose();
-    contentController.dispose();
+    descriptionController.dispose();
     locationController.dispose();
-    sizeController.dispose();
+    attendeeController.dispose();
     super.dispose();
   }
 }
