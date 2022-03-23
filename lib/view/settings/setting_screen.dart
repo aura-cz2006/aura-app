@@ -57,7 +57,8 @@ class ChangeHomeButton extends StatelessWidget {
     return ElevatedButton(
       child: Text("Change Home Address"),
       onPressed: (){
-        context.go('${GoRouter.of(context).location}/change_home_address');
+        GoRouter.of(context).push("/settings/change_home_address");
+        // context.go('${GoRouter.of(context).location}/change_home_address');
       },
       style: ElevatedButton.styleFrom(
         onPrimary: Colors.white, //text
