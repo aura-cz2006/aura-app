@@ -27,7 +27,7 @@ class EditMeetupView extends StatefulWidget {
 }
 
 class _EditMeetupViewState extends State<EditMeetupView> {
-  DateTime selectedDate = DateTime.now();
+  DateTime? selectedDate;
 
   final titleController = TextEditingController(); //Saves edited title
   final descriptionController = TextEditingController(); //Saves edited content
@@ -45,8 +45,9 @@ class _EditMeetupViewState extends State<EditMeetupView> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-            title: Center(child: Text('Edit Thread')),
-            automaticallyImplyLeading: true,
+        iconTheme: const IconThemeData(
+        color: Colors.black,),
+            title: Center(child: Text('Edit Meetup')),
             leading: AppBarBackButton()),
         body: Center(
           child: Column(
@@ -160,7 +161,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
                 onPressed: () {
                   setState(() {
                     var new_location = LatLng(12.1,21.3); // todo read new location
-                    meetupMgr.editMeetup(widget.meetupID, selectedDate, titleController.text,
+                    meetupMgr.editMeetup(widget.meetupID, selectedDate??meetupMgr.getMeetupByID(widget.meetupID).timeOfMeetUp, titleController.text,
                         descriptionController.text, new_location, int.parse(maxAttendeesController.text));
                     context.pop();
                   });
