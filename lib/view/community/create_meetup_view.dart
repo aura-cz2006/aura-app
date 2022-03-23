@@ -31,7 +31,7 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-            title: Center(child: Text('Create Thread')),
+            title: Center(child: Text('Create Meetup')),
             automaticallyImplyLeading: true,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
