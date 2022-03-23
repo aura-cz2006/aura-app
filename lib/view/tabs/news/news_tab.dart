@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class NewsTab extends StatefulWidget {
   const NewsTab({Key? key}) : super(key: key);
@@ -38,7 +40,8 @@ class _NewsTabState extends State<NewsTab> {
             ),
             actions: [
               IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.settings_outlined))
+                  onPressed: () {GoRouter.of(context).push("/settings");},
+                  icon: const Icon(Icons.settings_outlined))
             ],
           ),
           body: const Center(
