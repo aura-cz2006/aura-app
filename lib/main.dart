@@ -19,6 +19,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => Meetup_Manager()),
         ChangeNotifierProvider(create: (context) => User_Manager()),
         ChangeNotifierProvider(create: (context) => News_Manager()),
+        ChangeNotifierProvider(create: (context) => News_Manager()),
       ],
       child: const MyApp(),
     ),
