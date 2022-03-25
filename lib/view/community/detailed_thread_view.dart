@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:aura/view/tabs/community/fab_createthread.dart';
 
 import 'package:like_button/like_button.dart';
+import 'package:profanity_filter/profanity_filter.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -23,9 +24,7 @@ void main() {
 class DetailedThreadView extends StatefulWidget {
   final String threadID;
 
-
-  const DetailedThreadView(
-      {Key? key, required this.threadID})
+  const DetailedThreadView({Key? key, required this.threadID})
       : super(key: key);
 
   @override
@@ -61,10 +60,8 @@ class _DetailedThreadViewState extends State<DetailedThreadView> {
             children: <Widget>[
               Expanded(
                 child: ListView(children: <Widget>[
-                  DisplayFullThread(
-                      threadID: widget.threadID),
-                  DisplayThreadComments(
-                      threadID: widget.threadID),
+                  DisplayFullThread(threadID: widget.threadID),
+                  DisplayThreadComments(threadID: widget.threadID),
                   Row(children: [
                     Expanded(
                         child: TextField(
@@ -110,16 +107,14 @@ class _DetailedThreadViewState extends State<DetailedThreadView> {
 class DisplayFullThread extends StatefulWidget {
   final String threadID;
 
-
-  const DisplayFullThread(
-      {Key? key, required this.threadID})
-      : super(key: key);
+  const DisplayFullThread({Key? key, required this.threadID}) : super(key: key);
 
   @override
   State<DisplayFullThread> createState() => _DisplayFullThreadState();
 }
 
 class _DisplayFullThreadState extends State<DisplayFullThread> {
+  final filter = ProfanityFilter();
   @override
   Widget build(BuildContext context) {
     return Consumer2<Thread_Manager, User_Manager>(
@@ -131,8 +126,9 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
             children: <Widget>[
               ListTile(
                 title: Text(
-                    threadMgr.getThreadByID(widget.threadID)!.title ??
-                        "Untitled Thread",
+                    filter.censor(
+                        threadMgr.getThreadByID(widget.threadID)!.title ??
+                            "Untitled Thread"),
                     style: DefaultTextStyle.of(context)
                         .style
                         .apply(fontSizeFactor: 1.8, fontWeightDelta: 2)),
@@ -194,7 +190,9 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                 ],
               ),
               ListTile(
-                title: Text(threadMgr.getThreadByID(widget.threadID)!.content,
+                title: Text(
+                    filter.censor(
+                        threadMgr.getThreadByID(widget.threadID)!.content),
                     softWrap: true),
               ),
               // const SizedBox(height: 8),
@@ -203,15 +201,16 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                 children: <Widget>[
                   const SizedBox(width: 16),
                   LikeButton(
-                    isLiked:
-                        threadMgr.isLikedBy(widget.threadID, userMgr.active_user_id),
+                    isLiked: threadMgr.isLikedBy(
+                        widget.threadID, userMgr.active_user_id),
                     likeCount: threadMgr.getNumLikes(widget.threadID),
                     onTap: (bool isLiked) async {
                       if (isLiked) {
                         threadMgr.removeLike(
                             widget.threadID, userMgr.active_user_id);
                       } else {
-                        threadMgr.addLike(widget.threadID, userMgr.active_user_id);
+                        threadMgr.addLike(
+                            widget.threadID, userMgr.active_user_id);
                       }
                       return !isLiked;
                     },
@@ -252,9 +251,7 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
 class DisplayThreadComments extends StatefulWidget {
   final String threadID;
 
-
-  const DisplayThreadComments(
-      {Key? key, required this.threadID})
+  const DisplayThreadComments({Key? key, required this.threadID})
       : super(key: key);
 
   @override
@@ -262,6 +259,7 @@ class DisplayThreadComments extends StatefulWidget {
 }
 
 class _DisplayThreadCommentsState extends State<DisplayThreadComments> {
+  final filter = ProfanityFilter();
   @override
   Widget build(BuildContext context) {
     return Consumer2<Thread_Manager, User_Manager>(
@@ -272,7 +270,7 @@ class _DisplayThreadCommentsState extends State<DisplayThreadComments> {
           children: threadMgr
               .getCommentsForThread(widget.threadID)
               .map((c) => ListTile(
-                    title: Text(c.text ?? ""),
+                    title: Text(filter.censor(c.text ?? "")),
                     subtitle: Text(
                         "${userMgr.getUsernameByID(c.userID)}    ${DateFormat('yyyy-MM-dd kk:mm').format(c.timestamp)}",
                         style: DefaultTextStyle.of(context).style.apply(

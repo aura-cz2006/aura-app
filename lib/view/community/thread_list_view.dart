@@ -4,6 +4,7 @@ import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:aura/managers/user_manager.dart';
+import 'package:profanity_filter/profanity_filter.dart';
 
 import 'package:aura/managers/thread_manager.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class ThreadListView extends StatefulWidget {
 
 class ThreadListViewState extends State<ThreadListView> {
   late var thread_list = [];
-
+  final filter = ProfanityFilter();
   var dropdownValue = 'Most Likes'; // default sort
   @override
   Widget build(BuildContext context) {
@@ -94,7 +95,8 @@ class ThreadListViewState extends State<ThreadListView> {
                               const SizedBox(height: 8),
                               SizedBox(
                                   child: ListTile(
-                                      title: Text(t.title ?? "Untitled thread"),
+                                      title: Text(filter.censor(
+                                          t.title ?? "Untitled thread")),
                                       onTap: () => context.push(
                                           // ? can we use an arrow function here? will it affect performance???
                                           "/tabs/community/thread/${t.id}"),
@@ -103,7 +105,7 @@ class ThreadListViewState extends State<ThreadListView> {
                                             top: 5,
                                           ),
                                           child: Text(
-                                            t.content,
+                                            filter.censor(t.content),
                                             style: TextStyle(),
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,

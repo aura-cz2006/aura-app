@@ -7,9 +7,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import 'package:like_button/like_button.dart';
+import 'package:profanity_filter/profanity_filter.dart';
 import 'package:provider/provider.dart';
 
-void main() {// viewer
+void main() {
+  // viewer
   String meetupID = "1";
   runApp(MultiProvider(
     providers: [
@@ -23,8 +25,7 @@ void main() {// viewer
 class DetailedMeetupView extends StatefulWidget {
   final String meetupID;
 
-  const DetailedMeetupView(
-      {Key? key, required this.meetupID})
+  const DetailedMeetupView({Key? key, required this.meetupID})
       : super(key: key);
 
   @override
@@ -33,7 +34,7 @@ class DetailedMeetupView extends StatefulWidget {
 
 class _DetailedMeetupViewState extends State<DetailedMeetupView> {
   final textCtrl = TextEditingController();
-
+  final filter = ProfanityFilter();
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -59,10 +60,8 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
                 children: <Widget>[
                   Expanded(
                       child: ListView(children: <Widget>[
-                    DisplayFullMeetup(
-                        meetupID: widget.meetupID),
-                    DisplayMeetupComments(
-                        meetupID: widget.meetupID)
+                    DisplayFullMeetup(meetupID: widget.meetupID),
+                    DisplayMeetupComments(meetupID: widget.meetupID)
                   ])),
                   Row(children: [
                     Expanded(
@@ -105,16 +104,14 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
 class DisplayFullMeetup extends StatefulWidget {
   final String meetupID;
 
-
-  const DisplayFullMeetup(
-      {Key? key, required this.meetupID})
-      : super(key: key);
+  const DisplayFullMeetup({Key? key, required this.meetupID}) : super(key: key);
 
   @override
   State<DisplayFullMeetup> createState() => _DisplayFullMeetupState();
 }
 
 class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
+  final filter = ProfanityFilter();
   @override
   Widget build(BuildContext context) {
     return Consumer2<Meetup_Manager, User_Manager>(
@@ -124,8 +121,9 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
           child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
             ListTile(
               title: Text(
-                  meetupMgr.getMeetupByID(widget.meetupID).title ??
-                      "Untitled Meetup",
+                  filter.censor(
+                      meetupMgr.getMeetupByID(widget.meetupID).title ??
+                          "Untitled Meetup"),
                   style: DefaultTextStyle.of(context)
                       .style
                       .apply(fontSizeFactor: 1.8, fontWeightDelta: 2)),
@@ -136,8 +134,8 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                       onSelected: (value) {
                         setState(() {
                           if (value == "edit") {
-                            context
-                                .push("${GoRouter.of(context).location}/editMeetup");
+                            context.push(
+                                "${GoRouter.of(context).location}/editMeetup");
                           } else if (value == "delete") {
                             meetupMgr.cancelMeetup(widget.meetupID);
                             context.pop();
@@ -186,7 +184,9 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
             ),
             ListTile(
               title: Text(
-                  meetupMgr.getMeetupByID(widget.meetupID).description ?? "",
+                  filter.censor(
+                      meetupMgr.getMeetupByID(widget.meetupID).description ??
+                          ""),
                   softWrap: true),
             ),
             // ListTile(
@@ -258,7 +258,7 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                           setState(() {
                             if (isLiked) {
                               meetupMgr.removeRsvpAttendee(
-                                  widget.meetupID,userMgr.active_user_id);
+                                  widget.meetupID, userMgr.active_user_id);
                             } else {
                               meetupMgr.addRsvpAttendee(
                                   widget.meetupID, userMgr.active_user_id);
@@ -378,8 +378,7 @@ class _DisplayAttendeesState extends State<DisplayAttendees> {
 class DisplayMeetupComments extends StatefulWidget {
   final String meetupID;
 
-  const DisplayMeetupComments(
-      {Key? key, required this.meetupID})
+  const DisplayMeetupComments({Key? key, required this.meetupID})
       : super(key: key);
 
   @override
@@ -387,6 +386,7 @@ class DisplayMeetupComments extends StatefulWidget {
 }
 
 class _DisplayMeetupCommentsState extends State<DisplayMeetupComments> {
+  final filter = ProfanityFilter();
   @override
   Widget build(BuildContext context) {
     return Consumer2<Meetup_Manager, User_Manager>(
@@ -397,7 +397,7 @@ class _DisplayMeetupCommentsState extends State<DisplayMeetupComments> {
           children: meetupMgr
               .getCommentsForMeetup(widget.meetupID)
               .map((c) => ListTile(
-                    title: Text(c.text ?? ""),
+                    title: Text(filter.censor(c.text ?? "")),
                     subtitle: Text(
                         "${userMgr.getUsernameByID(c.userID)}    ${DateFormat('yyyy-MM-dd kk:mm').format(c.timestamp)}",
                         style: DefaultTextStyle.of(context).style.apply(
