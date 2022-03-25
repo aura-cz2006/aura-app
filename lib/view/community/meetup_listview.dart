@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:go_router/go_router.dart';
+import 'package:profanity_filter/profanity_filter.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -26,6 +27,7 @@ class MeetUpListView extends StatefulWidget {
 class _MeetUpListViewState extends State<MeetUpListView> {
   // Meetup_Manager active_meetup_manager = Meetup_Manager();
   // User curr_user = User('1', 'Ryan');
+  final filter = ProfanityFilter();
   late var meetup_list = [];
   var dropdownValue = 'Most Recent';
 
@@ -99,7 +101,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                               SizedBox(
                                   child: ListTile(
                                 title: Text(
-                                  m.title! +
+                                  filter.censor(m.title!) +
                                       " on " +
                                       DateFormat('MM-dd kk:mm')
                                           .format(m.timeOfMeetUp),
