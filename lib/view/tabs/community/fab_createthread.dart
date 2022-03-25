@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'create_thread_view.dart';
+import '../../community/create_thread_view.dart';
 import 'package:go_router/go_router.dart';
 
 
