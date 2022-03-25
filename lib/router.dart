@@ -10,12 +10,14 @@ import 'package:aura/view/community/meetup_listview.dart';
 import 'package:aura/view/community/thread_list_view.dart';
 import 'package:aura/view/settings/change_home_address_screen.dart';
 import 'package:aura/view/signin/signin_screen.dart';
-import 'package:aura/view/tabs/community/create_thread_view.dart';
-import 'package:aura/view/tabs/community/notifications_view.dart';
+import 'package:aura/view/community/create_thread_view.dart';
+import 'package:aura/view/community/notifications_view.dart';
 import 'package:aura/view/tabs/main_tab_bar.dart';
 import 'package:aura/view/settings/setting_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import 'models/discussion_topic.dart';
 
 
 
@@ -55,19 +57,18 @@ final router = GoRouter(
                                 (BuildContext context, GoRouterState state) =>
                                     EditMeetupView(
                                         meetupID: state.params['meetupId']!))
-                        // todo: replace this with editMeetupThread
                       ])
                 ]),
             GoRoute(
                 path: 'topic/:topicName',
                 builder: (BuildContext context, GoRouterState state) =>
                     ThreadListView(
-                        key: state.pageKey, topic: state.params['topicName']!), routes: [
+                        key: state.pageKey, topic: TopicConverter.parsable2topic(state.params['topicName']!)), routes: [
                       GoRoute(path: "createThread",
                           builder: (BuildContext context, GoRouterState state) =>
                               CreateThreadView(
                                   key: state.pageKey,
-                                  topic: state.params['topicName']!)
+                                  topic: TopicConverter.parsable2topic(state.params['topicName']!))
                       )]),
             GoRoute(
                 path: 'thread/:threadId',

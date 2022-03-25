@@ -1,13 +1,14 @@
 import 'package:aura/managers/thread_manager.dart';
 import 'package:aura/managers/user_manager.dart';
+import 'package:aura/models/discussion_topic.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(CreateThreadView(topic: "nature"));
+void main() => runApp(CreateThreadView(topic: DiscussionTopic.NATURE));
 
 class CreateThreadView extends StatefulWidget {
-  final String topic;
+  final DiscussionTopic topic;
 
   const CreateThreadView({Key? key, required this.topic}) : super(key: key);
 
@@ -76,7 +77,7 @@ class _CreateThreadViewState extends State<CreateThreadView> {
             onPressed: () {
               setState(() {
                 print(Text(
-                    "Title: ${titleController.text}\nTopic: ${widget.topic}\nContent: ${contentController.text}"));
+                    "Title: ${titleController.text}\nTopic: ${widget.topic.topic2readable()}\nContent: ${contentController.text}"));
                 //Create thread
                 threadMgr.addThread(
                     titleController.text,
