@@ -1,12 +1,14 @@
 import 'package:aura/models/comment.dart';
+import 'package:aura/models/discussion_topic.dart';
 import 'package:intl/intl.dart';
+
 
 class Thread {
   String id;
   String? title;
   String userID;
   String content;
-  String topic;
+  DiscussionTopic topic;
   DateTime timestamp;
   List<Comment> comments = [];
   List<String> likedBy = []; // list of userIDs
@@ -64,6 +66,6 @@ class Thread {
   }
 
   String getSummary() {
-    return "[$topic] $title \nPosted on: ${DateFormat('yyyy-MM-dd kk:mm').format(timestamp)}";
+    return "[${topic.topic2readable()}] $title \nPosted on: ${DateFormat('yyyy-MM-dd kk:mm').format(timestamp)}";
   }
 }

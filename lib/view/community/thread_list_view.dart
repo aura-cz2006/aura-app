@@ -1,4 +1,4 @@
-import 'package:aura/models/user.dart';
+import 'package:aura/models/discussion_topic.dart';
 import 'package:aura/view/tabs/community/fab_createthread.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:go_router/go_router.dart';
@@ -14,11 +14,11 @@ void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => Thread_Manager()),
     ChangeNotifierProvider(create: (context) => User_Manager()),
-  ], child: ThreadListView(topic: 'Nature')));
+  ], child: ThreadListView(topic: DiscussionTopic.NATURE)));
 }
 
 class ThreadListView extends StatefulWidget {
-  final String topic;
+  final DiscussionTopic topic;
 
   const ThreadListView({Key? key, required this.topic}) : super(key: key);
 
@@ -38,8 +38,8 @@ class ThreadListViewState extends State<ThreadListView> {
               iconTheme: const IconThemeData(
                 color: Colors.black,
               ),
-              title: Text("${widget.topic}"), // todo: use friendly text here
-              leading: AppBarBackButton()),
+              title: Text(widget.topic.topic2readable()), // todo: use friendly text here
+              leading: const AppBarBackButton()),
           floatingActionButton: FAB_CreateThread(widget.topic),
           body: Consumer2<Thread_Manager, User_Manager>(
               builder: (context, threadMgr, userMgr, child) {

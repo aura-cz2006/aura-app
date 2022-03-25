@@ -1,5 +1,5 @@
+import 'package:aura/models/discussion_topic.dart';
 import 'package:flutter/material.dart';
-import '../../community/create_thread_view.dart';
 import 'package:go_router/go_router.dart';
 
 
@@ -23,7 +23,7 @@ import 'package:go_router/go_router.dart';
 //   }
 // }
 
-Widget FAB_CreateThread(String topic){
+Widget FAB_CreateThread(DiscussionTopic topic){
   return Padding(
     padding: EdgeInsets.only(bottom: 50, right: 20),
     child: fabWidget(topic: topic),
@@ -31,16 +31,15 @@ Widget FAB_CreateThread(String topic){
 }
 
 class fabWidget extends StatefulWidget {
-  final String topic;
+  final DiscussionTopic topic;
 
-  fabWidget({required this.topic});
+  const fabWidget({Key? key, required this.topic});
 
   @override
   _fabWidgetState createState() => _fabWidgetState();
 }
 
 class _fabWidgetState extends State<fabWidget>{
-  var _isSelected = false;
 
   @override
   Widget build(BuildContext context){

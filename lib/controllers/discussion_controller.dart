@@ -1,6 +1,7 @@
 import 'package:aura/managers/discussion_manager.dart';
 import 'package:aura/models/thread.dart';
 import 'package:aura/api_handler/aura.dart';
+import 'package:aura/models/discussion_topic.dart';
 import 'package:aura/models/user.dart';
 
 class DiscussionController {
@@ -17,6 +18,6 @@ class DiscussionController {
   static Thread getThread(String ID) {
     // TODO: get the list of threads from manager and return the thread with the matching ID
     return Thread("0000", "TEST THREAD TITLE", "01",
-        "this is some content", "Anime", DateTime.now());
+        "this is some content", DiscussionTopic.GENERAL, DateTime.now());
   }
 }
