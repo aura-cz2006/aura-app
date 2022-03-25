@@ -5,13 +5,12 @@ import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:aura/view/tabs/community/fab_createthread.dart';
 
 import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  String threadID = "1";
+  String threadID = "2";
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => Thread_Manager()),
@@ -179,7 +178,7 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                 children: <Widget>[
                   const SizedBox(width: 16),
                   Text(
-                      userMgr.getUsernameByID(userMgr.active_user_id) ??
+                      userMgr.getUsernameByID(threadMgr.getThreadByID(widget.threadID)!.userID) ??
                           "UNKNOWN USER",
                       style: DefaultTextStyle.of(context).style.apply(
                           color: Colors.grey[700],
