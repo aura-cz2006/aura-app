@@ -14,7 +14,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => DiscussionManager()), // todo replace w thread manager
+        // ChangeNotifierProvider(create: (context) => DiscussionManager()), // todo replace w thread manager
         ChangeNotifierProvider(create: (context) => MapManager()),
         ChangeNotifierProvider(create: (context) => NotificationManager()),
         ChangeNotifierProvider(create: (context) => Thread_Manager()),

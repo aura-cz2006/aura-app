@@ -54,13 +54,7 @@ class Thread {
   }
 
   int numLikes() {
-    // TODO REMOVE THIS DUMMY CODE
-    if (this.id == '1') {
-      return likedBy.length + 1;
-    } else {
-      return likedBy.length + 99;
-    }
-    return likedBy.length; // TODO PUT THIS BACK
+    return likedBy.length;
   }
 
   String getSummary() {
