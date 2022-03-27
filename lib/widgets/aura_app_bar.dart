@@ -12,7 +12,7 @@ class AuraAppBar extends AppBar {
           titleTextStyle: const TextStyle(
               color: Colors.black,
               fontSize: 21,
-              fontWeight: FontWeight.w900),
+              fontWeight: FontWeight.w800),
           leading: (hasBackButton == null || hasBackButton) ? const AppBarBackButton() : null,
           title: title,
           actions: (actions?.isNotEmpty ?? false) ? actions : null,

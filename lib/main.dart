@@ -41,8 +41,8 @@ class MyApp extends StatelessWidget {
               actionsIconTheme: IconThemeData(color: Colors.black),
               titleTextStyle: TextStyle(
                   color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900)),
+                  fontSize: 21,
+                  fontWeight: FontWeight.w800)),
           tabBarTheme: TabBarTheme(
             indicator: const UnderlineTabIndicator(
               borderSide: BorderSide(width: 3, color: Colors.redAccent),
