@@ -65,6 +65,16 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
                   Row(children: [
                     Expanded(
                       child: TextField(
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (value) {
+                          setState(() {
+                            meetupMgr.addComment(
+                                widget.meetupID, userMgr.active_user_id, value);
+                            textCtrl.clear(); // clear text
+                            FocusManager.instance.primaryFocus
+                                ?.unfocus(); // exit keyboard
+                          });
+                        },
                         controller: textCtrl,
                         autocorrect: true,
                         decoration: InputDecoration(
