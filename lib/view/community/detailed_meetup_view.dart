@@ -67,13 +67,15 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
                       child: TextField(
                         textInputAction: TextInputAction.done,
                         onSubmitted: (value) {
-                          setState(() {
-                            meetupMgr.addComment(
-                                widget.meetupID, userMgr.active_user_id, value);
-                            textCtrl.clear(); // clear text
-                            FocusManager.instance.primaryFocus
-                                ?.unfocus(); // exit keyboard
-                          });
+                          if (value != "") {
+                            setState(() {
+                              meetupMgr.addComment(widget.meetupID,
+                                  userMgr.active_user_id, value);
+                              textCtrl.clear(); // clear text
+                              FocusManager.instance.primaryFocus
+                                  ?.unfocus(); // exit keyboard
+                            });
+                          }
                         },
                         controller: textCtrl,
                         autocorrect: true,
@@ -86,21 +88,20 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
                           fillColor: Colors.blueGrey[50],
                           filled: true,
                         ),
-                        // validator: (String? value) { // TODO? validate for censored text
-                        //   return (value != null && value.contains('@')) ? 'Do not use the @ char.' : null;
-                        // },
                       ),
                     ),
                     IconButton(
                       icon: Icon(Icons.send, color: Colors.grey[900]),
                       onPressed: () {
-                        setState(() {
-                          meetupMgr.addComment(widget.meetupID,
-                              userMgr.active_user_id, textCtrl.text);
-                          textCtrl.clear(); // clear text
-                          FocusManager.instance.primaryFocus
-                              ?.unfocus(); // exit keyboard
-                        });
+                        if (textCtrl.text != "") {
+                          setState(() {
+                            meetupMgr.addComment(widget.meetupID,
+                                userMgr.active_user_id, textCtrl.text);
+                            textCtrl.clear(); // clear text
+                            FocusManager.instance.primaryFocus
+                                ?.unfocus(); // exit keyboard
+                          });
+                        }
                       },
                     )
                   ]),

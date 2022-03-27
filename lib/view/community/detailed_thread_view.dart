@@ -63,13 +63,15 @@ class _DetailedThreadViewState extends State<DetailedThreadView> {
                   child: TextField(
                 textInputAction: TextInputAction.done,
                 onSubmitted: (value) {
-                  setState(() {
-                    threadMgr.addComment(
-                        widget.threadID, userMgr.active_user_id, value);
-                    textCtrl.clear(); // clear text
-                    FocusManager.instance.primaryFocus
-                        ?.unfocus(); // exit keyboard
-                  });
+                  if (value != "") {
+                    setState(() {
+                      threadMgr.addComment(
+                          widget.threadID, userMgr.active_user_id, value);
+                      textCtrl.clear(); // clear text
+                      FocusManager.instance.primaryFocus
+                          ?.unfocus(); // exit keyboard
+                    });
+                  }
                 },
                 controller: textCtrl,
                 autocorrect: true,
@@ -83,20 +85,19 @@ class _DetailedThreadViewState extends State<DetailedThreadView> {
                   fillColor: Colors.blueGrey[50],
                   filled: true,
                 ),
-                // validator: (String? value) { // TODO? validate for censored text
-                //   return (value != null && value.contains('@')) ? 'Do not use the @ char.' : null;
-                // },
               )),
               IconButton(
                 icon: Icon(Icons.send, color: Colors.grey[900]),
                 onPressed: () {
-                  setState(() {
-                    threadMgr.addComment(
-                        widget.threadID, userMgr.active_user_id, textCtrl.text);
-                    textCtrl.clear(); // clear text
-                    FocusManager.instance.primaryFocus
-                        ?.unfocus(); // exit keyboard
-                  });
+                  if (textCtrl.text != "") {
+                    setState(() {
+                      threadMgr.addComment(widget.threadID,
+                          userMgr.active_user_id, textCtrl.text);
+                      textCtrl.clear(); // clear text
+                      FocusManager.instance.primaryFocus
+                          ?.unfocus(); // exit keyboard
+                    });
+                  }
                 },
               ),
             ])
