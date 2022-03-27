@@ -35,6 +35,7 @@ class DetailedMeetupView extends StatefulWidget {
 class _DetailedMeetupViewState extends State<DetailedMeetupView> {
   final textCtrl = TextEditingController();
   final filter = ProfanityFilter();
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -58,11 +59,9 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
                 builder: (context, meetupMgr, userMgr, child) {
               return Column(
                 children: <Widget>[
+                  DisplayFullMeetup(meetupID: widget.meetupID),
                   Expanded(
-                      child: ListView(children: <Widget>[
-                    DisplayFullMeetup(meetupID: widget.meetupID),
-                    DisplayMeetupComments(meetupID: widget.meetupID)
-                  ])),
+                      child: DisplayMeetupComments(meetupID: widget.meetupID)),
                   Row(children: [
                     Expanded(
                       child: TextField(
@@ -112,6 +111,7 @@ class DisplayFullMeetup extends StatefulWidget {
 
 class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
   final filter = ProfanityFilter();
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<Meetup_Manager, User_Manager>(
@@ -387,12 +387,12 @@ class DisplayMeetupComments extends StatefulWidget {
 
 class _DisplayMeetupCommentsState extends State<DisplayMeetupComments> {
   final filter = ProfanityFilter();
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<Meetup_Manager, User_Manager>(
         builder: (context, meetupMgr, userMgr, child) {
       return ListView(
-          shrinkWrap: true,
           physics: const ScrollPhysics(),
           children: meetupMgr
               .getCommentsForMeetup(widget.meetupID)
