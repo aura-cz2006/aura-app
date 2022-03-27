@@ -47,11 +47,8 @@ class _NewsTabState extends State<NewsTab> {
             });
             return Scaffold(
               appBar: AppBar(
-                title: TabBar(
-                  // todo figure out colours
-                  labelColor: Colors.black,
-                  tabs: tabs,
-                ),
+                title: const Text("News"),
+                bottom: TabBar(tabs: tabs),
               ),
               body: ListView(
                 scrollDirection: Axis.vertical,
