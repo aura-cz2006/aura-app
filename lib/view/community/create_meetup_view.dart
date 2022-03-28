@@ -22,6 +22,7 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
   final locationController = TextEditingController();
   final attendeeController = TextEditingController();
   DateTime selectedDate = DateTime.now();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); //For validating empty fields
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +32,21 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
             title: Center(child: Text('Create Meetup')),
             automaticallyImplyLeading: true,
             leading: AppBarBackButton()),
-        body: Center(
-          child: ListView(
-            children: [
-              Padding(padding: EdgeInsets.all(5), child: titleField()),
-              Padding(padding: EdgeInsets.all(5), child: attendeeField()),
-              Padding(padding: EdgeInsets.all(5), child: selectTime()),
-              Padding(padding: EdgeInsets.all(5), child: locationField()),
-              Padding(padding: EdgeInsets.all(5), child: contentField()),
-              Padding(padding: EdgeInsets.all(5), child: submitButton(context))
-            ],
+        body: Form(
+          key: _formKey,
+          child: Center(
+            child: ListView(
+              children: [
+                Padding(padding: EdgeInsets.all(5), child: titleField()),
+                Padding(padding: EdgeInsets.all(5), child: attendeeField()),
+                Padding(padding: EdgeInsets.all(5), child: selectTime()),
+                Padding(padding: EdgeInsets.all(5), child: locationField()),
+                Padding(padding: EdgeInsets.all(5), child: contentField()),
+                Padding(padding: EdgeInsets.all(5), child: submitButton(context))
+              ],
+            ),
           ),
-        ),
+        )
       ),
     );
   }
@@ -55,6 +59,13 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
             labelText: "Location",
             hintText: "Enter the location of meet up here",
             border: OutlineInputBorder()),
+        validator: (value){
+          if (value!.isNotEmpty){
+            return null;
+          } else {
+            return "Please enter an location.";
+          }
+        },
       );
 
   Widget selectTime() => Row(
@@ -82,6 +93,13 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
             border: OutlineInputBorder()),
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.next,
+        validator: (value){
+          if (value!.isNotEmpty){
+            return null;
+          } else {
+            return "Please enter the number of max attendee.";
+          }
+        },
       );
 
   Widget titleField() => TextFormField(
@@ -93,6 +111,13 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
             border: OutlineInputBorder()),
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.next,
+        validator: (value){
+          if (value!.isNotEmpty){
+            return null;
+          } else {
+            return "Please enter a title.";
+          }
+        },
       );
 
   Widget contentField() => TextFormField(
@@ -103,6 +128,13 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
             labelText: "Content",
             hintText: "Enter the content of your post here",
             border: OutlineInputBorder()),
+        validator: (value){
+          if (value!.isNotEmpty){
+            return null;
+          } else {
+            return "Please enter an description.";
+          }
+        },
       );
 
   Widget submitButton(BuildContext context) {
@@ -116,6 +148,10 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
           return ElevatedButton(
             child: Text("Submit"),
             onPressed: () {
+              //Check and display warning message if empty fields
+              if (!_formKey.currentState!.validate() || selectedDate.isBefore(DateTime.now())){
+                return;
+              }
               setState(() {
                 print(Text('''Title: ${titleController.text}
                 Date&Time: ${selectedDate}

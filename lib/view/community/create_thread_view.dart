@@ -19,7 +19,7 @@ class CreateThreadView extends StatefulWidget {
 class _CreateThreadViewState extends State<CreateThreadView> {
   final titleController = TextEditingController(); //Saves edited title
   final contentController = TextEditingController(); //Saves edited content
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,15 +31,18 @@ class _CreateThreadViewState extends State<CreateThreadView> {
               icon: Icon(Icons.arrow_back),
               onPressed: () => Navigator.pop(context, false),
             )),
-        body: Center(
-          child: ListView(
-            children: [
-              Padding(padding: EdgeInsets.all(5), child: titleField()),
-              Padding(padding: EdgeInsets.all(5), child: contentField()),
-              Padding(padding: EdgeInsets.all(5), child: submitButton(context))
-            ],
+        body: Form(
+          key: _formKey,
+          child: Center(
+            child: ListView(
+              children: [
+                Padding(padding: EdgeInsets.all(5), child: titleField()),
+                Padding(padding: EdgeInsets.all(5), child: contentField()),
+                Padding(padding: EdgeInsets.all(5), child: submitButton(context))
+              ],
+            ),
           ),
-        ),
+        )
       ),
     );
   }
@@ -53,6 +56,13 @@ class _CreateThreadViewState extends State<CreateThreadView> {
             border: OutlineInputBorder()),
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.next,
+        validator: (value){
+          if (value!.isNotEmpty){
+            return null;
+          } else {
+            return "Please enter a title.";
+          }
+        },
       );
 
   Widget contentField() => TextFormField(
@@ -63,6 +73,13 @@ class _CreateThreadViewState extends State<CreateThreadView> {
             labelText: "Content",
             hintText: "Enter the content of your post here",
             border: OutlineInputBorder()),
+        validator: (value){
+          if (value!.isNotEmpty){
+            return null;
+          } else {
+            return "Please enter a content.";
+          }
+        },
       );
 
   Widget submitButton(BuildContext context) {
@@ -76,8 +93,10 @@ class _CreateThreadViewState extends State<CreateThreadView> {
             child: const Text("Submit"),
             onPressed: () {
               setState(() {
-                print(Text(
-                    "Title: ${titleController.text}\nTopic: ${widget.topic.topic2readable()}\nContent: ${contentController.text}"));
+                //Check and display warning message if empty fields
+                if (!_formKey.currentState!.validate()){
+                  return;
+                }
                 //Create thread
                 threadMgr.addThread(
                     titleController.text,
