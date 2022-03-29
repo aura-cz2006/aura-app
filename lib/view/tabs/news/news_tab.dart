@@ -7,10 +7,7 @@ import 'package:flutter_beautiful_popup/main.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:aura/view/community/fabLocation.dart';
 
 class NewsTab extends StatefulWidget {
   const NewsTab({Key? key}) : super(key: key);
@@ -32,7 +29,8 @@ class _NewsTabState extends State<NewsTab> {
   @override
   Widget build(BuildContext context) {
     return Consumer<News_Manager>(builder: (context, newsMgr, child) {
-      Future<void> _handleRefresh() async {
+
+      Future<void> _handleRefresh () async {
         NewsController.fetchNews(context);
       }
 
@@ -58,20 +56,14 @@ class _NewsTabState extends State<NewsTab> {
             return Scaffold(
                 appBar: AuraAppBar(
                   title: const Text("News"),
-                  hasBackButton: false,
-                  bottom: TabBar(tabs: tabs),
-                ),
-                body: LiquidPullToRefresh(
-                  key: _refreshIndicatorKey,
-                  // key if you want to add
-                  color: Colors.grey[200],
-                  backgroundColor: Colors.redAccent,
-                  showChildOpacityTransition: false,
-                  height: 75,
-                  animSpeedFactor: 3,
-                  onRefresh: _handleRefresh,
-                  // refresh callback
+                hasBackButton: false,
+                bottom: TabBar(tabs: tabs),
+              ),
+              body: LiquidPullToRefresh(
+                  key: _refreshIndicatorKey, // key if you want to add
+                  onRefresh: _handleRefresh, // refresh callback
                   child: // scroll view
+
                       ListView(
                     scrollDirection: Axis.vertical,
                     children: ((newsToDisplay == null)
