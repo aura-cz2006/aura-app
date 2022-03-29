@@ -77,7 +77,7 @@ class _CreateThreadViewState extends State<CreateThreadView> {
           if (value!.isNotEmpty){
             return null;
           } else {
-            return "Please enter a content.";
+            return "Please enter the contents of your post.";
           }
         },
       );
