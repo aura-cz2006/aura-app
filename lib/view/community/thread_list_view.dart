@@ -35,12 +35,8 @@ class ThreadListViewState extends State<ThreadListView> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-          appBar: AppBar(
-              iconTheme: const IconThemeData(
-                color: Colors.black,
-              ),
-              title: Text(widget.topic.topic2readable()), // todo: use friendly text here
-              leading: const AppBarBackButton()),
+          appBar: AuraAppBar(
+              title: Text(widget.topic.topic2readable())),
           floatingActionButton: FAB_CreateThread(topic: widget.topic),
           body: Consumer2<Thread_Manager, User_Manager>(
               builder: (context, threadMgr, userMgr, child) {
