@@ -27,6 +27,7 @@ class DengueNewsItem extends NewsItem {
   static IconData getIcon() {
     return Icons.bug_report;
   }
+
   @override
   String getText() {
     return "New dengue cluster detected at $location ($numCases cases).";

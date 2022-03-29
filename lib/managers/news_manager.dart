@@ -26,5 +26,4 @@ class News_Manager extends Manager {
   List<NewsItem> getUpcomingNewsItems() {
     return _newsList.where((n) => n.dateTime.isAfter(DateTime.now())).toList();
   }
-
 }
