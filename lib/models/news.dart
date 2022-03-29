@@ -11,7 +11,7 @@ abstract class NewsItem {
   NewsItem(this.dateTime, this.location);
 
   static IconData getIcon() {
-    return Icons.rsvp;
+    return Icons.newspaper;
   }
 
   String getText();
@@ -90,9 +90,8 @@ class UpgradingNewsItem extends NewsItem {
   }
 
   factory UpgradingNewsItem.getFromJson(Map<String, dynamic> json) {
-    DateTime dt = (int.parse(json['id']) % 2 == 0) ? DateTime(2022, 1, 1) : DateTime(2023, 1, 1);
-    return UpgradingNewsItem( // TODO replace: parse api response properly
+    return UpgradingNewsItem(
         // json['dateTime'], json['location'], json['title'], json['expectedEnd']);
-        dt, LatLng(0, 0), json['title'], DateTime(2022, 3, 31));
+        DateTime(2022, 1, 1), LatLng(0, 0), json['title'], DateTime(2022, 3, 31));
   }
 }

@@ -1,7 +1,10 @@
+
+
 import 'package:aura/apis/news_api.dart';
 import 'package:aura/managers/news_manager.dart';
 import 'package:aura/models/news.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 class NewsController {
