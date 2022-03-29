@@ -62,6 +62,8 @@ dependencies:
   badges: ^2.0.2
   modal_bottom_sheet: ^2.0.1
   profanity_filter: ^2.0.0
+  liquid_pull_to_refresh: ^3.0.1
+  http: ^0.13.4
   flutter_launcher_icons: ^0.9.2
   flutter_native_splash: ^2.1.2+1
 
