@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:aura/view/community/create_meetup_view.dart';
 import 'package:go_router/go_router.dart';
 
 class FAB_CreateMeetupView extends StatelessWidget {

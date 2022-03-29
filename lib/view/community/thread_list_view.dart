@@ -1,6 +1,6 @@
 import 'package:aura/models/discussion_topic.dart';
 import 'package:aura/view/tabs/community/fab_createthread.dart';
-import 'package:aura/widgets/app_bar_back_button.dart';
+import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:aura/managers/user_manager.dart';
