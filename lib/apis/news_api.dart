@@ -7,11 +7,9 @@ import 'package:http/http.dart' as http; // for making HTTP calls
 class NewsApi {
   static Future<List<NewsItem>> fetchNews() async {
     Uri url = Uri.parse("${Config().routes["api"]}/news");
-    print(url);
 
     http.Response response = await http.get(url);
-    print(response);
-    print("==============");
+
     if (response.statusCode == 200) {
       // the response body
       String responseBody = response.body;
