@@ -13,6 +13,7 @@ abstract class NewsItem {
   static IconData getIcon() {
     return Icons.rsvp;
   }
+
   String getText();
 }
 
@@ -25,23 +26,27 @@ class DengueNewsItem extends NewsItem {
   static IconData getIcon() {
     return Icons.bug_report;
   }
+
   @override
   String getText() {
     return "New dengue cluster detected at $location ($numCases cases).";
   }
 }
 
-class EventNewsItem extends NewsItem { // todo consider start and end date
+class EventNewsItem extends NewsItem {
+  // todo consider start and end date
   String eventTitle;
   double fee = 0;
   String websiteURL;
 
-  EventNewsItem(DateTime dateTime, LatLng location, this.eventTitle, this.fee, this.websiteURL)
+  EventNewsItem(DateTime dateTime, LatLng location, this.eventTitle, this.fee,
+      this.websiteURL)
       : super(dateTime, location);
 
   static IconData getIcon() {
     return Icons.event;
   }
+
   @override
   String getText() {
     return "New event \"$eventTitle\" hosted at $location (fee: $fee).";
@@ -60,6 +65,7 @@ class MarketNewsItem extends NewsItem {
   static IconData getIcon() {
     return Icons.shopping_basket;
   }
+
   @override
   String getText() {
     return "$marketName will be closed until ${DateFormat('yyyy-MM-dd kk:mm').format(reopeningDate)}.";
@@ -77,8 +83,15 @@ class UpgradingNewsItem extends NewsItem {
   static IconData getIcon() {
     return Icons.construction;
   }
+
   @override
   String getText() {
     return "Upgrading works at $location: $desc (expected completion: \$${DateFormat('yyyy-MM-dd kk:mm').format(expectedEnd)} ).";
+  }
+
+  factory UpgradingNewsItem.getFromJson(Map<String, dynamic> json) {
+    return UpgradingNewsItem(
+        // json['dateTime'], json['location'], json['title'], json['expectedEnd']);
+        DateTime(2022, 1, 1), LatLng(0, 0), json['title'], DateTime(2022, 3, 31));
   }
 }
