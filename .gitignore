@@ -23,3 +23,7 @@ doc/api/
 *.js.deps
 *.js.view.map
 /.idea/
+
+
+.flutter-plugins
+generated_plugin_registrant.dart

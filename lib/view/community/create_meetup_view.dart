@@ -28,10 +28,8 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-            title: Center(child: Text('Create Meetup')),
-            automaticallyImplyLeading: true,
-            leading: AppBarBackButton()),
+        appBar: AuraAppBar(
+            title: const Text('Create Meetup')),
         body: Form(
           key: _formKey,
           child: Center(

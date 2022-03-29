@@ -1,8 +1,6 @@
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/managers/user_manager.dart';
-import 'package:aura/models/user.dart';
 import 'package:aura/view/community/fab_createmeetup.dart';
-import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -37,7 +35,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
     return MaterialApp(
       home: Scaffold(
           appBar: AuraAppBar(title: const Text("Meetups")),
-          floatingActionButton: const CreateMeetupFAB(),
+          floatingActionButton: const FAB_CreateMeetupView(),
           body: Consumer2<Meetup_Manager, User_Manager>(
               builder: (context, meetupMgr, userMgr, child) {
             return Column(children: [
