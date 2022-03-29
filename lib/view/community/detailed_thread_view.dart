@@ -2,6 +2,7 @@ import 'dart:core';
 import 'package:aura/managers/thread_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
+import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -9,16 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:profanity_filter/profanity_filter.dart';
 import 'package:provider/provider.dart';
-
-void main() {
-  String threadID = "2";
-  runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => Thread_Manager()),
-      ChangeNotifierProvider(create: (context) => User_Manager()),
-    ], child: DetailedThreadView(threadID: threadID)),
-  );
-}
 
 class DetailedThreadView extends StatefulWidget {
   final String threadID;
@@ -42,63 +33,52 @@ class _DetailedThreadViewState extends State<DetailedThreadView> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // TODO: remove
-      home: Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
-          leading: const AppBarBackButton(),
-          title: const Text(
-              'Discussion Thread'), // TODO: maybe thread topic in appbar
-        ),
-        body: Consumer2<Thread_Manager, User_Manager>(
-            builder: (context, threadMgr, userMgr, child) {
-          return Column(
-            children: <Widget>[
-              Expanded(
-                child: ListView(children: <Widget>[
-                  DisplayFullThread(threadID: widget.threadID),
-                  DisplayThreadComments(threadID: widget.threadID),
-                  Row(children: [
-                    Expanded(
-                        child: TextField(
-                      controller: textCtrl,
-                      autocorrect: true,
-                      decoration: InputDecoration(
-                        labelText: "Leave a comment",
-                        labelStyle: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey[750],
-                          fontStyle: FontStyle.italic,
-                        ),
-                        fillColor: Colors.blueGrey[50],
-                        filled: true,
-                      ),
-                      // validator: (String? value) { // TODO? validate for censored text
-                      //   return (value != null && value.contains('@')) ? 'Do not use the @ char.' : null;
-                      // },
-                    )),
-                    IconButton(
-                      icon: Icon(Icons.send, color: Colors.grey[900]),
-                      onPressed: () {
-                        setState(() {
-                          threadMgr.addComment(widget.threadID,
-                              userMgr.active_user_id, textCtrl.text);
-                          textCtrl.clear(); // clear text
-                          FocusManager.instance.primaryFocus
-                              ?.unfocus(); // exit keyboard
-                        });
-                      },
-                    ),
-                  ])
-                ]),
-              )
-            ],
-          );
-        }),
+    return Scaffold(
+      appBar: AuraAppBar(
+        title: const Text('Discussion Thread'),
       ),
+      body: Consumer2<Thread_Manager, User_Manager>(
+          builder: (context, threadMgr, userMgr, child) {
+        return Column(
+          children: <Widget>[
+            Expanded(
+              child: ListView(children: <Widget>[
+                DisplayFullThread(threadID: widget.threadID),
+                DisplayThreadComments(threadID: widget.threadID),
+                Row(children: [
+                  Expanded(
+                      child: TextField(
+                    controller: textCtrl,
+                    autocorrect: true,
+                    decoration: InputDecoration(
+                      labelText: "Leave a comment",
+                      labelStyle: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[750],
+                        fontStyle: FontStyle.italic,
+                      ),
+                      fillColor: Colors.blueGrey[50],
+                      filled: true,
+                    ),
+                  )),
+                  IconButton(
+                    icon: Icon(Icons.send, color: Colors.grey[900]),
+                    onPressed: () {
+                      setState(() {
+                        threadMgr.addComment(widget.threadID,
+                            userMgr.active_user_id, textCtrl.text);
+                        textCtrl.clear(); // clear text
+                        FocusManager.instance.primaryFocus
+                            ?.unfocus(); // exit keyboard
+                      });
+                    },
+                  ),
+                ])
+              ]),
+            )
+          ],
+        );
+      }),
     );
   }
 }
@@ -114,6 +94,7 @@ class DisplayFullThread extends StatefulWidget {
 
 class _DisplayFullThreadState extends State<DisplayFullThread> {
   final filter = ProfanityFilter();
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<Thread_Manager, User_Manager>(
@@ -124,13 +105,17 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
-                title: Text(
-                    filter.censor(
-                        threadMgr.getThreadByID(widget.threadID)!.title ??
-                            "Untitled Thread"),
-                    style: DefaultTextStyle.of(context)
-                        .style
-                        .apply(fontSizeFactor: 1.8, fontWeightDelta: 2)),
+                title: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      filter.censor(
+                          threadMgr.getThreadByID(widget.threadID)!.title ??
+                              "Untitled Thread"),
+                      style: DefaultTextStyle.of(context)
+                          .style
+                          .apply(fontSizeFactor: 1.8, fontWeightDelta: 2),
+                      softWrap: true,
+                    )),
                 trailing: (userMgr.active_user_id ==
                         threadMgr.getThreadByID(widget.threadID)!.userID)
                     ? PopupMenuButton(
@@ -174,7 +159,9 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                 children: <Widget>[
                   const SizedBox(width: 16),
                   Text(
-                      userMgr.getUsernameByID(threadMgr.getThreadByID(widget.threadID)!.userID) ??
+                      userMgr.getUsernameByID(threadMgr
+                              .getThreadByID(widget.threadID)!
+                              .userID) ??
                           "UNKNOWN USER",
                       style: DefaultTextStyle.of(context).style.apply(
                           color: Colors.grey[700],
@@ -189,11 +176,13 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                 ],
               ),
               ListTile(
-                title: Text(
+                  title: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(
                     filter.censor(
                         threadMgr.getThreadByID(widget.threadID)!.content),
                     softWrap: true),
-              ),
+              )),
               // const SizedBox(height: 8),
               Row(
                 // mainAxisAlignment: MainAxisAlignment.end,
@@ -259,12 +248,12 @@ class DisplayThreadComments extends StatefulWidget {
 
 class _DisplayThreadCommentsState extends State<DisplayThreadComments> {
   final filter = ProfanityFilter();
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<Thread_Manager, User_Manager>(
         builder: (context, threadMgr, userMgr, child) {
       return ListView(
-          shrinkWrap: true,
           physics: const ScrollPhysics(),
           children: threadMgr
               .getCommentsForThread(widget.threadID)
@@ -280,8 +269,8 @@ class _DisplayThreadCommentsState extends State<DisplayThreadComments> {
                             onSelected: (value) {
                               setState(() {
                                 if (value == "delete") {
-                                  threadMgr.removeComment(widget.threadID,
-                                      c.commentID); // TODO: use manager function to delete comment
+                                  threadMgr.removeComment(
+                                      widget.threadID, c.commentID);
                                 }
                               });
                             },

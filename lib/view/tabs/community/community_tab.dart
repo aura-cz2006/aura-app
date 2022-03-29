@@ -1,6 +1,7 @@
 import 'package:aura/managers/notification_manager.dart';
 import 'package:aura/models/notification.dart' as no;
 import 'package:aura/models/discussion_topic.dart';
+import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -29,8 +30,9 @@ class _CommunityTabState extends State<CommunityTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AuraAppBar(
         title: const Text('Community'),
+        hasBackButton: false,
         actions: [
           Consumer<NotificationManager>(
               builder: (context, notificationData, child) => Badge(
@@ -48,10 +50,9 @@ class _CommunityTabState extends State<CommunityTab> {
           IconButton(
             icon: const Icon(
               Icons.settings,
-              color: Colors.black54,
             ),
             onPressed: () {
-              GoRouter.of(context).push("/settings");
+              context.push("/settings");
             },
           )
         ],

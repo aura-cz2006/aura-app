@@ -2,6 +2,7 @@ import 'dart:core';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
+import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -9,18 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:profanity_filter/profanity_filter.dart';
 import 'package:provider/provider.dart';
-
-void main() {
-  // viewer
-  String meetupID = "1";
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (context) => Meetup_Manager()),
-      ChangeNotifierProvider(create: (context) => User_Manager()),
-    ],
-    child: DetailedMeetupView(meetupID: meetupID),
-  )); // curr
-}
 
 class DetailedMeetupView extends StatefulWidget {
   final String meetupID;
@@ -35,6 +24,7 @@ class DetailedMeetupView extends StatefulWidget {
 class _DetailedMeetupViewState extends State<DetailedMeetupView> {
   final textCtrl = TextEditingController();
   final filter = ProfanityFilter();
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -44,60 +34,51 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        // TODO: remove
-        home: Scaffold(
-            appBar: AppBar(
-              iconTheme: const IconThemeData(
-                color: Colors.black,
-              ),
-              leading: const AppBarBackButton(),
-              title: const Text('Meetup'),
-            ),
-            body: Consumer2<Meetup_Manager, User_Manager>(
-                builder: (context, meetupMgr, userMgr, child) {
-              return Column(
-                children: <Widget>[
-                  Expanded(
-                      child: ListView(children: <Widget>[
-                    DisplayFullMeetup(meetupID: widget.meetupID),
-                    DisplayMeetupComments(meetupID: widget.meetupID)
-                  ])),
-                  Row(children: [
-                    Expanded(
-                      child: TextField(
-                        controller: textCtrl,
-                        autocorrect: true,
-                        decoration: InputDecoration(
-                          labelText: "Leave a comment",
-                          labelStyle: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey[750],
-                              fontStyle: FontStyle.italic),
-                          fillColor: Colors.blueGrey[50],
-                          filled: true,
-                        ),
-                        // validator: (String? value) { // TODO? validate for censored text
-                        //   return (value != null && value.contains('@')) ? 'Do not use the @ char.' : null;
-                        // },
-                      ),
+    return Scaffold(
+        appBar: AuraAppBar(
+          title: const Text('Meetup'),
+        ),
+        body: Consumer2<Meetup_Manager, User_Manager>(
+            builder: (context, meetupMgr, userMgr, child) {
+          return Column(
+            children: <Widget>[
+              Expanded(
+                  child: ListView(children: <Widget>[
+                DisplayFullMeetup(meetupID: widget.meetupID),
+                DisplayMeetupComments(meetupID: widget.meetupID)
+              ])),
+              Row(children: [
+                Expanded(
+                  child: TextField(
+                    controller: textCtrl,
+                    autocorrect: true,
+                    decoration: InputDecoration(
+                      labelText: "Leave a comment",
+                      labelStyle: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey[750],
+                          fontStyle: FontStyle.italic),
+                      fillColor: Colors.blueGrey[50],
+                      filled: true,
                     ),
-                    IconButton(
-                      icon: Icon(Icons.send, color: Colors.grey[900]),
-                      onPressed: () {
-                        setState(() {
-                          meetupMgr.addComment(widget.meetupID,
-                              userMgr.active_user_id, textCtrl.text);
-                          textCtrl.clear(); // clear text
-                          FocusManager.instance.primaryFocus
-                              ?.unfocus(); // exit keyboard
-                        });
-                      },
-                    )
-                  ]),
-                ],
-              );
-            })));
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(Icons.send, color: Colors.grey[900]),
+                  onPressed: () {
+                    setState(() {
+                      meetupMgr.addComment(widget.meetupID,
+                          userMgr.active_user_id, textCtrl.text);
+                      textCtrl.clear(); // clear text
+                      FocusManager.instance.primaryFocus
+                          ?.unfocus(); // exit keyboard
+                    });
+                  },
+                )
+              ]),
+            ],
+          );
+        }));
   }
 }
 
@@ -112,6 +93,7 @@ class DisplayFullMeetup extends StatefulWidget {
 
 class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
   final filter = ProfanityFilter();
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<Meetup_Manager, User_Manager>(
@@ -120,13 +102,17 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
         child: Card(
           child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
             ListTile(
-              title: Text(
-                  filter.censor(
-                      meetupMgr.getMeetupByID(widget.meetupID).title ??
-                          "Untitled Meetup"),
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .apply(fontSizeFactor: 1.8, fontWeightDelta: 2)),
+              title: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    filter.censor(
+                        meetupMgr.getMeetupByID(widget.meetupID).title ??
+                            "Untitled Meetup"),
+                    style: DefaultTextStyle.of(context)
+                        .style
+                        .apply(fontSizeFactor: 1.8, fontWeightDelta: 2),
+                    softWrap: true,
+                  )),
               trailing: (userMgr.active_user_id ==
                           meetupMgr.getMeetupByID(widget.meetupID).userID &&
                       meetupMgr.canEditMeetup(widget.meetupID))
@@ -183,21 +169,15 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
               ],
             ),
             ListTile(
-              title: Text(
-                  filter.censor(
-                      meetupMgr.getMeetupByID(widget.meetupID).description ??
+              title: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                      filter.censor(meetupMgr
+                              .getMeetupByID(widget.meetupID)
+                              .description ??
                           ""),
-                  softWrap: true),
+                      softWrap: true)),
             ),
-            // ListTile(
-            //   leading: const Icon(Icons.people),
-            //   title: meetupMgr.isCancelled(widget.meetupID)
-            //       ? const Text("NO ATTENDEES",
-            //           style: TextStyle(
-            //               color: Colors.red, fontWeight: FontWeight.bold))
-            //       : Text("${meetupMgr.getCurrNumAttendees(widget.meetupID)} "
-            //           "/ ${meetupMgr.getMeetupByID(widget.meetupID).maxAttendees} ATTENDEES"),
-            // ),
             ListTile(
               // TODO: display location address instead of coordinates
               leading: const Icon(Icons.pin_drop),
@@ -281,7 +261,7 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                         },
                         countBuilder: (int? count, bool isLiked, String text) {
                           String? message;
-                          var color;
+                          Color? color;
                           color = isLiked ? Colors.green : Colors.grey[700];
                           message = " " +
                               (isLiked
@@ -387,12 +367,12 @@ class DisplayMeetupComments extends StatefulWidget {
 
 class _DisplayMeetupCommentsState extends State<DisplayMeetupComments> {
   final filter = ProfanityFilter();
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<Meetup_Manager, User_Manager>(
         builder: (context, meetupMgr, userMgr, child) {
       return ListView(
-          shrinkWrap: true,
           physics: const ScrollPhysics(),
           children: meetupMgr
               .getCommentsForMeetup(widget.meetupID)

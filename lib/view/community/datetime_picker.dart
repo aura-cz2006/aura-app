@@ -31,19 +31,19 @@ import 'package:intl/intl.dart';
 
 typedef void DateTimeCallback(DateTime val);
 
-class datetime_picker extends StatefulWidget {
+class DatetimePicker extends StatefulWidget {
   final DateTimeCallback onClicked;
-  final DateTime date_reference; //For editting purposes
+  final DateTime date_reference; //For editing purposes
 
-  const datetime_picker(
+  const DatetimePicker(
       {Key? key, required this.onClicked, required this.date_reference})
       : super(key: key);
 
   @override
-  _datetime_pickerState createState() => _datetime_pickerState();
+  _DatetimePickerState createState() => _DatetimePickerState();
 }
 
-class _datetime_pickerState extends State<datetime_picker> {
+class _DatetimePickerState extends State<DatetimePicker> {
   final formatter = DateFormat('dd-MM-yyyy HH:mm');
   DateTime date = DateTime(0000);
   TimeOfDay initialTime = TimeOfDay.now();

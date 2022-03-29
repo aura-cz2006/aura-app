@@ -1,12 +1,13 @@
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
+import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
 class ChangeHomeAddressScreen extends StatefulWidget {
-  ChangeHomeAddressScreen();
+  const ChangeHomeAddressScreen({Key? key}) : super(key: key);
 
   @override
   _ChangeHomeAddressScreenState createState() =>
@@ -27,9 +28,7 @@ class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-            title: Center(child: Text('Change Home Address')),
-            leading: AppBarBackButton()),
+        appBar: AuraAppBar(title: const Text('Edit Home Address')),
         body: Center(
           child: Column(
             children: [
@@ -86,7 +85,6 @@ class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
         child: Text("Submit"),
         onPressed: () {
           setState(() {
-            //Check and display warning message if empty fields
             if (!_formKey.currentState!.validate()){
               return;
             }

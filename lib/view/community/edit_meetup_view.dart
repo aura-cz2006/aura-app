@@ -1,7 +1,7 @@
 import 'dart:core';
 
 import 'package:aura/managers/meetup_manager.dart';
-import 'package:aura/widgets/app_bar_back_button.dart';
+import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
@@ -20,7 +20,7 @@ void main() {
 class EditMeetupView extends StatefulWidget {
   final String meetupID;
 
-  const EditMeetupView({required this.meetupID});
+  const EditMeetupView({Key? key, required this.meetupID}) : super(key: key);
 
   @override
   _EditMeetupViewState createState() => _EditMeetupViewState();
@@ -44,20 +44,17 @@ class _EditMeetupViewState extends State<EditMeetupView> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-        iconTheme: const IconThemeData(
-        color: Colors.black,),
-            title: Center(child: Text('Edit Meetup')),
-            leading: AppBarBackButton()),
+        appBar: AuraAppBar(
+            title: const Text('Edit Meetup')),
         body: Center(
           child: Column(
             children: [
-              Padding(padding: EdgeInsets.all(5), child: titleField()),
-              Padding(padding: EdgeInsets.all(5), child: maxAttendeesField()),
-              Padding(padding: EdgeInsets.all(5), child: selectTime()),
-              Padding(padding: EdgeInsets.all(5), child: locationField()),
-              Padding(padding: EdgeInsets.all(5), child: descriptionField()),
-              Padding(padding: EdgeInsets.all(5), child: submitButton(context))
+              Padding(padding: const EdgeInsets.all(5), child: titleField()),
+              Padding(padding: const EdgeInsets.all(5), child: maxAttendeesField()),
+              Padding(padding: const EdgeInsets.all(5), child: selectTime()),
+              Padding(padding: const EdgeInsets.all(5), child: locationField()),
+              Padding(padding: const EdgeInsets.all(5), child: descriptionField()),
+              Padding(padding: const EdgeInsets.all(5), child: submitButton(context))
             ],
           ),
         ),
@@ -91,7 +88,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
           Padding(
               padding:
                   const EdgeInsets.only(top: 5, left: 15, right: 5, bottom: 5),
-              child: datetime_picker(
+              child: DatetimePicker(
                   date_reference:
                       meetupMgr.getMeetupByID(widget.meetupID).timeOfMeetUp,
                   onClicked: (DateTime val) =>
@@ -157,7 +154,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
             height: 50,
             child: Card(
               child: ElevatedButton(
-                child: Text("Submit"),
+                child: const Text("Submit"),
                 onPressed: () {
                   setState(() {
                     var new_location = LatLng(12.1,21.3); // todo read new location
