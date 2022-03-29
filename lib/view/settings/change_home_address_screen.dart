@@ -17,6 +17,7 @@ class ChangeHomeAddressScreen extends StatefulWidget {
 class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
   var oldaddressController = TextEditingController(); //Saves
   var newaddressController = TextEditingController(); // s edited content
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController _initAddressController(String og_title) {
     oldaddressController.text = og_title;
@@ -47,25 +48,34 @@ class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
   Widget originalAddressField() {
     return Consumer<User_Manager>(builder: (context, userMgr, child) {
       return TextFormField(
-        readOnly: true,
-        maxLines: null,
-        controller: _initAddressController(
-            userMgr.getUser(userMgr.active_user_id)!.getHomeAddress()),
-        decoration: InputDecoration(
-            labelText: "Original Address", border: OutlineInputBorder()),
-      );
+          readOnly: true,
+          maxLines: null,
+          controller: _initAddressController(
+              userMgr.getUser(userMgr.active_user_id)!.getHomeAddress()),
+          decoration: InputDecoration(
+              labelText: "Original Address", border: OutlineInputBorder()),
+        );
     });
   }
 
   Widget newAddressField() {
     return Consumer<User_Manager>(builder: (context, userMgr, child) {
-      return TextFormField(
-        keyboardType: TextInputType.multiline,
-        maxLines: null,
-        controller: newaddressController,
-        decoration: InputDecoration(
-            labelText: "New Address", border: OutlineInputBorder()),
-      );
+      return Form(
+        key: _formKey,
+        child: TextFormField(
+          keyboardType: TextInputType.multiline,
+          maxLines: null,
+          controller: newaddressController,
+          decoration: InputDecoration(
+              labelText: "New Address", border: OutlineInputBorder()),
+          validator: (value){
+            if (value!.isNotEmpty){
+              return null;
+            } else {
+              return "Please enter an address.";
+            }
+          },
+      ));
     });
   }
 
@@ -75,8 +85,9 @@ class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
         child: Text("Submit"),
         onPressed: () {
           setState(() {
-            print(
-                "New Home Address: ${newaddressController.text}"); // TODO REMOVE
+            if (!_formKey.currentState!.validate()){
+              return;
+            }
             userMgr.updateHomeAddress(
                 //update User's homeaddress in manager
                 userMgr.active_user_id,
