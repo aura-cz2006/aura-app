@@ -63,7 +63,7 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
           if (value!.isNotEmpty){
             return null;
           } else {
-            return "Please enter an location.";
+            return "Please enter a location.";
           }
         },
       );
@@ -97,7 +97,7 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
           if (value!.isNotEmpty){
             return null;
           } else {
-            return "Please enter the number of max attendee.";
+            return "Please enter the maximum number of attendees.";
           }
         },
       );
@@ -132,7 +132,7 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
           if (value!.isNotEmpty){
             return null;
           } else {
-            return "Please enter an description.";
+            return "Please enter a description.";
           }
         },
       );
