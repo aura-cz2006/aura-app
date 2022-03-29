@@ -1,6 +1,6 @@
 import 'package:aura/models/discussion_topic.dart';
-import 'package:aura/view/community/fab_createthread.dart';
-import 'package:aura/widgets/aura_app_bar.dart';
+import 'package:aura/view/tabs/community/fab_createthread.dart';
+import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:aura/managers/user_manager.dart';
@@ -35,8 +35,9 @@ class ThreadListViewState extends State<ThreadListView> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-          appBar: AuraAppBar(title: Text(widget.topic.topic2readable())),
-          floatingActionButton: CreateThreadFAB(topic: widget.topic),
+          appBar: AuraAppBar(
+              title: Text(widget.topic.topic2readable())),
+          floatingActionButton: FAB_CreateThread(topic: widget.topic),
           body: Consumer2<Thread_Manager, User_Manager>(
               builder: (context, threadMgr, userMgr, child) {
             return Column(children: [

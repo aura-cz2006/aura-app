@@ -47,7 +47,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
         appBar: AuraAppBar(
             title: const Text('Edit Meetup')),
         body: Center(
-          child: Column(
+          child: ListView(
             children: [
               Padding(padding: const EdgeInsets.all(5), child: titleField()),
               Padding(padding: const EdgeInsets.all(5), child: maxAttendeesField()),
