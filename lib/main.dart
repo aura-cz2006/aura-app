@@ -1,4 +1,3 @@
-import 'package:aura/managers/discussion_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/managers/map_manager.dart';
 import 'package:aura/router.dart';
@@ -42,18 +41,18 @@ class MyApp extends StatelessWidget {
               actionsIconTheme: IconThemeData(color: Colors.black),
               titleTextStyle: TextStyle(
                   color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold)),
+                  fontSize: 21,
+                  fontWeight: FontWeight.w800)),
           tabBarTheme: TabBarTheme(
-            labelStyle:
-                const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-            indicator: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.redAccent),
+            indicator: const UnderlineTabIndicator(
+              borderSide: BorderSide(width: 3, color: Colors.redAccent),
+            ),
+            labelColor: Colors.red,
+            labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            unselectedLabelColor: Colors.grey[400],
             unselectedLabelStyle: const TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: Colors.black, // ! doesn't work
+              fontWeight: FontWeight.w700,
             ),
           ),
           primarySwatch: Colors.red,

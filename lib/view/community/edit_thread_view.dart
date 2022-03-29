@@ -1,10 +1,10 @@
 import 'dart:core';
 import 'package:aura/managers/thread_manager.dart';
+import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-
 
 void main() {
   String threadID = "1";
@@ -19,7 +19,7 @@ void main() {
 class EditThreadView extends StatefulWidget {
   final String threadID;
 
-  EditThreadView({required this.threadID});
+  const EditThreadView({Key? key, required this.threadID}) : super(key: key);
 
   @override
   _EditThreadViewState createState() => _EditThreadViewState();
@@ -43,19 +43,15 @@ class _EditThreadViewState extends State<EditThreadView> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-            title: Center(child: Text('Edit Thread')),
-            automaticallyImplyLeading: true,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context, false),
-            )),
+        appBar: AuraAppBar(
+          title: const Text('Edit Thread'),
+        ),
         body: Center(
           child: Column(
             children: [
-              Padding(padding: EdgeInsets.all(5), child: titleField()),
-              Padding(padding: EdgeInsets.all(5), child: contentField()),
-              Padding(padding: EdgeInsets.all(5), child: submitButton(context))
+              Padding(padding: const EdgeInsets.all(5), child: titleField()),
+              Padding(padding: const EdgeInsets.all(5), child: contentField()),
+              Padding(padding: const EdgeInsets.all(5), child: submitButton(context))
             ],
           ),
         ),
@@ -69,7 +65,7 @@ class _EditThreadViewState extends State<EditThreadView> {
         // onChanged: (value) => setState(() => this.title = value), //og.title = value
         controller: _initTitleController(
             threadMgr.getThreadByID(widget.threadID)!.title!),
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
             labelText: "Title",
             hintText: "Enter the title of your post here",
             border: OutlineInputBorder()),
@@ -96,16 +92,18 @@ class _EditThreadViewState extends State<EditThreadView> {
   Widget submitButton(BuildContext context) {
     return Consumer<Thread_Manager>(builder: (context, thread_manager, child) {
       return ElevatedButton(
-        child: Text("Submit"),
+        child: const Text("Submit"),
         onPressed: () {
           setState(() {
-            print("Text: ${titleController.text}, Content: ${contentController.text}"); // TODO REMOVE
+            // print(
+            //     "Text: ${titleController.text}, Content: ${contentController.text}"); // TODO REMOVE
             thread_manager.editThread(
                 //Update thread
                 widget.threadID,
                 titleController.text,
                 contentController.text);
-            context.pop(); // Navigator.pop(context); //Return to previous, but updated thread
+            context
+                .pop(); // Navigator.pop(context); //Return to previous, but updated thread
           });
         },
       );

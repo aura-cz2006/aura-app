@@ -1,4 +1,5 @@
 import 'package:aura/widgets/app_bar_back_button.dart';
+import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -11,9 +12,9 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-            appBar: AppBar(
-                title: const Center(child: Text('Settings')),
-                leading: const AppBarBackButton()),
+            appBar: AuraAppBar(
+                title: const Text('Settings'),
+            ),
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

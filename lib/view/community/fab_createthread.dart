@@ -1,15 +1,17 @@
+import 'package:aura/models/discussion_topic.dart';
 import 'package:flutter/material.dart';
-import 'package:aura/view/community/create_meetup_view.dart';
 import 'package:go_router/go_router.dart';
 
-class CreateMeetupFAB extends StatefulWidget {
-  const CreateMeetupFAB({Key? key}) : super(key: key);
+class CreateThreadFAB extends StatefulWidget {
+  final DiscussionTopic topic;
+
+  const CreateThreadFAB({Key? key, required this.topic});
 
   @override
-  _CreateMeetupFABState createState() => _CreateMeetupFABState();
+  _CreateThreadFABState createState() => _CreateThreadFABState();
 }
 
-class _CreateMeetupFABState extends State<CreateMeetupFAB> {
+class _CreateThreadFABState extends State<CreateThreadFAB> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -18,7 +20,7 @@ class _CreateMeetupFABState extends State<CreateMeetupFAB> {
           child: const Icon(Icons.add),
           backgroundColor: Colors.lightBlueAccent,
           onPressed: () {
-            context.push("${GoRouter.of(context).location}/createMeetup");
+            context.push("${GoRouter.of(context).location}/createThread");
           },
         ));
   }

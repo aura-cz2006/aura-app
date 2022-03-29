@@ -1,5 +1,6 @@
 import 'package:aura/managers/news_manager.dart';
 import 'package:aura/models/news.dart';
+import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_beautiful_popup/main.dart';
 import 'package:intl/intl.dart';
@@ -46,12 +47,10 @@ class _NewsTabState extends State<NewsTab> {
               }
             });
             return Scaffold(
-              appBar: AppBar(
-                title: TabBar(
-                  // todo figure out colours
-                  labelColor: Colors.black,
-                  tabs: tabs,
-                ),
+              appBar: AuraAppBar(
+                title: const Text("News"),
+                hasBackButton: false,
+                bottom: TabBar(tabs: tabs),
               ),
               body: ListView(
                 scrollDirection: Axis.vertical,

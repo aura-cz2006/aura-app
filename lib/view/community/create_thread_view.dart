@@ -1,11 +1,12 @@
 import 'package:aura/managers/thread_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/models/discussion_topic.dart';
+import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(CreateThreadView(topic: DiscussionTopic.NATURE));
+void main() => runApp(const CreateThreadView(topic: DiscussionTopic.NATURE));
 
 class CreateThreadView extends StatefulWidget {
   final DiscussionTopic topic;
@@ -24,19 +25,17 @@ class _CreateThreadViewState extends State<CreateThreadView> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-            title: Center(child: Text('Create Thread')),
-            automaticallyImplyLeading: true,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context, false),
-            )),
+        appBar: AuraAppBar(
+          title: const Text('Create Thread'),
+        ),
         body: Center(
           child: ListView(
             children: [
-              Padding(padding: EdgeInsets.all(5), child: titleField()),
-              Padding(padding: EdgeInsets.all(5), child: contentField()),
-              Padding(padding: EdgeInsets.all(5), child: submitButton(context))
+              Padding(padding: const EdgeInsets.all(5), child: titleField()),
+              Padding(padding: const EdgeInsets.all(5), child: contentField()),
+              Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: submitButton(context))
             ],
           ),
         ),
@@ -47,7 +46,7 @@ class _CreateThreadViewState extends State<CreateThreadView> {
   Widget titleField() => TextFormField(
         // onChanged: (value) => setState(() => this.title = value), //og.title = value
         controller: titleController,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
             labelText: "Title",
             hintText: "Enter the title of your post here",
             border: OutlineInputBorder()),
@@ -59,7 +58,7 @@ class _CreateThreadViewState extends State<CreateThreadView> {
         keyboardType: TextInputType.multiline,
         maxLines: null,
         controller: contentController,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
             labelText: "Content",
             hintText: "Enter the content of your post here",
             border: OutlineInputBorder()),
@@ -76,8 +75,8 @@ class _CreateThreadViewState extends State<CreateThreadView> {
             child: const Text("Submit"),
             onPressed: () {
               setState(() {
-                print(Text(
-                    "Title: ${titleController.text}\nTopic: ${widget.topic.topic2readable()}\nContent: ${contentController.text}"));
+                // print(Text(
+                //     "Title: ${titleController.text} \nTopic: ${widget.topic.topic2readable()} \nContent: ${contentController.text}"));
                 //Create thread
                 threadMgr.addThread(
                     titleController.text,
@@ -85,8 +84,7 @@ class _CreateThreadViewState extends State<CreateThreadView> {
                     widget.topic,
                     userMgr.active_user_id //Not yet available
                     );
-                context
-                    .pop(); //Return to previous, but updated threadlistview*/
+                context.pop();
               });
             },
           );

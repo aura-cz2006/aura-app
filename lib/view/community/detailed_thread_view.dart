@@ -2,6 +2,7 @@ import 'dart:core';
 import 'package:aura/managers/thread_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
+import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -9,16 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:profanity_filter/profanity_filter.dart';
 import 'package:provider/provider.dart';
-
-void main() {
-  String threadID = "2";
-  runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => Thread_Manager()),
-      ChangeNotifierProvider(create: (context) => User_Manager()),
-    ], child: DetailedThreadView(threadID: threadID)),
-  );
-}
 
 class DetailedThreadView extends StatefulWidget {
   final String threadID;
@@ -42,68 +33,52 @@ class _DetailedThreadViewState extends State<DetailedThreadView> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // TODO: remove
-      home: Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
-          leading: const AppBarBackButton(),
-          title: const Text(
-              'Discussion Thread'), // TODO: maybe thread topic in appbar
-        ),
-        body: Consumer2<Thread_Manager, User_Manager>(
-            builder: (context, threadMgr, userMgr, child) {
-          return Column(children: <Widget>[
-            DisplayFullThread(threadID: widget.threadID),
-            Expanded(child: DisplayThreadComments(threadID: widget.threadID)),
-            Row(children: [
-              Expanded(
-                  child: TextField(
-                textInputAction: TextInputAction.done,
-                onSubmitted: (value) {
-                  if (value != "") {
-                    setState(() {
-                      threadMgr.addComment(
-                          widget.threadID, userMgr.active_user_id, value);
-                      textCtrl.clear(); // clear text
-                      FocusManager.instance.primaryFocus
-                          ?.unfocus(); // exit keyboard
-                    });
-                  }
-                },
-                controller: textCtrl,
-                autocorrect: true,
-                decoration: InputDecoration(
-                  labelText: "Leave a comment",
-                  labelStyle: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey[750],
-                    fontStyle: FontStyle.italic,
-                  ),
-                  fillColor: Colors.blueGrey[50],
-                  filled: true,
-                ),
-              )),
-              IconButton(
-                icon: Icon(Icons.send, color: Colors.grey[900]),
-                onPressed: () {
-                  if (textCtrl.text != "") {
-                    setState(() {
-                      threadMgr.addComment(widget.threadID,
-                          userMgr.active_user_id, textCtrl.text);
-                      textCtrl.clear(); // clear text
-                      FocusManager.instance.primaryFocus
-                          ?.unfocus(); // exit keyboard
-                    });
-                  }
-                },
-              ),
-            ])
-          ]);
-        }),
+    return Scaffold(
+      appBar: AuraAppBar(
+        title: const Text('Discussion Thread'),
       ),
+      body: Consumer2<Thread_Manager, User_Manager>(
+          builder: (context, threadMgr, userMgr, child) {
+        return Column(
+          children: <Widget>[
+            Expanded(
+              child: ListView(children: <Widget>[
+                DisplayFullThread(threadID: widget.threadID),
+                DisplayThreadComments(threadID: widget.threadID),
+                Row(children: [
+                  Expanded(
+                      child: TextField(
+                    controller: textCtrl,
+                    autocorrect: true,
+                    decoration: InputDecoration(
+                      labelText: "Leave a comment",
+                      labelStyle: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[750],
+                        fontStyle: FontStyle.italic,
+                      ),
+                      fillColor: Colors.blueGrey[50],
+                      filled: true,
+                    ),
+                  )),
+                  IconButton(
+                    icon: Icon(Icons.send, color: Colors.grey[900]),
+                    onPressed: () {
+                      setState(() {
+                        threadMgr.addComment(widget.threadID,
+                            userMgr.active_user_id, textCtrl.text);
+                        textCtrl.clear(); // clear text
+                        FocusManager.instance.primaryFocus
+                            ?.unfocus(); // exit keyboard
+                      });
+                    },
+                  ),
+                ])
+              ]),
+            )
+          ],
+        );
+      }),
     );
   }
 }
