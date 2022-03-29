@@ -17,7 +17,7 @@ class NewsTab extends StatefulWidget {
 }
 
 class _NewsTabState extends State<NewsTab> {
-  List<NewsItem> newsToDisplay = [];
+  List<NewsItem>? newsToDisplay;
   List<Tab> tabs = const [
     Tab(text: 'Now'),
     Tab(text: 'Upcoming'),
@@ -54,9 +54,9 @@ class _NewsTabState extends State<NewsTab> {
               ),
               body: ListView(
                 scrollDirection: Axis.vertical,
-                children: (newsToDisplay.isEmpty
+                children: ((newsToDisplay == null)
                         ? newsMgr.getNowNewsItems()
-                        : newsToDisplay)
+                        : newsToDisplay!)
                     .map((n) => Card(
                           child: ListTile(
                             leading: Icon(
