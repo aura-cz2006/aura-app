@@ -77,26 +77,6 @@ class NewsApi {
     } else {
       print(
           "ERROR fetching news: ${response.statusCode} ${getStatusMessage(response.statusCode)}");
-    print(url);
-
-    http.Response response = await http.get(url);
-    print(response);
-    print("==============");
-    if (response.statusCode == 200) {
-      // the response body
-      String responseBody = response.body;
-
-      // use dart:convert to decode JSON
-      dynamic decodedJson = json.decode(responseBody);
-
-      List<NewsItem> resList = (decodedJson['news'] as List).map((item) {
-        return UpgradingNewsItem.getFromJson(item);
-      }).toList();
-
-      return resList;
-    } else {
-      print("ERROR in getting post: status code: " +
-          response.statusCode.toString());
       return [];
     }
   }
