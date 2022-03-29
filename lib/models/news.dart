@@ -6,7 +6,7 @@ import 'package:latlong2/latlong.dart';
 abstract class NewsItem {
   String id;
   DateTime dateTime;
-  LatLng location; //todo replace latlng
+  LatLng location;
 
   // constructor
   NewsItem(this.id, this.dateTime, this.location);
@@ -27,7 +27,6 @@ class DengueNewsItem extends NewsItem {
   static IconData getIcon() {
     return Icons.bug_report;
   }
-
   @override
   String getText() {
     return "New dengue cluster detected at $location ($numCases cases).";

@@ -7,6 +7,8 @@ import 'package:flutter_beautiful_popup/main.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class NewsTab extends StatefulWidget {
@@ -56,8 +58,8 @@ class _NewsTabState extends State<NewsTab> {
             return Scaffold(
                 appBar: AuraAppBar(
                   title: const Text("News"),
-                hasBackButton: false,
-                bottom: TabBar(tabs: tabs),
+                  hasBackButton: false,
+                  bottom: TabBar(tabs: tabs),
               ),
               body: LiquidPullToRefresh(
                   key: _refreshIndicatorKey, // key if you want to add
