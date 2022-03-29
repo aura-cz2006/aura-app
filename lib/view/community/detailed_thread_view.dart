@@ -105,13 +105,17 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
-                title: Text(
-                    filter.censor(
-                        threadMgr.getThreadByID(widget.threadID)!.title ??
-                            "Untitled Thread"),
-                    style: DefaultTextStyle.of(context)
-                        .style
-                        .apply(fontSizeFactor: 1.8, fontWeightDelta: 2)),
+                title: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      filter.censor(
+                          threadMgr.getThreadByID(widget.threadID)!.title ??
+                              "Untitled Thread"),
+                      style: DefaultTextStyle.of(context)
+                          .style
+                          .apply(fontSizeFactor: 1.8, fontWeightDelta: 2),
+                      softWrap: true,
+                    )),
                 trailing: (userMgr.active_user_id ==
                         threadMgr.getThreadByID(widget.threadID)!.userID)
                     ? PopupMenuButton(
@@ -172,11 +176,13 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                 ],
               ),
               ListTile(
-                title: Text(
+                  title: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(
                     filter.censor(
                         threadMgr.getThreadByID(widget.threadID)!.content),
                     softWrap: true),
-              ),
+              )),
               // const SizedBox(height: 8),
               Row(
                 // mainAxisAlignment: MainAxisAlignment.end,
@@ -248,7 +254,6 @@ class _DisplayThreadCommentsState extends State<DisplayThreadComments> {
     return Consumer2<Thread_Manager, User_Manager>(
         builder: (context, threadMgr, userMgr, child) {
       return ListView(
-          shrinkWrap: true,
           physics: const ScrollPhysics(),
           children: threadMgr
               .getCommentsForThread(widget.threadID)
@@ -264,8 +269,8 @@ class _DisplayThreadCommentsState extends State<DisplayThreadComments> {
                             onSelected: (value) {
                               setState(() {
                                 if (value == "delete") {
-                                  threadMgr.removeComment(widget.threadID,
-                                      c.commentID); // TODO: use manager function to delete comment
+                                  threadMgr.removeComment(
+                                      widget.threadID, c.commentID);
                                 }
                               });
                             },

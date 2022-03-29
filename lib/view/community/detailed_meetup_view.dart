@@ -102,13 +102,17 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
         child: Card(
           child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
             ListTile(
-              title: Text(
-                  filter.censor(
-                      meetupMgr.getMeetupByID(widget.meetupID).title ??
-                          "Untitled Meetup"),
-                  style: DefaultTextStyle.of(context)
-                      .style
-                      .apply(fontSizeFactor: 1.8, fontWeightDelta: 2)),
+              title: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    filter.censor(
+                        meetupMgr.getMeetupByID(widget.meetupID).title ??
+                            "Untitled Meetup"),
+                    style: DefaultTextStyle.of(context)
+                        .style
+                        .apply(fontSizeFactor: 1.8, fontWeightDelta: 2),
+                    softWrap: true,
+                  )),
               trailing: (userMgr.active_user_id ==
                           meetupMgr.getMeetupByID(widget.meetupID).userID &&
                       meetupMgr.canEditMeetup(widget.meetupID))
@@ -165,21 +169,15 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
               ],
             ),
             ListTile(
-              title: Text(
-                  filter.censor(
-                      meetupMgr.getMeetupByID(widget.meetupID).description ??
+              title: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                      filter.censor(meetupMgr
+                              .getMeetupByID(widget.meetupID)
+                              .description ??
                           ""),
-                  softWrap: true),
+                      softWrap: true)),
             ),
-            // ListTile(
-            //   leading: const Icon(Icons.people),
-            //   title: meetupMgr.isCancelled(widget.meetupID)
-            //       ? const Text("NO ATTENDEES",
-            //           style: TextStyle(
-            //               color: Colors.red, fontWeight: FontWeight.bold))
-            //       : Text("${meetupMgr.getCurrNumAttendees(widget.meetupID)} "
-            //           "/ ${meetupMgr.getMeetupByID(widget.meetupID).maxAttendees} ATTENDEES"),
-            // ),
             ListTile(
               // TODO: display location address instead of coordinates
               leading: const Icon(Icons.pin_drop),
@@ -263,7 +261,7 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                         },
                         countBuilder: (int? count, bool isLiked, String text) {
                           String? message;
-                          var color;
+                          Color? color;
                           color = isLiked ? Colors.green : Colors.grey[700];
                           message = " " +
                               (isLiked
@@ -375,7 +373,6 @@ class _DisplayMeetupCommentsState extends State<DisplayMeetupComments> {
     return Consumer2<Meetup_Manager, User_Manager>(
         builder: (context, meetupMgr, userMgr, child) {
       return ListView(
-          shrinkWrap: true,
           physics: const ScrollPhysics(),
           children: meetupMgr
               .getCommentsForMeetup(widget.meetupID)
