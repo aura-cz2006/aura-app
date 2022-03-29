@@ -90,8 +90,9 @@ class UpgradingNewsItem extends NewsItem {
   }
 
   factory UpgradingNewsItem.getFromJson(Map<String, dynamic> json) {
-    return UpgradingNewsItem(
+    DateTime dt = (int.parse(json['id']) % 2 == 0) ? DateTime(2022, 1, 1) : DateTime(2023, 1, 1);
+    return UpgradingNewsItem( // TODO replace: parse api response properly
         // json['dateTime'], json['location'], json['title'], json['expectedEnd']);
-        DateTime(2022, 1, 1), LatLng(0, 0), json['title'], DateTime(2022, 3, 31));
+        dt, LatLng(0, 0), json['title'], DateTime(2022, 3, 31));
   }
 }
