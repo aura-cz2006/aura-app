@@ -1,3 +1,4 @@
+import 'package:aura/controllers/news_controller.dart';
 import 'package:aura/managers/news_manager.dart';
 import 'package:aura/models/news.dart';
 import 'package:aura/widgets/aura_app_bar.dart';
@@ -6,8 +7,6 @@ import 'package:flutter_beautiful_popup/main.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class NewsTab extends StatefulWidget {
@@ -18,7 +17,7 @@ class NewsTab extends StatefulWidget {
 }
 
 class _NewsTabState extends State<NewsTab> {
-  List<NewsItem> newsToDisplay = [];
+  List<NewsItem>? newsToDisplay;
   List<Tab> tabs = const [
     Tab(text: 'Now'),
     Tab(text: 'Upcoming'),
@@ -32,19 +31,7 @@ class _NewsTabState extends State<NewsTab> {
     return Consumer<News_Manager>(builder: (context, newsMgr, child) {
 
       Future<void> _handleRefresh () async {
-        // todo: call api handler
-
         NewsController.fetchNews(context);
-        // newsMgr.setNews(
-        //   [
-        //     UpgradingNewsItem(DateTime(2022, 1, 1), LatLng(0, 0),
-        //         "Repainting at Block 1 Dover Road", DateTime(2022, 3, 31)),
-        //     MarketNewsItem(DateTime(2022, 10, 11), LatLng(0, 0),
-        //         "Blk 17 Upper Boon Keng Market and Food Centre", DateTime(2022, 11, 1)),
-        //     EventNewsItem(DateTime(2022, 3, 5), LatLng(0, 0),
-        //         "intro to chromatic harmonica", 10, "https://www.onepa.gov.sg/events"),
-        //   ]
-        // );
       }
 
       return DefaultTabController(
@@ -56,7 +43,6 @@ class _NewsTabState extends State<NewsTab> {
             final TabController tabController =
                 DefaultTabController.of(context)!;
             tabController.addListener(() {
-              //todo fix
               if (!tabController.indexIsChanging) {
                 setState(() {
                   if (tabController.index == 0) {
@@ -80,9 +66,9 @@ class _NewsTabState extends State<NewsTab> {
 
                       ListView(
                     scrollDirection: Axis.vertical,
-                    children: (newsToDisplay.isEmpty
+                    children: ((newsToDisplay == null)
                             ? newsMgr.getNowNewsItems()
-                            : newsToDisplay)
+                            : newsToDisplay!)
                         .map((n) => Card(
                               child: ListTile(
                                 leading: Icon(
