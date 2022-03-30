@@ -113,6 +113,10 @@ class _EditThreadViewState extends State<EditThreadView> {
         child: const Text("Submit"),
         onPressed: () {
           setState(() {
+            //Validation for empty fields. CANNOT SUBMIT IF EMPTY
+            if (!_formKey.currentState!.validate()){
+              return;
+            }
             // print(
             //     "Text: ${titleController.text}, Content: ${contentController.text}"); // TODO REMOVE
             thread_manager.editThread(
