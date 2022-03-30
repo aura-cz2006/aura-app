@@ -89,6 +89,9 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                             : meetup_list)
                         .map(
                           (m) => Card(
+                            child: InkWell(
+                            onTap:() => context.push(
+                                "/tabs/community/meetups/${m.meetupID}"),
                             child: Column(children: [
                               const SizedBox(height: 8),
                               SizedBox(
@@ -104,8 +107,6 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                   //       color: Colors.grey[700],
                                   //     )
                                 ),
-                                onTap: () => context.push(
-                                    "/tabs/community/meetups/${m.meetupID}"),
                                 subtitle: Container(
                                   margin: const EdgeInsets.only(
                                     top: 5,
@@ -168,7 +169,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                   ),
                                 ),
                               )),
-                              Row(
+                                Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget>[
                                   const SizedBox(width: 16),
@@ -194,10 +195,10 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 16),
+                           const SizedBox(height: 16),
                             ]),
                           ),
-                        )
+                          ),)
                         .toList()),
               ),
             ]);
