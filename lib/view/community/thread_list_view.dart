@@ -87,15 +87,16 @@ class ThreadListViewState extends State<ThreadListView> {
                                 .getListOfThreadsSortedByLikes(widget.topic)
                             : thread_list)
                         .map((t) => Card(
+                              child: InkWell(
+                                onTap: () => context.push(
+                // ? can we use an arrow function here? will it affect performance???
+                "/tabs/community/thread/${t.id}"),
                                 child: Column(children: [
                               const SizedBox(height: 8),
                               SizedBox(
                                   child: ListTile(
                                       title: Text(filter.censor(
                                           t.title ?? "Untitled thread")),
-                                      onTap: () => context.push(
-                                          // ? can we use an arrow function here? will it affect performance???
-                                          "/tabs/community/thread/${t.id}"),
                                       subtitle: Container(
                                           margin: const EdgeInsets.only(
                                             top: 5,
@@ -187,7 +188,7 @@ class ThreadListViewState extends State<ThreadListView> {
                                 ],
                               ),
                               const SizedBox(height: 16),
-                            ])))
+                            ]))),)
                         .toList()),
               )
             ]);
