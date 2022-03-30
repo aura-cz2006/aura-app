@@ -33,6 +33,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
   final descriptionController = TextEditingController(); //Saves edited content
   final locationController = TextEditingController();
   final maxAttendeesController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); //For validating empty fields
 
   TextEditingController _setControllerText(
       TextEditingController ctrl, String text) {
@@ -46,18 +47,21 @@ class _EditMeetupViewState extends State<EditMeetupView> {
       home: Scaffold(
         appBar: AuraAppBar(
             title: const Text('Edit Meetup')),
-        body: Center(
-          child: ListView(
-            children: [
-              Padding(padding: const EdgeInsets.all(5), child: titleField()),
-              Padding(padding: const EdgeInsets.all(5), child: maxAttendeesField()),
-              Padding(padding: const EdgeInsets.all(5), child: selectTime()),
-              Padding(padding: const EdgeInsets.all(5), child: locationField()),
-              Padding(padding: const EdgeInsets.all(5), child: descriptionField()),
-              Padding(padding: const EdgeInsets.all(5), child: submitButton(context))
-            ],
+        body: Form(
+          key: _formKey,
+          child: Center(
+            child: ListView(
+              children: [
+                Padding(padding: const EdgeInsets.all(5), child: titleField()),
+                Padding(padding: const EdgeInsets.all(5), child: maxAttendeesField()),
+                Padding(padding: const EdgeInsets.all(5), child: selectTime()),
+                Padding(padding: const EdgeInsets.all(5), child: locationField()),
+                Padding(padding: const EdgeInsets.all(5), child: descriptionField()),
+                Padding(padding: const EdgeInsets.all(5), child: submitButton(context))
+              ],
+            ),
           ),
-        ),
+        )
       ),
     );
   }
@@ -73,6 +77,13 @@ class _EditMeetupViewState extends State<EditMeetupView> {
             labelText: "Location",
             hintText: "Enter the location of meet up here",
             border: OutlineInputBorder()),
+        validator: (value){
+          if (value!.isNotEmpty){
+            return null;
+          } else {
+            return "Please enter a location.";
+          }
+        },
       );
     });
   }
@@ -105,11 +116,18 @@ class _EditMeetupViewState extends State<EditMeetupView> {
         controller: _setControllerText(maxAttendeesController,
             meetupMgr.getMeetupByID(widget.meetupID).maxAttendees.toString()),
         decoration: const InputDecoration(
-            labelText: "Participant size",
-            hintText: "Enter the size of participant",
+            labelText: "Number of attendees",
+            hintText: "Enter the maximum number of attendees",
             border: OutlineInputBorder()),
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.next,
+        validator: (value){
+          if (value!.isNotEmpty){
+            return null;
+          } else {
+            return "Please enter the maximum number of attendees.";
+          }
+        },
       );
     });
   }
@@ -126,6 +144,13 @@ class _EditMeetupViewState extends State<EditMeetupView> {
             border: OutlineInputBorder()),
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.next,
+        validator: (value){
+          if (value!.isNotEmpty){
+            return null;
+          } else {
+            return "Please enter a title.";
+          }
+        },
       );
     });
   }
@@ -141,6 +166,13 @@ class _EditMeetupViewState extends State<EditMeetupView> {
             labelText: "Content",
             hintText: "Enter the content of your post here",
             border: OutlineInputBorder()),
+        validator: (value){
+          if (value!.isNotEmpty){
+            return null;
+          } else {
+            return "Please enter a description.";
+          }
+        },
       );
     });
   }
@@ -157,6 +189,11 @@ class _EditMeetupViewState extends State<EditMeetupView> {
                 child: const Text("Submit"),
                 onPressed: () {
                   setState(() {
+                    //Check and display warning message if empty fields
+                    if (!_formKey.currentState!.validate()){
+                      return;
+                    }
+
                     var new_location = LatLng(12.1,21.3); // todo read new location
                     meetupMgr.editMeetup(widget.meetupID, selectedDate??meetupMgr.getMeetupByID(widget.meetupID).timeOfMeetUp, titleController.text,
                         descriptionController.text, new_location, int.parse(maxAttendeesController.text));

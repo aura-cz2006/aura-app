@@ -28,6 +28,7 @@ class EditThreadView extends StatefulWidget {
 class _EditThreadViewState extends State<EditThreadView> {
   var titleController = TextEditingController(); //Saves edited title
   var contentController = TextEditingController(); //Saves edited content
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); //For validation of user input
 
   TextEditingController _initTitleController(String og_title) {
     titleController.text = og_title;
@@ -46,15 +47,18 @@ class _EditThreadViewState extends State<EditThreadView> {
         appBar: AuraAppBar(
           title: const Text('Edit Thread'),
         ),
-        body: Center(
-          child: Column(
-            children: [
-              Padding(padding: const EdgeInsets.all(5), child: titleField()),
-              Padding(padding: const EdgeInsets.all(5), child: contentField()),
-              Padding(padding: const EdgeInsets.all(5), child: submitButton(context))
-            ],
+        body: Form(
+          key: _formKey,
+          child: Center(
+            child: Column(
+              children: [
+                Padding(padding: const EdgeInsets.all(5), child: titleField()),
+                Padding(padding: const EdgeInsets.all(5), child: contentField()),
+                Padding(padding: const EdgeInsets.all(5), child: submitButton(context))
+              ],
+            ),
           ),
-        ),
+        )
       ),
     );
   }
@@ -70,6 +74,13 @@ class _EditThreadViewState extends State<EditThreadView> {
             hintText: "Enter the title of your post here",
             border: OutlineInputBorder()),
         textInputAction: TextInputAction.next,
+        validator: (value){
+          if (value!.isNotEmpty){
+            return null;
+          } else {
+            return "Please enter a title.";
+          }
+        },
       ); // move whatever was built in Widget build here
     });
   }
@@ -85,6 +96,13 @@ class _EditThreadViewState extends State<EditThreadView> {
             hintText: "Enter the content of your post here",
             border: OutlineInputBorder()),
         textInputAction: TextInputAction.done,
+        validator: (value){
+          if (value!.isNotEmpty){
+            return null;
+          } else {
+            return "Please enter the contents of your post.";
+          }
+        },
       );
     });
   }
