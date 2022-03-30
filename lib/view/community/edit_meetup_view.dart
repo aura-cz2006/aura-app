@@ -116,8 +116,8 @@ class _EditMeetupViewState extends State<EditMeetupView> {
         controller: _setControllerText(maxAttendeesController,
             meetupMgr.getMeetupByID(widget.meetupID).maxAttendees.toString()),
         decoration: const InputDecoration(
-            labelText: "Participant size",
-            hintText: "Enter the size of participant",
+            labelText: "Number of attendees",
+            hintText: "Enter the maximum number of attendees",
             border: OutlineInputBorder()),
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.next,
@@ -125,7 +125,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
           if (value!.isNotEmpty){
             return null;
           } else {
-            return "Please enter attendee size for meet up.";
+            return "Please enter the maximum number of attendees.";
           }
         },
       );
