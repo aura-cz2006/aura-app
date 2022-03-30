@@ -122,6 +122,7 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
         keyboardType: TextInputType.multiline,
         maxLines: null,
         controller: descriptionController,
+        minLines: 10,
         decoration: const InputDecoration(
             labelText: "Content",
             hintText: "Enter the content of your post here",

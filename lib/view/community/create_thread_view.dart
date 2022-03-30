@@ -66,7 +66,9 @@ class _CreateThreadViewState extends State<CreateThreadView> {
         keyboardType: TextInputType.multiline,
         maxLines: null,
         controller: contentController,
+        minLines: 10,
         decoration: const InputDecoration(
+          contentPadding:  EdgeInsets.all(5),
             labelText: "Content",
             hintText: "Enter the content of your post here",
             border: OutlineInputBorder()),
