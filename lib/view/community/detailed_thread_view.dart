@@ -41,41 +41,51 @@ class _DetailedThreadViewState extends State<DetailedThreadView> {
           builder: (context, threadMgr, userMgr, child) {
         return Column(
           children: <Widget>[
-            Expanded(
-              child: ListView(children: <Widget>[
-                DisplayFullThread(threadID: widget.threadID),
-                DisplayThreadComments(threadID: widget.threadID),
-                Row(children: [
-                  Expanded(
-                      child: TextField(
-                    controller: textCtrl,
-                    autocorrect: true,
-                    decoration: InputDecoration(
-                      labelText: "Leave a comment",
-                      labelStyle: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[750],
-                        fontStyle: FontStyle.italic,
-                      ),
-                      fillColor: Colors.blueGrey[50],
-                      filled: true,
-                    ),
-                  )),
-                  IconButton(
-                    icon: Icon(Icons.send, color: Colors.grey[900]),
-                    onPressed: () {
-                      setState(() {
-                        threadMgr.addComment(widget.threadID,
-                            userMgr.active_user_id, textCtrl.text);
-                        textCtrl.clear(); // clear text
-                        FocusManager.instance.primaryFocus
-                            ?.unfocus(); // exit keyboard
-                      });
-                    },
+            DisplayFullThread(threadID: widget.threadID),
+            Expanded(child: DisplayThreadComments(threadID: widget.threadID)),
+            Row(children: [
+              Expanded(
+                  child: TextField(
+                textInputAction: TextInputAction.done,
+                onSubmitted: (value) {
+                  if (value != "") {
+                    setState(() {
+                      threadMgr.addComment(
+                          widget.threadID, userMgr.active_user_id, value);
+                      textCtrl.clear(); // clear text
+                      FocusManager.instance.primaryFocus
+                          ?.unfocus(); // exit keyboard
+                    });
+                  }
+                },
+                controller: textCtrl,
+                autocorrect: true,
+                decoration: InputDecoration(
+                  labelText: "Leave a comment",
+                  labelStyle: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey[750],
+                    fontStyle: FontStyle.italic,
                   ),
-                ])
-              ]),
-            )
+                  fillColor: Colors.blueGrey[50],
+                  filled: true,
+                ),
+              )),
+              IconButton(
+                icon: Icon(Icons.send, color: Colors.grey[900]),
+                onPressed: () {
+                  if (textCtrl.text != "") {
+                    setState(() {
+                      threadMgr.addComment(widget.threadID,
+                          userMgr.active_user_id, textCtrl.text);
+                      textCtrl.clear(); // clear text
+                      FocusManager.instance.primaryFocus
+                          ?.unfocus(); // exit keyboard
+                    });
+                  }
+                },
+              ),
+            ])
           ],
         );
       }),

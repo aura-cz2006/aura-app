@@ -42,14 +42,23 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
             builder: (context, meetupMgr, userMgr, child) {
           return Column(
             children: <Widget>[
-              Expanded(
-                  child: ListView(children: <Widget>[
-                DisplayFullMeetup(meetupID: widget.meetupID),
-                DisplayMeetupComments(meetupID: widget.meetupID)
-              ])),
+              DisplayFullMeetup(meetupID: widget.meetupID),
+              Expanded(child: DisplayMeetupComments(meetupID: widget.meetupID)),
               Row(children: [
                 Expanded(
                   child: TextField(
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (value) {
+                      if (value != "") {
+                        setState(() {
+                          meetupMgr.addComment(
+                              widget.meetupID, userMgr.active_user_id, value);
+                          textCtrl.clear(); // clear text
+                          FocusManager.instance.primaryFocus
+                              ?.unfocus(); // exit keyboard
+                        });
+                      }
+                    },
                     controller: textCtrl,
                     autocorrect: true,
                     decoration: InputDecoration(
@@ -66,13 +75,15 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
                 IconButton(
                   icon: Icon(Icons.send, color: Colors.grey[900]),
                   onPressed: () {
-                    setState(() {
-                      meetupMgr.addComment(widget.meetupID,
-                          userMgr.active_user_id, textCtrl.text);
-                      textCtrl.clear(); // clear text
-                      FocusManager.instance.primaryFocus
-                          ?.unfocus(); // exit keyboard
-                    });
+                    if (textCtrl.text != "") {
+                      setState(() {
+                        meetupMgr.addComment(widget.meetupID,
+                            userMgr.active_user_id, textCtrl.text);
+                        textCtrl.clear(); // clear text
+                        FocusManager.instance.primaryFocus
+                            ?.unfocus(); // exit keyboard
+                      });
+                    }
                   },
                 )
               ]),
