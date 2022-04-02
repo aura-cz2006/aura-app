@@ -29,7 +29,8 @@ class _NewsTabState extends State<NewsTab> {
   @override
   Widget build(BuildContext context) {
     return Consumer<News_Manager>(builder: (context, newsMgr, child) {
-      Future<void> _handleRefresh() async {
+
+      Future<void> _handleRefresh () async {
         NewsController.fetchNews(context);
       }
 
