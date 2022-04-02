@@ -57,6 +57,7 @@ dependencies:
   profanity_filter: ^2.0.0
   liquid_pull_to_refresh: ^3.0.1
   http: ^0.13.4
+  http_status_code: ^0.0.2
 
 dev_dependencies:
   flutter_test:
