@@ -1,5 +1,12 @@
+// import 'dart:html';
+
+import 'package:aura/managers/user_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
+import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 void main() => runApp(FAB());
 
@@ -17,14 +24,14 @@ class FAB extends StatelessWidget {
                 onPressed:() => Navigator.pop(context, false),
               )
           ),
-          floatingActionButton: _locationFAB(),
+          floatingActionButton: locationFABWrap(),
         )
     );
   }
 }
 
 
-Widget _locationFAB(){
+Widget locationFABWrap(){
   return Padding(
     padding: EdgeInsets.only(bottom: 50, left: 20),
     child: locationFab(),
@@ -41,6 +48,11 @@ class locationFab extends StatefulWidget {
 
 class _locationFabState extends State<locationFab> {
   var _isSelected = false;
+  Location location = Location();
+  late LocationData _locationData;
+  late bool _serviceEnabled;
+  late PermissionStatus _permissionGranted;
+
 
   void openDialog() {
     Navigator.of(context).push(new MaterialPageRoute<Null>(
@@ -52,38 +64,58 @@ class _locationFabState extends State<locationFab> {
 
   @override
   Widget build(BuildContext context) {
-    return SpeedDial(
-      heroTag: "unq2", //in case if we need multiple FAB in the same page
-      backgroundColor: Colors.lightBlueAccent,
-      icon: Icons.map,
-      activeIcon: Icons.clear,
-      children: [
-        SpeedDialChild(
-          child: Icon(Icons.gps_fixed),
-          label: "Current",
-          backgroundColor: Colors.amber,
-          onTap: (){},
-        ),
-        SpeedDialChild(
-          child: Icon(Icons.search_outlined),
-          label: "Search",
-          backgroundColor: Colors.lightGreenAccent,
-          onTap: (){
-            Navigator.of(context).push(PageRouteBuilder(
-                opaque: false,
-                pageBuilder: (BuildContext context, _, __) =>
-                    searchOverlay()));
-            //Navigator.of(context).pop(MyReturnObject("some value");
-          },
-        ),
-        SpeedDialChild(
-          child: Icon(Icons.home),
-          label: "Home",
-          backgroundColor: Colors.redAccent,
-          onTap: (){},
-        )
-      ],
-    );
+    return Consumer<User_Manager>(builder: (context, userMgr, child) {
+      return SpeedDial(
+        heroTag: "unq2", //in case if we need multiple FAB in the same page
+        backgroundColor: Colors.lightBlueAccent,
+        icon: Icons.map,
+        activeIcon: Icons.clear,
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.gps_fixed),
+            label: "Current",
+            backgroundColor: Colors.amber,
+            onTap: ()async{
+              _serviceEnabled = await location.serviceEnabled();
+              if (!_serviceEnabled){
+                _serviceEnabled = await location.requestService();
+                if (!_serviceEnabled) return;
+              }
+              //TODO: Ask for permission during onboarding
+              _permissionGranted = await location.hasPermission();
+              if (_permissionGranted == PermissionStatus.denied){
+                _permissionGranted = await location.requestPermission();
+                if (_permissionGranted != PermissionStatus.granted) return;
+              }
+
+              location.changeSettings(); //Ensure accuracy is high
+              _locationData = await location.getLocation();
+              setState(() {
+                userMgr.updateLocation(LatLng(_locationData.latitude!, _locationData.longitude!));
+              });
+            },
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.search_outlined),
+            label: "Search",
+            backgroundColor: Colors.lightGreenAccent,
+            onTap: (){
+              Navigator.of(context).push(PageRouteBuilder(
+                  opaque: false,
+                  pageBuilder: (BuildContext context, _, __) =>
+                      searchOverlay()));
+              //Navigator.of(context).pop(MyReturnObject("some value");
+            },
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.home),
+            label: "Home",
+            backgroundColor: Colors.redAccent,
+            onTap: (){},
+          )
+        ],
+      );
+    });
   }
 }
 

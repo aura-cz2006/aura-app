@@ -1,9 +1,11 @@
 import 'package:aura/models/user.dart';
 import 'package:aura/util/manager.dart';
+import 'package:latlong2/latlong.dart';
 
 class User_Manager extends Manager {
 
   String active_user_id = "1";
+  late LatLng location_data;
 
   var user_list = [
     User('1', 'Ryan'),
@@ -35,6 +37,15 @@ class User_Manager extends Manager {
         return each.username;
       }
     }
+  }
+
+  void updateLocation(LatLng coord){
+    location_data = coord;
+    notifyListeners();
+  }
+
+  LatLng getLocation(){
+    return location_data;
   }
 
 

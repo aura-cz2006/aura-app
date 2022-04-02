@@ -38,6 +38,7 @@ dependencies:
   # for map tab
   latlong2: ^0.8.1
   flutter_map: any
+  location: any
 
   #multiple floating action buttons
   flutter_speed_dial: ^4.3.0
