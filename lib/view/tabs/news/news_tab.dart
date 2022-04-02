@@ -30,8 +30,7 @@ class _NewsTabState extends State<NewsTab> {
   @override
   Widget build(BuildContext context) {
     return Consumer<News_Manager>(builder: (context, newsMgr, child) {
-
-      Future<void> _handleRefresh () async {
+      Future<void> _handleRefresh() async {
         NewsController.fetchNews(context);
       }
 
@@ -55,16 +54,22 @@ class _NewsTabState extends State<NewsTab> {
               }
             });
             return Scaffold(
-              appBar: AuraAppBar(
-                title: const Text("News"),
-                hasBackButton: false,
-                bottom: TabBar(tabs: tabs),
-              ),
-              body: LiquidPullToRefresh(
-                  key: _refreshIndicatorKey, // key if you want to add
-                  onRefresh: _handleRefresh, // refresh callback
+                appBar: AuraAppBar(
+                  title: const Text("News"),
+                  hasBackButton: false,
+                  bottom: TabBar(tabs: tabs),
+                ),
+                body: LiquidPullToRefresh(
+                  key: _refreshIndicatorKey,
+                  // key if you want to add
+                  color: Colors.grey[200],
+                  backgroundColor: Colors.redAccent,
+                  showChildOpacityTransition: false,
+                  height: 75,
+                  animSpeedFactor: 3,
+                  onRefresh: _handleRefresh,
+                  // refresh callback
                   child: // scroll view
-
                       ListView(
                     scrollDirection: Axis.vertical,
                     children: ((newsToDisplay == null)
