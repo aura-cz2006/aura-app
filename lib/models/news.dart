@@ -6,7 +6,7 @@ import 'package:latlong2/latlong.dart';
 abstract class NewsItem {
   String id;
   DateTime dateTime;
-  LatLng location;
+  LatLng location; //todo replace latlng
 
   // constructor
   NewsItem(this.id, this.dateTime, this.location);
