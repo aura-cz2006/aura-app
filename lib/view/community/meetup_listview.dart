@@ -13,7 +13,7 @@ void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => Meetup_Manager()),
     ChangeNotifierProvider(create: (context) => User_Manager()),
-  ], child: MeetUpListView()));
+  ], child: const MeetUpListView()));
 }
 
 class MeetUpListView extends StatefulWidget {
@@ -171,21 +171,6 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                                     : Colors.grey[700],
                                                 size: 30,
                                               );
-                                            },
-                                            countBuilder: (int? count,
-                                                bool isLiked, String text) {
-                                              String? message;
-                                              var color;
-                                              color = isLiked
-                                                  ? Colors.green
-                                                  : Colors.grey[700];
-                                              // message = " " +
-                                              //     (isLiked
-                                              //         ? "Going!"
-                                              //         : "RSVP");
-                                              // return Text(
-                                              //     (message),
-                                              //     style: TextStyle(color: color, fontSize: 18));
                                             },
                                           ),
                                   ),
