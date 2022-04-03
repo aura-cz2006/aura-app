@@ -43,12 +43,11 @@ class IntroScreen extends StatelessWidget {
       ),
       PageViewModel(
         title: "Home Address",
-        body: "Entering your home address",
         image: const Center(
           child: Icon(Icons.home,size:30),
         ),
         bodyWidget: Center(
-          child:ListView(
+          child:Column(
             children: [
               Padding(
                 padding: const EdgeInsets.all(10),
@@ -126,6 +125,7 @@ class IntroScreen extends StatelessWidget {
               LatLng(interest.latitude, interest.longitude));
           //Indicate that the phone has done onboarding before.
           setFirstTimeVisit();
+          context.go("/tabs/map");
         },
       );
     });

@@ -3,7 +3,6 @@ import 'package:aura/managers/map_manager.dart';
 import 'package:aura/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:aura/view/onboarding/userpreferences.dart';
 import 'managers/news_manager.dart';
 import 'managers/notification_manager.dart';
 import 'managers/thread_manager.dart';

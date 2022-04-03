@@ -107,7 +107,35 @@ final router = GoRouter(
           path: "/sign-in",
           builder: (BuildContext context, GoRouterState state) =>
               const SigninScreen())
-    ]
+    ],
+
+    redirect: (state) {
+      // check if user has onboarded
+      final hasOnboarded = true; // todo: add sharedPrefs check here
+      final isOnboarding = state.subloc == '/onboarding';
+
+      if (!hasOnboarded) return isOnboarding ? null : '/onboarding';
+
+      if (isOnboarding) return '/'
+
+      // if the user is not logged in, they need to login
+      final loggedIn = loginInfo.loggedIn;
+      final loggingIn = state.subloc == '/login';
+      if (!loggedIn) return loggingIn ? null : '/login';
+
+      // if the user is logged in but still on the login page, send them to
+      // the home page
+      if (loggingIn) return '/tabs/map';
+
+      //
+      // for onboarding
+
+
+
+      // no need to redirect at all
+      return null;
+    },
+
     // errorPageBuilder: (context, state) => MaterialPage<void>(
     //   key: state.pageKey,
     //   child: ErrorPage(state.error),
