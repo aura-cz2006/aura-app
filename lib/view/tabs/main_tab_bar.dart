@@ -3,6 +3,7 @@ import 'package:aura/view/tabs/community/community_tab.dart';
 import 'package:aura/view/tabs/map/map_tab.dart';
 import 'package:aura/view/tabs/news/news_tab.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 /* Navigation Tab Bar */
 
 const tabs = {0: "community", 1: "map", 2: "news"};
@@ -27,7 +28,7 @@ class _MainTabBarState extends State<MainTabBar> {
       GoRouter.of(context).go("/tabs/$newTabName");
     }
 
-    return Scaffold(
+    return isviewed != true ? IntroScreen() : Scaffold(
         body: IndexedStack(
           index: selectedIndex,
           children: const <Widget>[
@@ -58,5 +59,16 @@ class _MainTabBarState extends State<MainTabBar> {
                 label: 'News',
               ),
             ]));
+  }
+  void getFirstTimeVisit() async{
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    isviewed = pref.getBool('firstTimeVisit')!;
+  }
+
+  void initializeFirstTime() async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    if (isviewed != true) {
+      pref.setBool('firstTimeVisit', false);
+    }
   }
 }
