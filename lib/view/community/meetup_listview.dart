@@ -24,8 +24,6 @@ class MeetUpListView extends StatefulWidget {
 }
 
 class _MeetUpListViewState extends State<MeetUpListView> {
-  // Meetup_Manager active_meetup_manager = Meetup_Manager();
-  // User curr_user = User('1', 'Ryan');
   final filter = ProfanityFilter();
   late var meetup_list = [];
   var dropdownValue = 'Most Recent';
@@ -90,91 +88,109 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                         .map(
                           (m) => Card(
                             child: InkWell(
-                              onTap: () => context.push(
-                                  "/tabs/community/meetups/${m.meetupID}"),
-                              child: Column(children: [
-                                const SizedBox(height: 8),
-                                SizedBox(
-                                    child: ListTile(
-                                  title: Text(
-                                    filter.censor(m.title!) +
-                                        " on " +
-                                        DateFormat('MM-dd kk:mm')
-                                            .format(m.timeOfMeetUp),
-                                    // style: DefaultTextStyle.of(context)
-                                    //     .style
-                                    //     .apply(
-                                    //       color: Colors.grey[700],
-                                    //     )
+                            onTap:() => context.push(
+                                "/tabs/community/meetups/${m.meetupID}"),
+                            child: Column(children: [
+                              const SizedBox(height: 8),
+                              SizedBox(
+                                  child: ListTile(
+                                title: Text(
+                                  filter.censor(m.title!) +
+                                      " on " +
+                                      DateFormat('MM-dd kk:mm')
+                                          .format(m.timeOfMeetUp),
+                                ),
+                                subtitle: Container(
+                                  margin: const EdgeInsets.only(
+                                    top: 5,
                                   ),
-                                  subtitle: Container(
-                                    margin: const EdgeInsets.only(
-                                      top: 5,
-                                    ),
-                                    child: Text(
-                                        "${m.currNumAttendees()}/${m.maxAttendees} Attendees"),
-                                  ),
-                                  trailing: Container(
-                                    height: 50,
-                                    width: 80,
-                                    alignment: const Alignment(1.0, 0.0),
-                                    child: (meetupMgr.maxAttendeesReached(
-                                                m.meetupID) &&
-                                            !meetupMgr.isAttending(m.meetupID,
-                                                userMgr.active_user_id))
-                                        ? Column(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: const [
-                                            Icon(
-                                              Icons.groups,
+                                  child: Text(
+                                      "${m.currNumAttendees()}/${m.maxAttendees} Attendees"),
+                                ),
+                                trailing: Container(
+                                  height: 70,
+                                  width: 80,
+                                  alignment: const Alignment(1.0, 0.0),
+                                  child:  (meetupMgr.maxAttendeesReached(
+                                      m.meetupID) &&
+                                      !meetupMgr.isAttending(m.meetupID,
+                                          userMgr.active_user_id))
+                                      ? Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: const [
+                                        Icon(
+                                          Icons.groups,
+                                          color: Colors.redAccent,
+                                        ),
+                                        Text(
+                                          "FULL",
+                                          style: TextStyle(
                                               color: Colors.redAccent,
-                                            ),
-                                            Text(
-                                              "FULL",
-                                              style: TextStyle(
-                                                  color: Colors.redAccent,
-                                                  fontWeight: FontWeight.bold),
-                                            )
-                                          ])
-                                        : LikeButton(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            isLiked: m.isAttending(
-                                                userMgr.active_user_id),
-                                            onTap: (bool isLiked) async {
-                                              setState(() {
-                                                if (isLiked) {
-                                                  m.removeRsvpAttendee(userMgr
-                                                      .active_user_id); // TODO use manager function
-                                                } else {
-                                                  m.addRsvpAttendee(
-                                                      userMgr.active_user_id);
-                                                }
-                                              });
-                                              return !isLiked;
-                                            },
-                                            circleColor: const CircleColor(
-                                                start: Colors.lightGreen,
-                                                end: Colors.green),
-                                            bubblesColor: const BubblesColor(
-                                              dotPrimaryColor:
-                                                  Colors.lightGreenAccent,
-                                              dotSecondaryColor:
-                                                  Colors.lightGreen,
-                                            ),
-                                            likeBuilder: (bool isLiked) {
-                                              return Icon(
-                                                Icons.rsvp_rounded,
-                                                // isLiked ? Icons.person_add : Icons.person_remove,
-                                                color: isLiked
-                                                    ? Colors.green
-                                                    : Colors.grey[700],
-                                                size: 30,
-                                              );
-                                            },
-                                          ),
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      ])
+                                      : LikeButton(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    isLiked:
+                                        m.isAttending(userMgr.active_user_id),
+                                    onTap: (bool isLiked) async {
+                                      setState(() {
+                                        if (isLiked) {
+                                          m.removeRsvpAttendee(userMgr
+                                              .active_user_id); // TODO use manager function
+                                        } else {
+                                          m.addRsvpAttendee(
+                                              userMgr.active_user_id);
+                                        }
+                                      });
+                                      return !isLiked;
+                                    },
+                                    circleColor: const CircleColor(
+                                        start: Colors.lightGreen,
+                                        end: Colors.green),
+                                    bubblesColor: const BubblesColor(
+                                      dotPrimaryColor: Colors.lightGreenAccent,
+                                      dotSecondaryColor: Colors.lightGreen,
+                                    ),
+                                    likeBuilder: (bool isLiked) {
+                                      return Container(
+                                        child: isLiked
+                                        ? Column(
+                                          children:  [
+                                            Expanded(child:Icon(
+                                            Icons.people_alt,
+                                          color: Colors.green,
+                                          ),),
+                                      Expanded(child:Icon(
+                                            Icons.rsvp,
+                                            color: Colors.green,
+                                          ),)])
+                                      :
+                                         Column(
+                                      children:  [
+                                         Expanded(child:Icon(Icons.people_outline)),
+                                      Expanded(child:Icon(Icons.rsvp,))]
+                                      ), );
+                                    },
+
+                                    countBuilder: (int? count, bool isLiked,
+                                        String text) {
+                                      String? message;
+                                      var color;
+                                      color = isLiked
+                                          ? Colors.green
+                                          : Colors.grey[700];
+                                      // message = " " +
+                                      //     (isLiked
+                                      //         ? "Going!"
+                                      //         : "RSVP");
+                                      // return Text(
+                                      //     (message),
+                                      //     style: TextStyle(color: color, fontSize: 18));
+                                    },
                                   ),
-                                )),
+                                ),
+                              )),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
