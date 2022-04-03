@@ -2,9 +2,10 @@ import 'package:aura/managers/user_manager.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
 import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:aura/managers/user_manager.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:geocoding/geocoding.dart';
 
 class ChangeHomeAddressScreen extends StatefulWidget {
   const ChangeHomeAddressScreen({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class ChangeHomeAddressScreen extends StatefulWidget {
 class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
   var oldaddressController = TextEditingController(); //Saves
   var newaddressController = TextEditingController(); // s edited content
+  GeocodingPlatform geocoding = GeocodingPlatform.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController _initAddressController(String og_title) {
@@ -48,34 +50,34 @@ class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
   Widget originalAddressField() {
     return Consumer<User_Manager>(builder: (context, userMgr, child) {
       return TextFormField(
-          readOnly: true,
-          maxLines: null,
-          controller: _initAddressController(
-              userMgr.getUser(userMgr.active_user_id)!.getHomeAddress()),
-          decoration: InputDecoration(
-              labelText: "Original Address", border: OutlineInputBorder()),
-        );
+        readOnly: true,
+        maxLines: null,
+        controller: _initAddressController(
+            userMgr.getUser(userMgr.active_user_id)!.getHomeAddress()),
+        decoration: InputDecoration(
+            labelText: "Original Address", border: OutlineInputBorder()),
+      );
     });
   }
 
   Widget newAddressField() {
     return Consumer<User_Manager>(builder: (context, userMgr, child) {
       return Form(
-        key: _formKey,
-        child: TextFormField(
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-          controller: newaddressController,
-          decoration: InputDecoration(
-              labelText: "New Address", border: OutlineInputBorder()),
-          validator: (value){
-            if (value!.isNotEmpty){
-              return null;
-            } else {
-              return "Please enter an address.";
-            }
-          },
-      ));
+          key: _formKey,
+          child: TextFormField(
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            controller: newaddressController,
+            decoration: InputDecoration(
+                labelText: "New Address", border: OutlineInputBorder()),
+            validator: (value) {
+              if (value!.isNotEmpty) {
+                return null;
+              } else {
+                return "Please enter an address.";
+              }
+            },
+          ));
     });
   }
 
@@ -83,15 +85,20 @@ class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
     return Consumer<User_Manager>(builder: (context, userMgr, child) {
       return ElevatedButton(
         child: Text("Submit"),
-        onPressed: () {
+        onPressed: () async {
+          var addresses =
+              await geocoding.locationFromAddress(newaddressController.text);
+          var interest = addresses.first;
+          print("Search location: ${LatLng( //TODO: Delete this line
+              interest.latitude, interest.longitude)}");
+
           setState(() {
-            if (!_formKey.currentState!.validate()){
+            if (!_formKey.currentState!.validate()) {
               return;
             }
-            userMgr.updateHomeAddress(
-                //update User's homeaddress in manager
-                userMgr.active_user_id,
-                newaddressController.text);
+            //update User's homeaddress in manager
+            userMgr.updateHomeAddress(userMgr.active_user_id,
+                LatLng(interest.latitude, interest.longitude));
             context
                 .pop(); // Navigator.pop(context); //Return to previous, but updated thread
           });
