@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:aura/managers/map_manager.dart';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/view/tabs/map/layers/amenities/amenities_filter_chips.dart';
@@ -5,6 +7,7 @@ import 'package:aura/view/tabs/map/layers/dengue/dengue_markers.dart';
 import 'package:aura/view/tabs/map/layers/meetups/meetups_markers.dart';
 import 'package:aura/view/tabs/map/layers/taxi/taxi_markers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
@@ -45,12 +48,19 @@ class MapTab extends StatefulWidget {
 }
 
 class _MapTabState extends State<MapTab> {
+  late String mapboxToken;
   final MapController _mapController = MapController();
+
+  Future<void> initMapboxToken() async {
+    final String response = await rootBundle.loadString('assets/sample.json');
+    final data = await json.decode(response);
+    mapboxToken = data['MAPBOX_ACCESS_TOKEN'];
+  }
 
   @override
   void initState() {
-    // initialise markers at each point in latLngList
-
+    initMapboxToken();
+    // todo? initialise markers at each point in latLngList
     super.initState();
   }
 
