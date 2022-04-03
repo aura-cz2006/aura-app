@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:aura/view/community/fabLocation.dart';
 
 class NewsTab extends StatefulWidget {
   const NewsTab({Key? key}) : super(key: key);
@@ -129,6 +130,7 @@ class _NewsTabState extends State<NewsTab> {
                     ))
                     .toList(),
               ),
+              floatingActionButton: locationFABWrap(),
             );
           },
         ),
