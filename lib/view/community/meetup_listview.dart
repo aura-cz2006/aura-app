@@ -13,7 +13,7 @@ void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => Meetup_Manager()),
     ChangeNotifierProvider(create: (context) => User_Manager()),
-  ], child: MeetUpListView()));
+  ], child: const MeetUpListView()));
 }
 
 class MeetUpListView extends StatefulWidget {
@@ -90,115 +90,122 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                         .map(
                           (m) => Card(
                             child: InkWell(
-                            onTap:() => context.push(
-                                "/tabs/community/meetups/${m.meetupID}"),
-                            child: Column(children: [
-                              const SizedBox(height: 8),
-                              SizedBox(
-                                  child: ListTile(
-                                title: Text(
-                                  filter.censor(m.title!) +
-                                      " on " +
-                                      DateFormat('MM-dd kk:mm')
-                                          .format(m.timeOfMeetUp),
-                                  // style: DefaultTextStyle.of(context)
-                                  //     .style
-                                  //     .apply(
-                                  //       color: Colors.grey[700],
-                                  //     )
-                                ),
-                                subtitle: Container(
-                                  margin: const EdgeInsets.only(
-                                    top: 5,
+                              onTap: () => context.push(
+                                  "/tabs/community/meetups/${m.meetupID}"),
+                              child: Column(children: [
+                                const SizedBox(height: 8),
+                                SizedBox(
+                                    child: ListTile(
+                                  title: Text(
+                                    filter.censor(m.title!) +
+                                        " on " +
+                                        DateFormat('MM-dd kk:mm')
+                                            .format(m.timeOfMeetUp),
+                                    // style: DefaultTextStyle.of(context)
+                                    //     .style
+                                    //     .apply(
+                                    //       color: Colors.grey[700],
+                                    //     )
                                   ),
-                                  child: Text(
-                                      "${m.currNumAttendees()}/${m.maxAttendees} Attendees"),
-                                ),
-                                trailing: Container(
-                                  height: 50,
-                                  width: 80,
-                                  alignment: const Alignment(1.0, 0.0),
-                                  child: LikeButton(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    isLiked:
-                                        m.isAttending(userMgr.active_user_id),
-                                    onTap: (bool isLiked) async {
-                                      setState(() {
-                                        if (isLiked) {
-                                          m.removeRsvpAttendee(userMgr
-                                              .active_user_id); // TODO use manager function
-                                        } else {
-                                          m.addRsvpAttendee(
-                                              userMgr.active_user_id);
-                                        }
-                                      });
-                                      return !isLiked;
-                                    },
-                                    circleColor: const CircleColor(
-                                        start: Colors.lightGreen,
-                                        end: Colors.green),
-                                    bubblesColor: const BubblesColor(
-                                      dotPrimaryColor: Colors.lightGreenAccent,
-                                      dotSecondaryColor: Colors.lightGreen,
+                                  subtitle: Container(
+                                    margin: const EdgeInsets.only(
+                                      top: 5,
                                     ),
-                                    likeBuilder: (bool isLiked) {
-                                      return Icon(
-                                        Icons.rsvp_rounded,
-                                        // isLiked ? Icons.person_add : Icons.person_remove,
-                                        color: isLiked
-                                            ? Colors.green
-                                            : Colors.grey[700],
-                                        size: 30,
-                                      );
-                                    },
-                                    countBuilder: (int? count, bool isLiked,
-                                        String text) {
-                                      String? message;
-                                      var color;
-                                      color = isLiked
-                                          ? Colors.green
-                                          : Colors.grey[700];
-                                      // message = " " +
-                                      //     (isLiked
-                                      //         ? "Going!"
-                                      //         : "RSVP");
-                                      // return Text(
-                                      //     (message),
-                                      //     style: TextStyle(color: color, fontSize: 18));
-                                    },
+                                    child: Text(
+                                        "${m.currNumAttendees()}/${m.maxAttendees} Attendees"),
                                   ),
-                                ),
-                              )),
+                                  trailing: Container(
+                                    height: 50,
+                                    width: 80,
+                                    alignment: const Alignment(1.0, 0.0),
+                                    child: (meetupMgr.maxAttendeesReached(
+                                                m.meetupID) &&
+                                            !meetupMgr.isAttending(m.meetupID,
+                                                userMgr.active_user_id))
+                                        ? Column(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: const [
+                                            Icon(
+                                              Icons.groups,
+                                              color: Colors.redAccent,
+                                            ),
+                                            Text(
+                                              "FULL",
+                                              style: TextStyle(
+                                                  color: Colors.redAccent,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          ])
+                                        : LikeButton(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            isLiked: m.isAttending(
+                                                userMgr.active_user_id),
+                                            onTap: (bool isLiked) async {
+                                              setState(() {
+                                                if (isLiked) {
+                                                  m.removeRsvpAttendee(userMgr
+                                                      .active_user_id); // TODO use manager function
+                                                } else {
+                                                  m.addRsvpAttendee(
+                                                      userMgr.active_user_id);
+                                                }
+                                              });
+                                              return !isLiked;
+                                            },
+                                            circleColor: const CircleColor(
+                                                start: Colors.lightGreen,
+                                                end: Colors.green),
+                                            bubblesColor: const BubblesColor(
+                                              dotPrimaryColor:
+                                                  Colors.lightGreenAccent,
+                                              dotSecondaryColor:
+                                                  Colors.lightGreen,
+                                            ),
+                                            likeBuilder: (bool isLiked) {
+                                              return Icon(
+                                                Icons.rsvp_rounded,
+                                                // isLiked ? Icons.person_add : Icons.person_remove,
+                                                color: isLiked
+                                                    ? Colors.green
+                                                    : Colors.grey[700],
+                                                size: 30,
+                                              );
+                                            },
+                                          ),
+                                  ),
+                                )),
                                 Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  const SizedBox(width: 16),
-                                  Text(
-                                    "Posted by: ${userMgr.getUsernameByID(m.userID)}",
-                                    // todo: lookup username
-                                    // todo: fix/replace DefaultTextStyle !
-                                    //     style: DefaultTextStyle.of(context)
-                                    //         .style
-                                    //         .apply(
-                                    //             color: Colors.grey[700],
-                                    //             fontStyle: FontStyle.italic)
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Text(
-                                    DateFormat('yyyy-MM-dd kk:mm')
-                                        .format(m.createdAt),
-                                    //     style: DefaultTextStyle.of(context)
-                                    //         .style
-                                    //         .apply(
-                                    //             color: Colors.grey[700],
-                                    //             fontStyle: FontStyle.italic)
-                                  ),
-                                ],
-                              ),
-                           const SizedBox(height: 16),
-                            ]),
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    const SizedBox(width: 16),
+                                    Text(
+                                      "Posted by: ${userMgr.getUsernameByID(m.userID)}",
+                                      // todo: lookup username
+                                      // todo: fix/replace DefaultTextStyle !
+                                      //     style: DefaultTextStyle.of(context)
+                                      //         .style
+                                      //         .apply(
+                                      //             color: Colors.grey[700],
+                                      //             fontStyle: FontStyle.italic)
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Text(
+                                      DateFormat('yyyy-MM-dd kk:mm')
+                                          .format(m.createdAt),
+                                      //     style: DefaultTextStyle.of(context)
+                                      //         .style
+                                      //         .apply(
+                                      //             color: Colors.grey[700],
+                                      //             fontStyle: FontStyle.italic)
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                              ]),
+                            ),
                           ),
-                          ),)
+                        )
                         .toList()),
               ),
             ]);

@@ -203,7 +203,9 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
             Row(
               children: (meetupMgr.hasElapsed(widget.meetupID) ||
                       (meetupMgr.isCancelled(widget.meetupID)) ||
-                      (meetupMgr.maxAttendeesReached(widget.meetupID)))
+                      (meetupMgr.maxAttendeesReached(widget.meetupID) &&
+                          !meetupMgr.isAttending(
+                              widget.meetupID, userMgr.active_user_id)))
                   ? [
                       // no rsvp for elapsed / cancelled / full capacity meetups
                       const SizedBox(width: 16),
@@ -216,12 +218,11 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                           SizedBox(
                             width: 250,
                             child: Text(
-                                (meetupMgr.isCancelled(widget.meetupID)
-                                        ? "This meetup has been cancelled."
-                                        : meetupMgr.maxAttendeesReached(
-                                                widget.meetupID)
-                                            ? "Maximum number of attendees has been reached."
-                                            : "This meetup has elapsed.") +
+                                (meetupMgr.hasElapsed(widget.meetupID)
+                                        ? "This meetup has elapsed."
+                                        : meetupMgr.isCancelled(widget.meetupID)
+                                            ? "This meetup has been cancelled."
+                                            : "Maximum number of attendees has been reached.") +
                                     "\nNo more RSVPs are allowed.",
                                 softWrap: true,
                                 style: const TextStyle(
