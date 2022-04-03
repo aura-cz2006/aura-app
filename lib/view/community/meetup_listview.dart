@@ -126,7 +126,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                         mainAxisAlignment: MainAxisAlignment.end,
                                         children: const [
                                             Icon(
-                                              Icons.group,
+                                              Icons.groups,
                                               color: Colors.redAccent,
                                             ),
                                             Text(
