@@ -2,6 +2,7 @@ import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/view/community/fab_createmeetup.dart';
 import 'package:aura/widgets/aura_app_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
@@ -88,7 +89,8 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                             ? meetupMgr.getMeetupsSortedByCreationDateTime()
                             : meetup_list)
                         .map(
-                          (m) => Card(
+                          (m) =>
+                              Card(
                             child: InkWell(
                             onTap:() => context.push(
                                 "/tabs/community/meetups/${m.meetupID}"),
@@ -107,6 +109,8 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                   //       color: Colors.grey[700],
                                   //     )
                                 ),
+
+
                                 subtitle: Container(
                                   margin: const EdgeInsets.only(
                                     top: 5,
@@ -115,7 +119,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                       "${m.currNumAttendees()}/${m.maxAttendees} Attendees"),
                                 ),
                                 trailing: Container(
-                                  height: 50,
+                                  height: 70,
                                   width: 80,
                                   alignment: const Alignment(1.0, 0.0),
                                   child: LikeButton(
@@ -142,15 +146,26 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                       dotSecondaryColor: Colors.lightGreen,
                                     ),
                                     likeBuilder: (bool isLiked) {
-                                      return Icon(
-                                        Icons.rsvp_rounded,
-                                        // isLiked ? Icons.person_add : Icons.person_remove,
-                                        color: isLiked
-                                            ? Colors.green
-                                            : Colors.grey[700],
-                                        size: 30,
-                                      );
+                                      return Container(
+                                        child: isLiked
+                                        ? Column(
+                                          children:  [
+                                            Expanded(child:Icon(
+                                            Icons.people_alt,
+                                          color: Colors.green,
+                                          ),),
+                                      Expanded(child:Icon(
+                                            Icons.rsvp,
+                                            color: Colors.green,
+                                          ),)])
+                                      :
+                                         Column(
+                                      children:  [
+                                         Expanded(child:Icon(Icons.people_outline)),
+                                      Expanded(child:Icon(Icons.rsvp,))]
+                                      ), );
                                     },
+
                                     countBuilder: (int? count, bool isLiked,
                                         String text) {
                                       String? message;
