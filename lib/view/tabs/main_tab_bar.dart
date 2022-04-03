@@ -1,3 +1,4 @@
+import 'package:aura/view/onboarding/introduction_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:aura/view/tabs/community/community_tab.dart';
 import 'package:aura/view/tabs/map/map_tab.dart';
@@ -18,6 +19,15 @@ class MainTabBar extends StatefulWidget {
 }
 
 class _MainTabBarState extends State<MainTabBar> {
+  var isviewed;
+
+  @override
+  void initState(){
+    getFirstTimeVisit();
+    initializeFirstTime();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     int selectedIndex = tabs.entries
