@@ -6,6 +6,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:aura/view/news/searchOverlay_view.dart';
 import 'package:go_router/go_router.dart';
 
 void main() => runApp(FAB());
@@ -47,19 +48,17 @@ class locationFab extends StatefulWidget {
 }
 
 class _locationFabState extends State<locationFab> {
-  var _isSelected = false;
+  OverlayEntry? entry;
   Location location = Location();
   late LocationData _locationData;
   late bool _serviceEnabled;
   late PermissionStatus _permissionGranted;
 
+  void showOverlay(){
+    entry = OverlayEntry(builder: (context) => searchOverlay(entry: entry,));
 
-  void openDialog() {
-    Navigator.of(context).push(new MaterialPageRoute<Null>(
-        builder: (BuildContext context) {
-          return new searchOverlay();
-        },
-        fullscreenDialog: true));
+    final overlay = Overlay.of(context)!;
+    overlay.insert(entry!);
   }
 
   @override
@@ -90,6 +89,7 @@ class _locationFabState extends State<locationFab> {
 
               location.changeSettings(); //Ensure accuracy is high
               _locationData = await location.getLocation();
+              print("Current Coordinate: ${LatLng(_locationData.latitude!, _locationData.longitude!)}"); //TODO: Remove bugtesting
               setState(() {
                 userMgr.updateLocation(LatLng(_locationData.latitude!, _locationData.longitude!));
               });
@@ -100,11 +100,7 @@ class _locationFabState extends State<locationFab> {
             label: "Search",
             backgroundColor: Colors.lightGreenAccent,
             onTap: (){
-              Navigator.of(context).push(PageRouteBuilder(
-                  opaque: false,
-                  pageBuilder: (BuildContext context, _, __) =>
-                      searchOverlay()));
-              //Navigator.of(context).pop(MyReturnObject("some value");
+              showOverlay();
             },
           ),
           SpeedDialChild(
@@ -117,67 +113,4 @@ class _locationFabState extends State<locationFab> {
       );
     });
   }
-}
-
-
-class searchOverlay extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white.withOpacity(0.85),
-      body: Center(
-        child: Stack(
-          children: <Widget>[
-            searchBar(),
-            submitButton()
-          ],
-        )
-      )
-    );
-  }
-}
-
-Widget submitButton() {
-  return Align(
-    alignment: Alignment(0,0.8),
-    child: ElevatedButton(
-      style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0)
-              )
-          )
-      ),
-      child: Text("Submit"),
-      onPressed: (){
-        /*Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => createThread()),*/
-      },
-    ),
-  );
-}
-
-Widget searchBar(){
-  return Align(
-    alignment: Alignment.center,
-    child: Container(
-        width: 350,
-        decoration: BoxDecoration(
-          color: Color(0x11111111),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Padding(
-          padding: EdgeInsets.only(left: 15, right: 15, top: 5),
-          child: TextFormField(
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: "Search Location",
-              )
-          ),
-        )
-    )
-  );
 }
