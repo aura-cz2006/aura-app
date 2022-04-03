@@ -155,6 +155,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                       ),
                                       likeBuilder: (bool isLiked) {
                                         return Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             Expanded(
                                               child:
