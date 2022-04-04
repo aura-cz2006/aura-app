@@ -19,12 +19,9 @@ class MainTabBar extends StatefulWidget {
 }
 
 class _MainTabBarState extends State<MainTabBar> {
-  var isviewed;
 
   @override
   void initState(){
-    getFirstTimeVisit();
-    initializeFirstTime();
     super.initState();
   }
 
@@ -38,7 +35,7 @@ class _MainTabBarState extends State<MainTabBar> {
       GoRouter.of(context).go("/tabs/$newTabName");
     }
 
-    return isviewed != true ? IntroScreen() : Scaffold(
+    return Scaffold(
         body: IndexedStack(
           index: selectedIndex,
           children: const <Widget>[
@@ -69,16 +66,5 @@ class _MainTabBarState extends State<MainTabBar> {
                 label: 'News',
               ),
             ]));
-  }
-  void getFirstTimeVisit() async{
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    isviewed = pref.getBool('firstTimeVisit')!;
-  }
-
-  void initializeFirstTime() async {
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    if (isviewed != true) {
-      pref.setBool('firstTimeVisit', false);
-    }
   }
 }

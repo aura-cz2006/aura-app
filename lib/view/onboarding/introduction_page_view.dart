@@ -20,10 +20,6 @@ class IntroScreen extends StatelessWidget {
   GeocodingPlatform geocoding = GeocodingPlatform.instance;
   late List<PageViewModel> listPagesViewModel;
 
-  Future<void> setFirstTimeVisit() async{
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setBool('firstTimeVisit', true);
-  }
 
   List<PageViewModel> initPageViewModel(BuildContext context){
     listPagesViewModel = [

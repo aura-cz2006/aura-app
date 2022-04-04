@@ -1,3 +1,4 @@
+import 'package:aura/globals.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/managers/map_manager.dart';
 import 'package:aura/router.dart';
@@ -8,8 +9,15 @@ import 'managers/notification_manager.dart';
 import 'managers/thread_manager.dart';
 import 'managers/meetup_manager.dart';
 
+
+Future initMain() async {
+  await Prefs.init();
+}
+
 int? isviewed;
-void main()  {
+void main() async {
+  await initMain();
+
   runApp(
     MultiProvider(
       providers: [
