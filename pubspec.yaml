@@ -113,11 +113,11 @@ flutter:
 flutter_icons:
   ios: true
   android: true
-  image_path_ios: "assets/app_icon.png"
-  image_path_android: "assets/app_icon.png"
+  image_path_ios: "assets/screenicon.png"
+  image_path_android: "assets/screenicon.png"
   adaptive_icon_background: "#ffffff" # or image
-  adaptive_icon_foreground: "assets/app_icon.png"
+  adaptive_icon_foreground: "assets/screenicon.png"
 
-  flutter_native_splash:
+flutter_native_splash:
   image: assets/app_icon.png
   color: "#ffffff"
