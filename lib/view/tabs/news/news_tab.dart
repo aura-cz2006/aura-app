@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:aura/managers/news_manager.dart';
 import 'package:aura/models/news.dart';
 import 'package:aura/widgets/aura_app_bar.dart';
@@ -89,7 +91,48 @@ class _NewsTabState extends State<NewsTab> {
                                 .format(n.dateTime)),
                           ),
                           onTap: () {
-                            final popup = BeautifulPopup(
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text('News Details'),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            Text(n.getText())
+                                          ],
+                                        ),
+                                      ),
+                                      actions:
+                                      n is EventNewsItem ?
+                                      <Widget>[
+                                        TextButton(
+                                        onPressed: () async {
+                                          if (!await launch(n.websiteURL)) {
+                                          throw 'Could not launch ${n.websiteURL}';
+                                          }},
+                                        child: Text('Redirect')
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text('Close'),
+                                        )
+                                      ]:
+                                        <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('Close'),
+                                          ),
+                                        ]
+                                    );
+                                  });
+
+
+                            /*final popup = BeautifulPopup(
                               //TODO populate w related data by type of news item
                               context: context,
                               template: TemplateGeolocation,
@@ -123,7 +166,7 @@ class _NewsTabState extends State<NewsTab> {
                                       .pop, //todo switch to go router
                                 )
                               ],
-                            );
+                            );*/
                           },
                         ),
                       ),
@@ -136,5 +179,10 @@ class _NewsTabState extends State<NewsTab> {
         ),
       );
     });
+
   }
+
+
 }
+
+
