@@ -118,10 +118,14 @@ final router = GoRouter(
     ],
 
     redirect: (state) {
-      //Check initial bool value
+      //Check initial bool value, onBoardedInitialValue can be
+      //null in the case of a new user (because getting a value from a key that does not exist).
+      //in the case of an exising user, will be true (set upon submit button at end of onboarding)
       final bool? onBoardedInitialValue = Prefs.prefs?.getBool('hasOnboarded');
       //hasOnboarded is either null, True
 
+      //isOnboarding checks the state of the user whether user is currently in onboarding
+      //boolean
       final isOnboarding = state.subloc == '/onboarding';
 
       print({
@@ -129,9 +133,14 @@ final router = GoRouter(
         isOnboarding
       });
 
-      //null check. If null, user has NOT onboarded.  If not null, user HAS onboarded.
+      //null check. If null, user has NOT onboarded, assign false.
+      // If not null, user HAS onboarded, assign true.
       final hasOnboarded = (onBoardedInitialValue == null) ? false : true;
-      //If user has onboarded, redirect to map. If haven't, go to onboarding.
+
+
+      //IF USER HAS NOT ONBOARDED
+      //1) IF USER IS CURRENTLY IN BOARDINGPAGE -> NO NEED FOR REDIRECTING
+      //2) IF USER IS NOT IN BOARDINGPAGE -> REDIRECT TO BOARDINGPAGE
       if (!hasOnboarded) return isOnboarding ? null : '/onboarding';
       //If have already onboarded, go to map
       if (isOnboarding) return '/tabs/map';
