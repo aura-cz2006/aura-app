@@ -1,8 +1,10 @@
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/managers/user_manager.dart';
+import 'package:aura/models/meetup.dart';
 import 'package:aura/view/community/fab_createmeetup.dart';
 import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
 import 'package:go_router/go_router.dart';
@@ -27,7 +29,11 @@ class _MeetUpListViewState extends State<MeetUpListView> {
   final filter = ProfanityFilter();
   late var meetup_list = [];
   var dropdownValue = 'Most Recent';
+  var meetupAddress;
 
+  Future<void> getMeetupAddress(Meetup_Manager meetupMgr, String meetupID) async {
+    meetupAddress = await meetupMgr.getMeetupAddress(meetupID);
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -86,43 +92,43 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                             ? meetupMgr.getMeetupsSortedByCreationDateTime()
                             : meetup_list)
                         .map(
-                          (m) => Card(
-                            child: InkWell(
-                              onTap: () => context.push(
-                                  "/tabs/community/meetups/${m.meetupID}"),
-                              child: Column(children: [
-                                const SizedBox(height: 8),
-                                SizedBox(
-                                    child: ListTile(
-                                      visualDensity: VisualDensity.compact,
-                                      isThreeLine: true,
-                                  title: Text(
-                                    filter.censor(m.title!) ,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold
-                                          ),
-                                  ),
-                                  subtitle: Container(
-                                    margin: const EdgeInsets.only(
-                                      top: 5,
-                                    ),
-                                    child: Text(
-                                        "Date: " +
-                                            DateFormat('yyyy-MM-dd kk:mm\n')
-                                                .format(m.timeOfMeetUp) +
-                                        "${m.currNumAttendees()}/${m.maxAttendees} Attendees"),
-                                  ),
-                                  trailing: Container(
-                                    height: 70,
-                                    width: 80,
-                                    alignment: const Alignment(1.0, 0.0),
-                                    child: (meetupMgr.maxAttendeesReached(
-                                        m.meetupID) &&
-                                        !meetupMgr.isAttending(m.meetupID,
-                                            userMgr.active_user_id))
-                                        ? Column(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: const [
+                  (m) {
+                    getMeetupAddress(meetupMgr, m.meetupID);
+                    return Card(
+                      child: InkWell(
+                        onTap: () => context
+                            .push("/tabs/community/meetups/${m.meetupID}"),
+                        child: Column(children: [
+                          const SizedBox(height: 8),
+                          ListTile(
+                            title: Text(
+                              filter.censor(m.title!),
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  userMgr.getUsernameByID(m.userID)!,
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  DateFormat('yyyy-MM-dd kk:mm')
+                                      .format(m.createdAt),
+                                ),
+                              ],
+                            ),
+                            trailing: Container(
+                              width: 80,
+                              alignment: const Alignment(1.0, 0.0),
+                              child: (meetupMgr
+                                          .maxAttendeesReached(m.meetupID) &&
+                                      !meetupMgr.isAttending(
+                                          m.meetupID, userMgr.active_user_id))
+                                  ? Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: const [
                                           Icon(
                                             Icons.groups,
                                             color: Colors.redAccent,
@@ -131,10 +137,11 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                             "FULL",
                                             style: TextStyle(
                                                 color: Colors.redAccent,
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 10),
                                           )
                                         ])
-                                        : LikeButton(
+                                  : LikeButton(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       isLiked:
                                           m.isAttending(userMgr.active_user_id),
@@ -160,66 +167,58 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                       ),
                                       likeBuilder: (bool isLiked) {
                                         return Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                              child:
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
                                               Icon(
-                                                isLiked
-                                                    ? Icons.people
-                                                    : Icons.people_outline,
+                                                Icons.people,
                                                 color: isLiked
                                                     ? Colors.green
                                                     : Colors.grey[700],
+                                                size: 18,
                                               ),
-                                            ),
-                                            Expanded(
-                                              child:
-                                              Icon(
-                                                Icons.rsvp,
-                                                color: isLiked
-                                                    ? Colors.green
-                                                    : Colors.grey[700],
+                                              Text(
+                                                "RSVP",
+                                                style: TextStyle(
+                                                  color: isLiked
+                                                      ? Colors.green
+                                                      : Colors.grey[700],
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 10,
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        );
+                                            ]);
                                       },
                                     ),
-                                  ),
-                                )),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    const SizedBox(width: 16),
-                                    Text("Location: ${m.location}"),
-                                  ]
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    const SizedBox(width: 16),
-                                    Text(
-                                      "Posted by: ${userMgr.getUsernameByID(m.userID)}",
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Text(
-                                      DateFormat('yyyy-MM-dd kk:mm')
-                                          .format(m.createdAt),
-                                      //     style: DefaultTextStyle.of(context)
-                                      //         .style
-                                      //         .apply(
-                                      //             color: Colors.grey[700],
-                                      //             fontStyle: FontStyle.italic)
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 16),
-                              ]),
                             ),
                           ),
-                        )
-                        .toList()),
+                          Row(
+                              // mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 16),
+                                Text(
+                                    "Date: ${DateFormat('yyyy-MM-dd kk:mm').format(m.timeOfMeetUp)}"),
+                              ]),
+                          Row(
+                              // mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 16),
+                                Text(
+                                    "${m.currNumAttendees()}/${m.maxAttendees} Attendees"),
+                              ]),
+                          Row(
+                              // mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                const SizedBox(width: 16),
+                                //todo replace w location name
+                                Text("Location: ${meetupAddress}"),
+                              ]),
+                          const SizedBox(height: 16),
+                        ]),
+                      ),
+                    );
+                  },
+                ).toList()),
               ),
             ]);
           })),

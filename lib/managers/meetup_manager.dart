@@ -1,6 +1,7 @@
 import 'package:aura/models/comment.dart';
 import 'package:aura/models/meetup.dart';
 import 'package:aura/util/manager.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 
 class Meetup_Manager extends Manager {
@@ -61,6 +62,15 @@ class Meetup_Manager extends Manager {
 
   Meetup getMeetupByID(String meetupID) {
     return meet_up_list.firstWhere((m) => m.meetupID == meetupID);
+  }
+
+  Future<String> getMeetupAddress(String meetupID) async {
+    Meetup m = getMeetupByID(meetupID);
+    var placemarks = await placemarkFromCoordinates(m.location.latitude, m.location.longitude);
+    var interest = placemarks.first;
+    String address = interest.street! + ", " + interest.postalCode!;
+    print(m.title! + "     " + address); // todo
+    return address;
   }
 
   void cancelMeetup(String meetupID) {
