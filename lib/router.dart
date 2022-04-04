@@ -142,7 +142,9 @@ final router = GoRouter(
       //1) IF USER IS CURRENTLY IN BOARDINGPAGE -> NO NEED FOR REDIRECTING
       //2) IF USER IS NOT IN BOARDINGPAGE -> REDIRECT TO BOARDINGPAGE
       if (!hasOnboarded) return isOnboarding ? null : '/onboarding';
-      //If have already onboarded, go to map
+      //IF USER HAS BOARDED,
+      //IF USER F UPS AND IS IN BOARDING PAGE -> REDIRECT TO MAIN PAGE
+      //CATCH ERROR TLDR
       if (isOnboarding) return '/tabs/map';
 
 
