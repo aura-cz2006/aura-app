@@ -1,19 +1,28 @@
+import 'package:aura/globals.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/managers/map_manager.dart';
 import 'package:aura/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'managers/news_manager.dart';
 import 'managers/notification_manager.dart';
 import 'managers/thread_manager.dart';
 import 'managers/meetup_manager.dart';
 
-void main() {
+
+Future initMain() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Prefs.init();
+}
+
+int? isviewed;
+void main() async {
+  await initMain();
+
   runApp(
     MultiProvider(
       providers: [
-        // ChangeNotifierProvider(create: (context) => DiscussionManager()), // todo replace w thread manager
         ChangeNotifierProvider(create: (context) => MapManager()),
         ChangeNotifierProvider(create: (context) => NotificationManager()),
         ChangeNotifierProvider(create: (context) => Thread_Manager()),

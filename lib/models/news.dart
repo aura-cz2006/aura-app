@@ -11,7 +11,7 @@ abstract class NewsItem {
   NewsItem(this.dateTime, this.location);
 
   static IconData getIcon() {
-    return Icons.newspaper;
+    return Icons.rsvp;
   }
   String getText();
 }

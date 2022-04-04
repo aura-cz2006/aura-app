@@ -2,7 +2,7 @@ import 'package:aura/models/user.dart';
 import 'package:aura/util/manager.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geocoding/geocoding.dart';
-
+ 
 class User_Manager extends Manager {
   String active_user_id = "1";
   late LatLng location_data;

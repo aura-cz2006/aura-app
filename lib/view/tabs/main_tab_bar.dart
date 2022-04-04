@@ -1,8 +1,10 @@
+import 'package:aura/view/onboarding/introduction_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:aura/view/tabs/community/community_tab.dart';
 import 'package:aura/view/tabs/map/map_tab.dart';
 import 'package:aura/view/tabs/news/news_tab.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 /* Navigation Tab Bar */
 
 const tabs = {0: "community", 1: "map", 2: "news"};
@@ -17,6 +19,12 @@ class MainTabBar extends StatefulWidget {
 }
 
 class _MainTabBarState extends State<MainTabBar> {
+
+  @override
+  void initState(){
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     int selectedIndex = tabs.entries

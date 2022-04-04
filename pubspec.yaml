@@ -35,6 +35,11 @@ dependencies:
   intl: ^0.17.0
   icon_badge: ^1.0.0
 
+  #for onboarding
+  introduction_screen: ^3.0.0
+  #for checking if user is first time user
+  shared_preferences: ^2.0.13
+
   # for map tab
   latlong2: ^0.8.1
   flutter_map: any
