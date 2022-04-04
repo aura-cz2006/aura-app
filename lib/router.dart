@@ -124,11 +124,18 @@ final router = GoRouter(
 
       final isOnboarding = state.subloc == '/onboarding';
 
+      print({
+        onBoardedInitialValue,
+        isOnboarding
+      });
+
       //null check. If null, user has NOT onboarded.  If not null, user HAS onboarded.
       final hasOnboarded = (onBoardedInitialValue == null) ? false : true;
       //If user has onboarded, redirect to map. If haven't, go to onboarding.
-      if (hasOnboarded) return '/tabs/map';
       if (!hasOnboarded) return isOnboarding ? null : '/onboarding';
+      //If have already onboarded, go to map
+      if (isOnboarding) return '/tabs/map';
+
 
       // if (hasOnboarded) return isOnboarding ? null : '/onboarding';
       //

@@ -11,6 +11,8 @@ import 'managers/meetup_manager.dart';
 
 
 Future initMain() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await Prefs.init();
 }
 
