@@ -35,8 +35,8 @@ class DengueNewsItem extends NewsItem {
 
   factory DengueNewsItem.getFromJson(Map<String, dynamic> json) {
     // TODO test
-    DateTime dt = DateTime.parse(json['datetime']);
-    LatLng location = LatLng(json['location'][0], json['location'][1]);
+    DateTime dt = DateTime.parse(json['date']);
+    LatLng location = LatLng(0, 0); // TODO LatLng(json['location'][0], json['location'][1]);
     return DengueNewsItem(json['id'], dt, location, json['numCases']);
   }
 }
@@ -44,7 +44,7 @@ class DengueNewsItem extends NewsItem {
 class EventNewsItem extends NewsItem {
   // todo consider start and end date
   String eventTitle;
-  double fee = 0;
+  String fee;
   String websiteURL;
 
   EventNewsItem(String id, DateTime dateTime, LatLng location, this.eventTitle,
@@ -62,10 +62,10 @@ class EventNewsItem extends NewsItem {
 
   factory EventNewsItem.getFromJson(Map<String, dynamic> json) {
     // TODO test
-    DateTime dt = DateTime.parse(json['datetime']);
-    LatLng location = LatLng(json['location'][0], json['location'][1]);
+    DateTime dt = DateTime.parse(json['date']);
+    LatLng location = LatLng(0,0); // TODO LatLng(json['location'][0], json['location'][1]);
     return EventNewsItem(json['id'], dt, location, json['eventTitle'],
-        json['fee'], json['websiteURL']);
+        json['fee'], json['url']);
   }
 }
 
@@ -90,11 +90,11 @@ class MarketNewsItem extends NewsItem {
 
   factory MarketNewsItem.getFromJson(Map<String, dynamic> json) {
     // TODO test
-    DateTime dt = DateTime.parse(json['datetime']);
-    LatLng location = LatLng(json['location'][0], json['location'][1]);
+    DateTime dt = DateTime.parse(json['date']);
+    LatLng location = LatLng(0,0); // TODO LatLng(json['location'][0], json['location'][1]);
     DateTime reopening_dt = DateTime.parse(json['reopeningDate']);
     return MarketNewsItem(
-        json['id'], dt, location, json['market'], reopening_dt);
+        json['id'], dt, location, json['marketName'], reopening_dt);
   }
 }
 
@@ -117,10 +117,10 @@ class UpgradingNewsItem extends NewsItem {
 
   factory UpgradingNewsItem.getFromJson(Map<String, dynamic> json) {
     //todo test
-    DateTime dt = DateTime.parse(json['datetime']);
-    LatLng location = LatLng(json['location'][0], json['location'][1]);
-    DateTime end_dt = DateTime.parse(json['end']);
+    DateTime dt = DateTime.parse(json['date']);
+    LatLng location = LatLng(0,0); // TODO LatLng(json['location'][0], json['location'][1]);
+    DateTime end_dt = DateTime.parse(json['endDate']);
     return UpgradingNewsItem(
-        json['id'], dt, location, json['description'], end_dt);
+        json['id'], dt, location, json['desc'], end_dt);
   }
 }
