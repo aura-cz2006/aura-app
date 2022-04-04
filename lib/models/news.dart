@@ -6,7 +6,7 @@ import 'package:latlong2/latlong.dart';
 abstract class NewsItem {
   String id;
   DateTime dateTime;
-  LatLng location; //todo replace latlng
+  LatLng location;
 
   // constructor
   NewsItem(this.id, this.dateTime, this.location);
@@ -34,7 +34,6 @@ class DengueNewsItem extends NewsItem {
   }
 
   factory DengueNewsItem.getFromJson(Map<String, dynamic> json) {
-    // TODO test
     DateTime dt = DateTime.parse(json['date']);
     LatLng location = LatLng(0, 0); // TODO LatLng(json['location'][0], json['location'][1]);
     return DengueNewsItem(json['id'], dt, location, json['numCases']);
@@ -61,7 +60,6 @@ class EventNewsItem extends NewsItem {
   }
 
   factory EventNewsItem.getFromJson(Map<String, dynamic> json) {
-    // TODO test
     DateTime dt = DateTime.parse(json['date']);
     LatLng location = LatLng(0,0); // TODO LatLng(json['location'][0], json['location'][1]);
     return EventNewsItem(json['id'], dt, location, json['eventTitle'],
@@ -85,11 +83,10 @@ class MarketNewsItem extends NewsItem {
 
   @override
   String getText() {
-    return "$marketName will be closed until ${DateFormat('yyyy-MM-dd kk:mm').format(reopeningDate)}.";
+    return "$marketName will be closed until ${DateFormat('yyyy-MM-dd').format(reopeningDate)}.";
   }
 
   factory MarketNewsItem.getFromJson(Map<String, dynamic> json) {
-    // TODO test
     DateTime dt = DateTime.parse(json['date']);
     LatLng location = LatLng(0,0); // TODO LatLng(json['location'][0], json['location'][1]);
     DateTime reopening_dt = DateTime.parse(json['reopeningDate']);
@@ -112,11 +109,10 @@ class UpgradingNewsItem extends NewsItem {
 
   @override
   String getText() {
-    return "Upgrading works at $location: $desc (expected completion: \$${DateFormat('yyyy-MM-dd kk:mm').format(expectedEnd)} ).";
+    return "Upgrading works at $location: $desc (expected completion: \$${DateFormat('yyyy-MM-dd').format(expectedEnd)} ).";
   }
 
   factory UpgradingNewsItem.getFromJson(Map<String, dynamic> json) {
-    //todo test
     DateTime dt = DateTime.parse(json['date']);
     LatLng location = LatLng(0,0); // TODO LatLng(json['location'][0], json['location'][1]);
     DateTime end_dt = DateTime.parse(json['endDate']);
