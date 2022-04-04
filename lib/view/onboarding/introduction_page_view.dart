@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:aura/globals.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:geocoding/geocoding.dart';
@@ -120,7 +121,7 @@ class IntroScreen extends StatelessWidget {
           userMgr.updateHomeAddress(userMgr.active_user_id,
               LatLng(interest.latitude, interest.longitude));
           //Indicate that the phone has done onboarding before.
-          setFirstTimeVisit();
+          Prefs.hasOnboarded();
           context.go("/tabs/map");
         },
       );
