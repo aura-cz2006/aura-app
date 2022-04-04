@@ -94,17 +94,18 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                 const SizedBox(height: 8),
                                 SizedBox(
                                     child: ListTile(
+                                      isThreeLine: true,
                                   title: Text(
-                                    filter.censor(m.title!) +
-                                        " on " +
-                                        DateFormat('MM-dd kk:mm')
-                                            .format(m.timeOfMeetUp),
+                                    filter.censor(m.title!)
                                   ),
                                   subtitle: Container(
                                     margin: const EdgeInsets.only(
                                       top: 5,
                                     ),
                                     child: Text(
+                                        "Date: " +
+                                            DateFormat('MM-dd kk:mm\n')
+                                                .format(m.timeOfMeetUp) +
                                         "${m.currNumAttendees()}/${m.maxAttendees} Attendees"),
                                   ),
                                   trailing: Container(
