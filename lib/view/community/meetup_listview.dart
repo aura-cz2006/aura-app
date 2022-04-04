@@ -94,9 +94,13 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                 const SizedBox(height: 8),
                                 SizedBox(
                                     child: ListTile(
+                                      visualDensity: VisualDensity.compact,
                                       isThreeLine: true,
                                   title: Text(
-                                    filter.censor(m.title!)
+                                    filter.censor(m.title!) ,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold
+                                          ),
                                   ),
                                   subtitle: Container(
                                     margin: const EdgeInsets.only(
@@ -104,7 +108,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                     ),
                                     child: Text(
                                         "Date: " +
-                                            DateFormat('MM-dd kk:mm\n')
+                                            DateFormat('yyyy-MM-dd kk:mm\n')
                                                 .format(m.timeOfMeetUp) +
                                         "${m.currNumAttendees()}/${m.maxAttendees} Attendees"),
                                   ),
@@ -184,6 +188,13 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                     ),
                                   ),
                                 )),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    const SizedBox(width: 16),
+                                    Text("Location: ${m.location}"),
+                                  ]
+                                ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
