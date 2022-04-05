@@ -7,7 +7,7 @@ if (localPropertiesFile.exists()) {
 }
 
 buildscript {
-    ext.kotlin_version = '1.6.10'
+    ext.kotlin_version = '1.6.20'
     repositories {
         google()
         mavenCentral()
