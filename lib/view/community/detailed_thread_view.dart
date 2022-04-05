@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:aura/controllers/thread_controller.dart';
 import 'package:aura/managers/thread_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
