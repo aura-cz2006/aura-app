@@ -1,3 +1,9 @@
+import 'dart:async';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 import 'package:aura/globals.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/managers/map_manager.dart';
@@ -9,7 +15,6 @@ import 'managers/notification_manager.dart';
 import 'managers/thread_manager.dart';
 import 'managers/meetup_manager.dart';
 
-
 Future initMain() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -17,23 +22,41 @@ Future initMain() async {
 }
 
 int? isviewed;
-void main() async {
-  await initMain();
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => MapManager()),
-        ChangeNotifierProvider(create: (context) => NotificationManager()),
-        ChangeNotifierProvider(create: (context) => Thread_Manager()),
-        ChangeNotifierProvider(create: (context) => Meetup_Manager()),
-        ChangeNotifierProvider(create: (context) => User_Manager()),
-        ChangeNotifierProvider(create: (context) => News_Manager()),
-        ChangeNotifierProvider(create: (context) => News_Manager()),
-      ],
-      child: const MyApp(),
-    ),
-  );
+
+
+void main() async {
+  // // firebase + crashlytics init
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+
+  // for zoned errors https://firebase.flutter.dev/docs/crashlytics/usage#zoned-errors
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    // The following lines are the same as previously explained in "Handling uncaught errors"
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
+    // load shareprefs as global vars
+    await initMain();
+
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => MapManager()),
+          ChangeNotifierProvider(create: (context) => NotificationManager()),
+          ChangeNotifierProvider(create: (context) => Thread_Manager()),
+          ChangeNotifierProvider(create: (context) => Meetup_Manager()),
+          ChangeNotifierProvider(create: (context) => User_Manager()),
+          ChangeNotifierProvider(create: (context) => News_Manager()),
+          ChangeNotifierProvider(create: (context) => News_Manager()),
+        ],
+        child: const MyApp(),
+      ),
+    );
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 
 class MyApp extends StatelessWidget {
@@ -57,7 +80,8 @@ class MyApp extends StatelessWidget {
               borderSide: BorderSide(width: 3, color: Colors.redAccent),
             ),
             labelColor: Colors.red,
-            labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            labelStyle:
+                const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
             unselectedLabelColor: Colors.grey[400],
             unselectedLabelStyle: const TextStyle(
               fontSize: 18,

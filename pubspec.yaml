@@ -64,6 +64,9 @@ dependencies:
   profanity_filter: ^2.0.0
   flutter_launcher_icons: ^0.9.2
   flutter_native_splash: ^2.1.2+1
+  mapbox_gl: ^0.15.0
+  firebase_core: ^1.14.0
+  firebase_crashlytics: ^2.6.0
 
 dev_dependencies:
   flutter_test:

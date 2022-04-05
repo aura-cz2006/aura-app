@@ -1,3 +1,11 @@
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
 buildscript {
     ext.kotlin_version = '1.6.20'
     repositories {
@@ -8,13 +16,36 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:4.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // firebase crashlytics
+        classpath 'com.google.gms:google-services:4.3.5'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
     }
 }
 
 allprojects {
+
+    def token = System.getenv('SDK_REGISTRY_TOKEN') ?: localProperties.getProperty('MAPBOX_DOWNLOADS_TOKEN')
+    if (token == null || token.empty) {
+        throw new Exception("SDK Registry token is null. See flutter mapbox_gl README.md for more information.")
+    }
     repositories {
         google()
         mavenCentral()
+        maven {
+            url 'https://api.mapbox.com/downloads/v2/releases/maven'
+            authentication {
+                basic(BasicAuthentication)
+            }
+            credentials {
+                // Do not change the username below.
+                // This should always be `mapbox` (not your username).
+                username = "mapbox"
+                // Use the secret token you stored in gradle.properties as the password
+                 password = token
+//                password = "sk.eyJ1IjoicmVhbGR5bGxvbiIsImEiOiJjbDFsMjhhdGMwMGowM2lwZ2J5bTZlMXVuIn0.cQ_GiX0yiXfFA5MtCy03yw"
+            }
+        }
     }
 }
 
