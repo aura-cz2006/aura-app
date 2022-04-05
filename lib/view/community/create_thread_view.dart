@@ -93,7 +93,7 @@ class _CreateThreadViewState extends State<CreateThreadView> {
           return ElevatedButton(
             child: const Text("Submit"),
             onPressed: () {
-              setState(() {
+              setState(() async {
                 if (!_formKey.currentState!.validate()){
                   return;
                 }
@@ -104,6 +104,28 @@ class _CreateThreadViewState extends State<CreateThreadView> {
                     topic: widget.topic,
                     userID: userMgr.active_user_id //Not yet available
                     );
+                if (response == 200) {print("Success");}
+
+                //Failure Message
+                if (response == 400){
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                            elevation: 10,
+                            scrollable: true,
+                            content: Center(
+                                child: Container(
+                                  child: Text("Unable to create thread.\n"
+                                      "\n Please try again."),
+                                )
+                            )
+                        );
+                      });
+                  return;
+                }
+                ThreadController.fetchThreads(context);
+
                 context.pop();
               });
             },

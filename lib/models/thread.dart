@@ -1,7 +1,7 @@
 import 'package:aura/models/comment.dart';
 import 'package:aura/models/discussion_topic.dart';
 import 'package:intl/intl.dart';
-
+import 'dart:convert';
 
 class Thread {
   late String id;
@@ -13,7 +13,7 @@ class Thread {
   late List<Comment> comments = [];
   late List<String> likedBy = []; // list of userIDs
 
-  // constructor
+  // constructor for app
   Thread(
     this.id,
     this.title,
@@ -22,6 +22,12 @@ class Thread {
     this.topic,
     this.timestamp,
   );
+  //Constructor for backend
+  Thread.fromBackEnd(
+      this.id, this.title, this.userID,
+      this.content, this.topic, this.timestamp,
+      this.comments, this.likedBy);
+
 
   @override
   String toString() {
@@ -82,3 +88,4 @@ class Thread {
         DateTime.parse(json['date']), constructCommentsListfromStringList(json['comments']),   List<String>.from(json['likedBy']));
   }
 }
+

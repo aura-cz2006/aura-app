@@ -7,4 +7,6 @@ class Comment {
   String? text;
 
   Comment(this.commentID, this.userID, this.timestamp, this.text);
+
+  // factory Comment.fromJson(Map<String>)
 }
