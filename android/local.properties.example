@@ -1,0 +1,5 @@
+sdk.dir=change-this
+flutter.sdk=change-this
+flutter.buildMode=debug
+flutter.versionName=0.1.0
+MAPBOX_DOWNLOADS_TOKEN=replace-this-string-with-the-secret-key
