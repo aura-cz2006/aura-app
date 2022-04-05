@@ -62,6 +62,9 @@ dependencies:
   badges: ^2.0.2
   modal_bottom_sheet: ^2.0.1
   profanity_filter: ^2.0.0
+  mapbox_gl: ^0.15.0
+  firebase_core: ^1.14.0
+  firebase_crashlytics: ^2.6.0
 
 dev_dependencies:
   flutter_test:
