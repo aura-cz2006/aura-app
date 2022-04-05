@@ -98,7 +98,6 @@ final router = GoRouter(
                 path: "notifications",
                 builder: (BuildContext context, GoRouterState state) =>
                     const NotificationsView()),
-            // TODO: remove currUserId param
           ]),
       GoRoute(
         path: "/settings",

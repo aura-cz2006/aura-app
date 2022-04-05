@@ -21,12 +21,13 @@ List<Polygon> denguePolygons(MapManager mapManager) {
   //   print(element);
   // });
 
-  List<Polygon> _polygons = !mapManager.selectedLayers.contains('dengue')
-      ? []
-      : mapManager.dengueData
-          // .map((cluster) => cluster['geometry']['coordinates'][0][0])
-          .map((element) => Polygon(points: [LatLng(0, 0)]))
-          .toList();
-
-  return _polygons;
+  // List<Polygon> _polygons = !mapManager.selectedLayers.contains('dengue')
+  //     ? []
+  //     : mapManager.dengueData
+  //         // .map((cluster) => cluster['geometry']['coordinates'][0][0])
+  //         .map((element) => Polygon(points: [LatLng(0, 0)]))
+  //         .toList();
+  //
+  // return _polygons;
+  return [];
 }

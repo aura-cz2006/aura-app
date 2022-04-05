@@ -115,7 +115,7 @@ class _MapTabState extends State<MapTab> {
                 rotate: true,
               ),
               MarkerLayerOptions(
-                markers: taxiMarkers(mapManager.taxis,
+                markers: taxiMarkers([], // mapManager.taxis,
                     mapManager.selectedLayers.contains('taxi')),
                 rotate: true,
               ),
