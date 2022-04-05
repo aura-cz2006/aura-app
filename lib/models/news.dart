@@ -35,7 +35,7 @@ class DengueNewsItem extends NewsItem {
 
   factory DengueNewsItem.getFromJson(Map<String, dynamic> json) {
     DateTime dt = DateTime.parse(json['date']);
-    LatLng location = LatLng(0, 0); // TODO LatLng(json['location'][0], json['location'][1]);
+    LatLng location = LatLng(json['location']['lat'], json['location']['lng']);
     return DengueNewsItem(json['id'], dt, location, json['numCases']);
   }
 }
@@ -61,7 +61,7 @@ class EventNewsItem extends NewsItem {
 
   factory EventNewsItem.getFromJson(Map<String, dynamic> json) {
     DateTime dt = DateTime.parse(json['date']);
-    LatLng location = LatLng(0,0); // TODO LatLng(json['location'][0], json['location'][1]);
+    LatLng location = LatLng(json['location']['lat'], json['location']['lng']);
     return EventNewsItem(json['id'], dt, location, json['eventTitle'],
         json['fee'], json['url']);
   }
@@ -88,7 +88,7 @@ class MarketNewsItem extends NewsItem {
 
   factory MarketNewsItem.getFromJson(Map<String, dynamic> json) {
     DateTime dt = DateTime.parse(json['date']);
-    LatLng location = LatLng(0,0); // TODO LatLng(json['location'][0], json['location'][1]);
+    LatLng location = LatLng(json['location']['lat'], json['location']['lng']);
     DateTime reopening_dt = DateTime.parse(json['reopeningDate']);
     return MarketNewsItem(
         json['id'], dt, location, json['marketName'], reopening_dt);
@@ -114,7 +114,7 @@ class UpgradingNewsItem extends NewsItem {
 
   factory UpgradingNewsItem.getFromJson(Map<String, dynamic> json) {
     DateTime dt = DateTime.parse(json['date']);
-    LatLng location = LatLng(0,0); // TODO LatLng(json['location'][0], json['location'][1]);
+    LatLng location = LatLng(json['location']['lat'], json['location']['lng']);
     DateTime end_dt = DateTime.parse(json['endDate']);
     return UpgradingNewsItem(
         json['id'], dt, location, json['desc'], end_dt);
