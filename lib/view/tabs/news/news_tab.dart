@@ -67,6 +67,7 @@ class _NewsTabState extends State<NewsTab> {
                   height: 75,
                   animSpeedFactor: 3,
                   onRefresh: _handleRefresh,
+                  // method that calls controller to "set" data in manager
                   child: // scroll view
                       ListView(
                     scrollDirection: Axis.vertical,
