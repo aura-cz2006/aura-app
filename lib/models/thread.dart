@@ -4,14 +4,14 @@ import 'package:intl/intl.dart';
 
 
 class Thread {
-  String id;
-  String? title;
-  String userID;
-  String content;
-  DiscussionTopic topic;
-  DateTime timestamp;
-  List<Comment> comments = [];
-  List<String> likedBy = []; // list of userIDs
+  late String id;
+  late String? title;
+  late String userID;
+  late String content;
+  late DiscussionTopic topic;
+  late DateTime timestamp;
+  late List<Comment> comments = [];
+  late List<String> likedBy = []; // list of userIDs
 
   // constructor
   Thread(
@@ -61,5 +61,24 @@ class Thread {
 
   String getSummary() {
     return "[${topic.topic2readable()}] $title \nPosted on: ${DateFormat('yyyy-MM-dd kk:mm').format(timestamp)}";
+  }
+
+  static List<Comment> constructCommentsListfromStringList(List<dynamic> jsonInputListOfMap){
+    List<Comment> result = [];
+
+    for (dynamic item in jsonInputListOfMap){
+
+      Comment commentToAdd = Comment(item['id']!, item['user']!,
+          DateTime.parse(item['timestamp']!), item['text']);
+      result.add(commentToAdd);
+    }
+    return result;
+  }
+
+  factory Thread.getFromJson(Map<String, dynamic> json){
+
+    return Thread.fromBackEnd(json['id'], json['title'], json['userID'],
+        json['content'], TopicConverter.parsable2topic(json['topic']),
+        DateTime.parse(json['date']), constructCommentsListfromStringList(json['comments']),   List<String>.from(json['likedBy']));
   }
 }

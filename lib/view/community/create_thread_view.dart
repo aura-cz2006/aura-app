@@ -1,3 +1,5 @@
+import 'package:aura/apis/discussion_api.dart';
+import 'package:aura/controllers/thread_controller.dart';
 import 'package:aura/managers/thread_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/models/discussion_topic.dart';
@@ -87,7 +89,7 @@ class _CreateThreadViewState extends State<CreateThreadView> {
         width: 100,
         height: 50,
         child: Card(child: Consumer2<Thread_Manager, User_Manager>(
-            builder: (context, threadMgr, userMgr, child) {
+            builder: (context, threadCtrl, userMgr, child) {
           return ElevatedButton(
             child: const Text("Submit"),
             onPressed: () {
@@ -96,11 +98,11 @@ class _CreateThreadViewState extends State<CreateThreadView> {
                   return;
                 }
                 //Create thread
-                threadMgr.addThread(
-                    titleController.text,
-                    contentController.text,
-                    widget.topic,
-                    userMgr.active_user_id //Not yet available
+                int response = await ThreadController.createThread(
+                    title : titleController.text,
+                    content : contentController.text,
+                    topic: widget.topic,
+                    userID: userMgr.active_user_id //Not yet available
                     );
                 context.pop();
               });
