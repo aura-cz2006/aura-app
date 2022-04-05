@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:aura/globals.dart';
 import 'package:aura/managers/user_manager.dart';
@@ -21,23 +21,17 @@ Future initMain() async {
   await Prefs.init();
 }
 
-int? isviewed;
-
-
 
 void main() async {
-  // // firebase + crashlytics init
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
-
   // for zoned errors https://firebase.flutter.dev/docs/crashlytics/usage#zoned-errors
   runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
     // The following lines are the same as previously explained in "Handling uncaught errors"
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
+    FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+    analytics.logAppOpen();
 
     // load shareprefs as global vars
     await initMain();
