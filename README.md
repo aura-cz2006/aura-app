@@ -6,9 +6,8 @@
 2. Install firebase tools, [instructions here](https://firebase.google.com/docs/cli/#windows)
 3. Login to firebase, `firebase login` -> make sure that you are a member of the firebase project
 4. Get Flutter dependencies, `flutter pub get`
-5. Copy the `gradle.properties.example` in /android, rename it to `gradle.properties`, and change the
-   relevant keys
-6. Run the app with android studio
+5. Add a `gradle.properties` file to `«USER_HOME»/.gradle` (for windows, `C:\Users\<<your user name>>\.gradle`)
+6. Add `MAPBOX_DOWNLOADS_TOKEN=<<paste secret key here>>` to gradle.properties
 
 ## build app
 
