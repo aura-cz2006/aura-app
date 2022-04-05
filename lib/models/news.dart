@@ -14,6 +14,8 @@ abstract class NewsItem {
     return Icons.newspaper;
   }
   String getText();
+  String getPopupText();
+  String getTitle();
 }
 
 class DengueNewsItem extends NewsItem {
@@ -28,6 +30,14 @@ class DengueNewsItem extends NewsItem {
   @override
   String getText() {
     return "New dengue cluster detected at $location ($numCases cases).";
+  }
+  String getPopupText() {
+    return "Cases: $numCases \n"
+        "Location: $location \n"
+        "Date: $dateTime";
+  }
+  String getTitle() {
+    return "New Dengue Cluster";
   }
 }
 
@@ -44,7 +54,17 @@ class EventNewsItem extends NewsItem { // todo consider start and end date
   }
   @override
   String getText() {
-    return "New event \"$eventTitle\" hosted at $location (fee: $fee).";
+    return "New event \"$eventTitle\" hosted at $location (fee: \$$fee).";
+  }
+
+  @override
+  String getPopupText() {
+    return "Event title: \"$eventTitle\" \n"
+        "Location: $location \n"
+        "fee: \$$fee";
+  }
+  String getTitle() {
+    return "New Event";
   }
 }
 
@@ -64,6 +84,14 @@ class MarketNewsItem extends NewsItem {
   String getText() {
     return "$marketName will be closed until ${DateFormat('yyyy-MM-dd kk:mm').format(reopeningDate)}.";
   }
+
+  String getPopupText() {
+    return "$marketName will be closed until ${DateFormat('yyyy-MM-dd kk:mm').format(reopeningDate)}.";
+  }
+
+  String getTitle() {
+    return "Market Closure";
+  }
 }
 
 class UpgradingNewsItem extends NewsItem {
@@ -79,6 +107,14 @@ class UpgradingNewsItem extends NewsItem {
   }
   @override
   String getText() {
-    return "Upgrading works at $location: $desc (expected completion: \$${DateFormat('yyyy-MM-dd kk:mm').format(expectedEnd)} ).";
+    return "Upgrading works at $location: $desc (expected completion: ${DateFormat('yyyy-MM-dd kk:mm').format(expectedEnd)} ).";
+  }
+  String getPopupText() {
+    return "Location: $location \n"
+        "Description: $desc \n"
+        "Expected Completion: ${DateFormat('yyyy-MM-dd kk:mm').format(expectedEnd)}";
+  }
+  String getTitle() {
+    return "Upgrading Works";
   }
 }

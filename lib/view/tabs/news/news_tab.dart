@@ -95,11 +95,11 @@ class _NewsTabState extends State<NewsTab> {
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      title: Text('News Details'),
+                                      title: Text(n.getTitle()),
                                       content: SingleChildScrollView(
                                         child: ListBody(
                                           children: <Widget>[
-                                            Text(n.getText())
+                                            Text(n.getPopupText())
                                           ],
                                         ),
                                       ),
