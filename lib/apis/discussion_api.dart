@@ -76,4 +76,19 @@ class DiscussionThreadApi {
 
     return response.statusCode;
   }
+
+  static Future<int> deleteThread({required Thread thread}) async {
+    Uri url = Uri.parse(
+        "${Config().routes["api"]}/discussions/${thread.topic.topic2readable()}/threads/${thread.id}");
+
+    final response = await http.delete(
+      url,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      encoding: Encoding.getByName('utf-8'),
+    );
+
+    return response.statusCode;
+  }
 }

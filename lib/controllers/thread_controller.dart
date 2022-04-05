@@ -28,4 +28,8 @@ class ThreadController {
   static Future<int> patchThread({required Thread thread, required String title, required String content}){
     return DiscussionThreadApi.patchThread(thread: thread, title: title, content: content);
   }
+
+  static Future<int> deleteThread({required Thread thread}){
+    return DiscussionThreadApi.deleteThread(thread: thread);
+  }
   }
