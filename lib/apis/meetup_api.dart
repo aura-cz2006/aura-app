@@ -4,7 +4,7 @@ import 'package:aura/config/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_status_code/http_status_code.dart';
 import 'package:latlong2/latlong.dart';
-
+import 'package:geocoding/geocoding.dart';
 
 class MeetUpAPI{
   static Future<List<Meetup>> fetchMeetups() async {
@@ -20,7 +20,9 @@ class MeetUpAPI{
       json.decode(responseBody); // todo put this back
 
       List<Meetup> resList = (decodedJson).map((item) {
-        return Meetup.getFromJson(item);
+        Meetup meetup = Meetup.getFromJson(item);
+        meetup.latLngtoAddress(meetup.location);
+        return meetup;
       }).toList();
 
       print(resList);
@@ -125,4 +127,11 @@ class MeetUpAPI{
 
     return response.statusCode;
   }
+}
+
+Future<String> latLngtoAddress_String(LatLng coord) async {
+  var places = await placemarkFromCoordinates(coord.latitude,coord.longitude);
+  var interest = await places.first;
+  String address = interest.street! + ", " + interest.postalCode!;
+  return address;
 }

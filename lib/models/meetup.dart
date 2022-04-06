@@ -25,6 +25,10 @@ class Meetup {
     rsvpAttendees.add(userID);
   }
 
+  static Future<Meetup> create(){
+
+  }
+
   Meetup.toBackEnd({
     required this.title,
     required this.description,
