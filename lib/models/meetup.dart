@@ -1,5 +1,5 @@
 
-
+import 'package:geocoding/geocoding.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:aura/models/comment.dart';
@@ -17,6 +17,7 @@ class Meetup {
   late List<Comment> comments = [];
   late bool isCancelled = false;
   late Map<String, double> location_toback;
+  late String address;
 
 
   Meetup(this.timeOfMeetUp, this.location, this.meetupID, this.userID,
@@ -45,6 +46,7 @@ class Meetup {
       this.comments,
       this.rsvpAttendees,
       this.isCancelled);
+
 
   int currNumAttendees() {
     return rsvpAttendees.length;
@@ -110,7 +112,7 @@ class Meetup {
   factory Meetup.getFromJson(Map<String, dynamic> json) {
     // print("LatLng type looks like this!!!!!!!!!!!!!!!!! ");
     // print(LatLng((json['location']['lat']), (json['location']['lng'])));
-    return Meetup.fromBackEnd(
+    Meetup meetup = Meetup.fromBackEnd(
         json['title'],
         json['description'],
         DateTime.parse(json['createdAt']),
@@ -122,5 +124,15 @@ class Meetup {
         constructCommentsListfromStringList(json['comments']),
         List<String>.from(json['rsvpAttendees']),
         json['isCancelled']);
+
+    meetup.latLngtoAddress(LatLng((json['location']['lat']), (json['location']['lng'])));
+    return meetup;
+  }
+
+  void latLngtoAddress(LatLng coord) async {
+    var placemarks = await placemarkFromCoordinates(coord.latitude, coord.longitude);
+    var interest = placemarks.first;
+    String address = interest.street! + ", " + interest.postalCode!;
+    this.address = address;
   }
 }

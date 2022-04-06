@@ -81,7 +81,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
         keyboardType: TextInputType.multiline,
         maxLines: null,
         controller: _setControllerText(locationController,
-            "Vivocity"),
+            meetupMgr.getMeetupByID(widget.meetupID).address),
         decoration: const InputDecoration(
             labelText: "Location",
             hintText: "Enter the location of meet up here",
