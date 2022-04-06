@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:aura/managers/map_manager.dart';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/view/tabs/map/layers/amenities/amenities_filter_chips.dart';
@@ -16,6 +17,11 @@ class _MapboxTabState extends State<MapboxTab> {
   late MapboxMapController controller;
 
   // handle taps
+  void _onFeatureTapped(
+      dynamic featureId, Point<double> point, LatLng coordinates) {
+    _showSnackBar('feature', featureId);
+  }
+
   void _onFillTapped(Fill fill) {
     _showSnackBar('fill', fill.id);
   }
@@ -56,6 +62,7 @@ class _MapboxTabState extends State<MapboxTab> {
         builder: (context, mapMgr, meetupMgr, child) {
       void _onMapCreated(MapboxMapController mbController) {
         controller = mbController;
+        controller.onFeatureTapped.add(_onFeatureTapped);
         controller.onFillTapped.add(_onFillTapped);
         controller.onCircleTapped.add(_onCircleTapped);
         controller.onLineTapped.add(_onLineTapped);
@@ -70,6 +77,7 @@ class _MapboxTabState extends State<MapboxTab> {
               attribution: "Dengue clusters data from data.gov.sg",
               data: // URL to a GeoJSON file, or inline GeoJSON
                   mapMgr.dengueData,
+              promoteId: 'Name', // TODO TESTING
             ));
         await controller.addFillLayer(
             "dengue_clusters",
