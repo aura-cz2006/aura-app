@@ -1,3 +1,4 @@
+import 'package:aura/util/sign_in_google.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,13 +18,29 @@ class _SigninScreenState extends State<SigninScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
           OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: const BorderSide(width: 1, color: Colors.white),
-            ),
             onPressed: () {
-              context.go("/tabs/map");
+              signInWithGoogle().then((value) => {context.go("/tabs/map")});
             },
-            child: Image.asset('assets/singpass.png'),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(
+                    Icons.logout,
+                    size: 30,
+                  ),
+                  SizedBox(width: 16),
+                  Text(
+                    "Sign in with Google",
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ]),
+            style: ElevatedButton.styleFrom(
+              onPrimary: Colors.white,
+              primary: Colors.black,
+              fixedSize: const Size(300, 70),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
+            ),
           ),
         ]));
   }

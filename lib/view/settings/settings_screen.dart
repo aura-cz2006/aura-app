@@ -1,4 +1,5 @@
 import 'package:aura/widgets/aura_app_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,6 +22,10 @@ class SettingsScreen extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: _currentUser(context),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
                     child: _changeHomeAddressButton(context),
                   ),
                   Padding(
@@ -30,6 +35,35 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             )));
+  }
+
+  Widget _currentUser(BuildContext context) {
+    return StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          final user = snapshot.data as User?;
+          if (user != null) {
+            // if user is signed in
+            return Column(children: [
+              ClipOval(
+                  child: SizedBox.fromSize(
+                      size: const Size.fromRadius(48), // Image radius
+                      child: Image.network(
+                        user.photoURL ?? "",
+                      ))),
+              Text(
+                user.displayName ?? "no name",
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(user.email ?? "no email")
+            ]);
+          } else {
+            // if user isn't signed in
+            // ! the user shouldn't be able to access this !!!!
+
+            return const Text("No user!");
+          }
+        });
   }
 
   Widget _changeHomeAddressButton(BuildContext context) {
@@ -62,7 +96,11 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _logoutButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        FirebaseAuth.instance
+            .signOut()
+            .then((value) => {context.go("/sign-in")});
+      },
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
         Icon(
           Icons.logout,

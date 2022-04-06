@@ -1,7 +1,4 @@
 import 'package:aura/globals.dart';
-import 'package:aura/managers/thread_manager.dart';
-import 'package:aura/models/thread.dart';
-import 'package:aura/models/user.dart';
 import 'package:aura/view/community/create_meetup_view.dart';
 import 'package:aura/view/community/detailed_meetup_view.dart';
 import 'package:aura/view/community/detailed_thread_view.dart';
@@ -16,9 +13,9 @@ import 'package:aura/view/community/create_thread_view.dart';
 import 'package:aura/view/community/notifications_view.dart';
 import 'package:aura/view/tabs/main_tab_bar.dart';
 import 'package:aura/view/settings/settings_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/discussion_topic.dart';
 
@@ -152,18 +149,20 @@ final router = GoRouter(
       //
       // if (isOnboarding) return '/tabs/map';
       //
+
       // if the user is not logged in, they need to login
-      // final bool? prefsLoggedIn = Prefs.prefs?.getBool('isLoggedIn');
-      // final loggedIn = (prefsLoggedIn != null) ?? false;
-      // final loggingIn = state.subloc == '/login';
-      // if (!loggedIn) return loggingIn ? null : '/login';
-      //
-      // // if the user is logged in but still on the login page, send them to
-      // // the home page
-      // if (loggingIn) return '/tabs/map';
-      //
-      // for onboarding
-      // no need to redirect at all
+      User? user = Auth.getAuthState();
+      bool loggedIn = (user != null);
+      print("router login check");
+      print(user);
+      bool loggingIn = state.subloc == '/sign-in';
+      if (!loggedIn) return loggingIn ? null : '/sign-in';
+
+      // if the user is logged in but still on the login page, send them to
+      // the home page
+      if (loggingIn) return '/tabs/map';
+
+
       return null;
     },
 
