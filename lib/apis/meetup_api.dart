@@ -3,6 +3,7 @@ import 'package:aura/models/meetup.dart';
 import 'package:aura/config/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_status_code/http_status_code.dart';
+import 'package:latlong2/latlong.dart';
 
 
 class MeetUpAPI{
@@ -18,14 +19,11 @@ class MeetUpAPI{
       List<dynamic> decodedJson =
       json.decode(responseBody); // todo put this back
 
-      //print(decodedJson);
-
       List<Meetup> resList = (decodedJson).map((item) {
         return Meetup.getFromJson(item);
       }).toList();
 
       print(resList);
-      //print("HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO");
 
       return resList;
     } else {
@@ -36,6 +34,7 @@ class MeetUpAPI{
   }
 
   static Future<int> postMeetup({required Meetup meetup}) async {
+    print("Entered API\n");
     Uri url = Uri.parse(
         "${Config().routes["api"]}/meetups/");
 
@@ -47,11 +46,11 @@ class MeetUpAPI{
         body: {
           'title': meetup.title!,
           "description": meetup.description,
-          "meetupTime": meetup.timeOfMeetUp,
-          "location": meetup.location, //Todo: check if this location is a map
-          "maxAttendees": meetup.maxAttendees,
+          "meetupTime": meetup.timeOfMeetUp.toString(),
+          "location": json.encode(meetup.location_toback), //Todo: check if this location is a map
+          "maxAttendees": meetup.maxAttendees.toString(),
         });
-
+  //print("RESPONSE POSTED@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     return response.statusCode; //200 == Success, 400 == Failure.
   }
 }

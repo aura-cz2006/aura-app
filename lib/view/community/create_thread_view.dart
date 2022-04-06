@@ -104,7 +104,7 @@ class _CreateThreadViewState extends State<CreateThreadView> {
                     topic: widget.topic,
                     userID: userMgr.active_user_id //Not yet available
                     );
-                if (response == 200) {print("Success");}
+                if (response == 200) {print("Posting Thread Success");}
 
                 //Failure Message
                 if (response == 400){

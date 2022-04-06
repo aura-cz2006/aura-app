@@ -112,7 +112,6 @@ class IntroScreen extends StatelessWidget {
           print("Search location: ${LatLng( //TODO: Delete this line
               interest.latitude, interest.longitude)}");
 
-
           //Error message for empty field
           if (!_formKey.currentState!.validate()) {
             return;

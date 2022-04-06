@@ -5,22 +5,32 @@ import 'package:latlong2/latlong.dart';
 import 'package:aura/models/comment.dart';
 
 class Meetup {
-  String? title;
-  String? description;
-  DateTime createdAt;
-  DateTime timeOfMeetUp;
-  LatLng location;
-  String meetupID;
-  String userID;
-  int maxAttendees;
-  List<String> rsvpAttendees = []; // userIDs
-  List<Comment> comments = [];
-  bool isCancelled = false;
+  late String? title;
+  late String? description;
+  late DateTime createdAt;
+  late DateTime timeOfMeetUp;
+  late LatLng location;
+  late String meetupID;
+  late String userID;
+  late int maxAttendees;
+  late List<String> rsvpAttendees = []; // userIDs
+  late List<Comment> comments = [];
+  late bool isCancelled = false;
+  late Map<String, double> location_toback;
+
 
   Meetup(this.timeOfMeetUp, this.location, this.meetupID, this.userID,
       this.maxAttendees, this.title, this.description, this.createdAt) {
     rsvpAttendees.add(userID);
   }
+
+  Meetup.toBackEnd({
+    required this.title,
+    required this.description,
+    required this.timeOfMeetUp,
+    required this.location_toback,
+    required this.maxAttendees,
+});
 
   //Constructor for backend
   Meetup.fromBackEnd(
