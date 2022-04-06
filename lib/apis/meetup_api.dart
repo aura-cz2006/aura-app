@@ -78,4 +78,19 @@ class MeetUpAPI{
   //print("RESPONSE POSTED@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     return response.statusCode; //200 == Success, 400 == Failure.
   }
+
+  static Future<int> deleteMeetup({required Meetup meetup}) async {
+    Uri url = Uri.parse(
+        "${Config().routes["api"]}/meetups/${meetup.meetupID}");
+
+    final response = await http.delete(
+      url,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      encoding: Encoding.getByName('utf-8'),
+    );
+
+    return response.statusCode;
+  }
 }

@@ -46,6 +46,10 @@ class MeetupsController {
         maxAttendees: maxAttendees);
     return MeetUpAPI.patchMeetup(meetup: editMeetup);
   }
+
+  static Future<int> deleteMeetup({required Meetup meetup}){
+    return MeetUpAPI.deleteMeetup(meetup: meetup);
+  }
 }
 
 Map<String, double> locationLatLngtoMapForBackEnd(LatLng coord){
