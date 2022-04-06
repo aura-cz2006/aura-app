@@ -1,4 +1,5 @@
 import 'package:aura/widgets/aura_app_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,10 +22,14 @@ class SettingsScreen extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: _currentUser(context),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     child: _changeHomeAddressButton(context),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     child: _logoutButton(context),
                   ),
                 ],
@@ -32,17 +37,49 @@ class SettingsScreen extends StatelessWidget {
             )));
   }
 
+  Widget _currentUser(BuildContext context) {
+    return StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          final user = snapshot.data as User?;
+          if (user != null) {
+            // if user is signed in
+            return Column(children: [
+              ClipOval(
+                  child: SizedBox.fromSize(
+                      size: const Size.fromRadius(75), // Image radius
+                      child: Image.network(
+                        user.photoURL ?? "",
+                        width: 300,
+                        height: 300,
+                        fit: BoxFit.cover,
+                      ))),
+              Padding(padding: EdgeInsets.symmetric(vertical:10), child: Text(
+                user.displayName ?? "no name",
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              )),
+              Text(user.email ?? "no email")
+            ]);
+          } else {
+            // if user isn't signed in
+            // ! the user shouldn't be able to access this !!!!
+
+            return const Text("No user!");
+          }
+        });
+  }
+
   Widget _changeHomeAddressButton(BuildContext context) {
     return ElevatedButton(
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
         Icon(
           Icons.home,
-          size: 30,
+          size: 24,
         ),
         SizedBox(width: 16),
         Text(
           "Change Home Address",
-          style: TextStyle(fontSize: 18, color: Colors.black),
+          style: TextStyle(fontSize: 16, color: Colors.black),
         ),
       ]),
       onPressed: () {
@@ -53,33 +90,37 @@ class SettingsScreen extends StatelessWidget {
         onPrimary: Colors.black,
         primary: Colors.white,
         side: const BorderSide(color: Colors.black, width: 2),
-        fixedSize: const Size(300, 70),
+        fixedSize: const Size(250, 50),
         shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       ),
     );
   }
 
   Widget _logoutButton(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        FirebaseAuth.instance
+            .signOut()
+            .then((value) => {context.go("/sign-in")});
+      },
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
         Icon(
           Icons.logout,
-          size: 30,
+          size: 24,
         ),
         SizedBox(width: 16),
         Text(
-          "Log Out",
-          style: TextStyle(fontSize: 18, color: Colors.white),
+          "Sign Out",
+          style: TextStyle(fontSize: 16, color: Colors.white),
         ),
       ]),
       style: ElevatedButton.styleFrom(
         onPrimary: Colors.white,
         primary: Colors.redAccent,
-        fixedSize: const Size(300, 70),
+        fixedSize: const Size(250, 50),
         shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       ),
     );
   }

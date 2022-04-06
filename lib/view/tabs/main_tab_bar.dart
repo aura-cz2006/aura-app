@@ -1,3 +1,4 @@
+import 'package:aura/view/map/mapbox_tab.dart';
 import 'package:aura/view/onboarding/introduction_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:aura/view/tabs/community/community_tab.dart';
@@ -40,7 +41,7 @@ class _MainTabBarState extends State<MainTabBar> {
           index: selectedIndex,
           children: const <Widget>[
             CommunityTab(),
-            MapTab(),
+            MapboxTab(),
             NewsTab(),
           ],
         ),
