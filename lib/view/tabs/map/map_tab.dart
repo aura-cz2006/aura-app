@@ -1,3 +1,4 @@
+import 'package:aura/controllers/meetups_controller.dart';
 import 'package:aura/controllers/news_controller.dart';
 import 'package:aura/controllers/thread_controller.dart';
 import 'package:aura/managers/map_manager.dart';
@@ -52,6 +53,7 @@ class _MapTabState extends State<MapTab> {
   @override
   void initState() {
     // initialise markers at each point in latLngList
+    MeetupsController.fetchMeetups(context);
     ThreadController.fetchThreads(context);
     NewsController.fetchNews(context); // get initial
 

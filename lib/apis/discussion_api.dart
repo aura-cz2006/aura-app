@@ -27,7 +27,7 @@ class DiscussionThreadApi {
         return Thread.getFromJson(item);
       }).toList();
 
-      print(resList);
+      //print(resList);
       //print("HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO");
 
       return resList;

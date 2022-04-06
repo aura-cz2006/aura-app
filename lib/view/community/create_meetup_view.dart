@@ -1,3 +1,4 @@
+import 'package:aura/controllers/meetups_controller.dart';
 import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:aura/view/community/datetime_picker.dart';
@@ -151,21 +152,31 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
               if (!_formKey.currentState!.validate() || selectedDate.isBefore(DateTime.now())){
                 return;
               }
-              setState(() {
-                // print(Text('''Title: ${titleController.text}
-                // Date&Time: ${selectedDate}
-                // Location: 1.3483, 103.6831
-                // Content: ${descriptionController.text}
-                // '''));
-                //Create thread
-                meetupMgr.addMeetup(
-                  selectedDate,
-                  LatLng(1.1, 2.2),
-                  userMgr.active_user_id,
-                  int.parse(attendeeController.text),
-                  titleController.text,
-                  descriptionController.text,
-                );
+              setState(() async {
+                int response = await MeetupsController.createMeetup(title: titleController.text,
+                    content: descriptionController.text, maxAttendees: int.parse(attendeeController.text),
+                    userID: userMgr.active_user_id, timeofMeetup: selectedDate, location: LatLng(1.1, 2.2));
+                if (response == 200) {print("Success");}
+
+                //Failure Message
+                if (response != 200){
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                            elevation: 10,
+                            scrollable: true,
+                            content: Center(
+                                child: Container(
+                                  child: Text("Unable to create meetup.\n"
+                                      "\n Please try again."),
+                                )
+                            )
+                        );
+                      });
+                  return;
+                }
+                MeetupsController.fetchMeetups(context);
                 context.pop();
               });
             },

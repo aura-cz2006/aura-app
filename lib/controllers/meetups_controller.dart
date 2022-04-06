@@ -1,11 +1,25 @@
+import 'package:aura/apis/meetup_api.dart';
+import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/models/meetup.dart';
+import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
 
 class MeetupsController {
-  static Meetup getMeetup(String ID) {
-    // TODO: get the list of meetups from manager and return the meetup with the matching ID
-    return Meetup(DateTime.now().add(Duration(days: 2)), LatLng(1.34, 103.68), '1',
-        '1', 5, 'Table tennis', 'I love the high speed game.', DateTime.now());
+  static void fetchMeetups(BuildContext context) async {
 
+    // call api (convert to dart there) and receive api data
+    List<Meetup> fetchedMeetupItems = await MeetUpAPI.fetchMeetups();
+
+    // call provider
+    Provider.of<Meetup_Manager>(context, listen: false).updateMeetupList(
+        fetchedMeetupItems
+    );
+  }
+
+  static Future<int> createMeetup(
+      {required String title, required String content, required int maxAttendees, required String userID, required DateTime timeofMeetup, required LatLng location}) {
+    Meetup meetUpToAdd = Meetup(timeofMeetup, location,'placeholderID', userID, maxAttendees, title, content, DateTime.now());
+    return MeetUpAPI.postMeetup(meetup: meetUpToAdd);
   }
 }
