@@ -53,8 +53,11 @@ class _MapTabState extends State<MapTab> {
   @override
   void initState() {
     // initialise markers at each point in latLngList
+    print("Entering Meetup");
     MeetupsController.fetchMeetups(context);
+    print("Entering Thread");
     ThreadController.fetchThreads(context);
+    print("Entering News");
     NewsController.fetchNews(context); // get initial
 
     super.initState();

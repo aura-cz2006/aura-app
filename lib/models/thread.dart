@@ -23,10 +23,17 @@ class Thread {
       this.timestamp,
       );
   //Constructor for backend
-  Thread.fromBackEnd(
-      this.id, this.title, this.userID,
-      this.content, this.topic, this.timestamp,
-      this.comments, this.likedBy);
+  Thread.fromBackEnd({
+    required this.id,
+    required this.title,
+    required this.userID,
+    required this.content,
+    required this.topic,
+    required this.timestamp,
+    required this.comments,
+    required this.likedBy
+    }
+  );
 
 
   @override
@@ -71,9 +78,10 @@ class Thread {
 
   static List<Comment> constructCommentsListfromStringList(List<dynamic> jsonInputListOfMap){
     List<Comment> result = [];
-
+    
+    if (jsonInputListOfMap.isEmpty || jsonInputListOfMap == null){return result;}
+    
     for (dynamic item in jsonInputListOfMap){
-
       Comment commentToAdd = Comment(item['id']!, item['user']!,
           DateTime.parse(item['timestamp']!), item['text']);
       result.add(commentToAdd);
@@ -82,10 +90,28 @@ class Thread {
   }
 
   factory Thread.getFromJson(Map<String, dynamic> json){
+    List<Comment> comments = [Comment("1", "3", DateTime.now(), "text")];
+    List<String> likes = [];
+    //json['id'], json['title'], json['userID'],
+    //         json['content'], TopicConverter.parsable2topic(json['topic']),
+    //         DateTime.parse(json['date']), comments,   List<String>.from(json['likedBy'])
+    print("id: ${json['id'].toString()}");
+    print("title: ${json['title']}, runtype: ${json['title'].runtimeType}");
+    print("topic: ${TopicConverter.parsable2topic(json['topic'])}, runtype = ${TopicConverter.parsable2topic(json['topic']).runtimeType} ");
+    print("Comment: ${comments}, runtype = ${comments.runtimeType}");
+    print("author_user_id: ${json['author_user_id']}");
 
-    return Thread.fromBackEnd(json['id'], json['title'], json['userID'],
-        json['content'], TopicConverter.parsable2topic(json['topic']),
-        DateTime.parse(json['date']), constructCommentsListfromStringList(json['comments']),   List<String>.from(json['likedBy']));
+
+    return Thread.fromBackEnd(
+        id: json['id'].toString(),
+        title: json['title'],
+        userID: json['author_user_id'],
+        content: json['content'],
+        topic: TopicConverter.parsable2topic(json['topic']),
+        timestamp: DateTime.parse(json['date']),
+        comments: comments, //constructCommentsListfromStringList(json['comments'])
+        likedBy: List<String>.from(json['liked_by']), //List<String>.from(json['likedBy'])
+    );
   }
 }
 

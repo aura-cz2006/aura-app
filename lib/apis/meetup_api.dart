@@ -33,6 +33,32 @@ class MeetUpAPI{
     }
   }
 
+  // static Future<List<Meetup>> fetchDiscussionComments() async {
+  //   Uri url = Uri.parse("${Config().routes["api"]}/discussions/");
+  //
+  //   http.Response response = await http.get(url);
+  //
+  //   if (response.statusCode == StatusCode.OK) {
+  //     String responseBody = response.body;
+  //
+  //     // use dart:convert to decode JSON
+  //     List<dynamic> decodedJson =
+  //     json.decode(responseBody); // todo put this back
+  //
+  //     List<Meetup> resList = (decodedJson).map((item) {
+  //       return Meetup.getFromJson(item);
+  //     }).toList();
+  //
+  //     print(resList);
+  //
+  //     return resList;
+  //   } else {
+  //     print(
+  //         "ERROR fetching Meetups: ${response.statusCode} ${getStatusMessage(response.statusCode)}");
+  //     return [];
+  //   }
+  // }
+
   static Future<int> patchMeetup({required Meetup meetup}) async {
     print("Entered API\n");
     Uri url = Uri.parse(

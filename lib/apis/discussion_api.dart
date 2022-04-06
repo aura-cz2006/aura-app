@@ -22,8 +22,6 @@ class DiscussionThreadApi {
       json.decode(responseBody); // todo put this back
       // List<Map<String, String>> _comment_map = List<Map<String, String>>.from(decodedJson['comments']);
 
-      //print(decodedJson);
-
       List<Thread> resList = (decodedJson).map((item) {
         return Thread.getFromJson(item);
       }).toList();

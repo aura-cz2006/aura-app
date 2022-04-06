@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 class MeetupsController {
   static void fetchMeetups(BuildContext context) async {
+    print("===========ENTERING MEETUP CONTROLLER===============");
     // call api (convert to dart there) and receive api data
     List<Meetup> fetchedMeetupItems = await MeetUpAPI.fetchMeetups();
 

@@ -193,9 +193,8 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                 children: <Widget>[
                   const SizedBox(width: 16),
                   Text(
-                      userMgr.getUsernameByID(threadMgr
-                              .getThreadByID(widget.threadID)!
-                              .userID) ??
+                    threadMgr.getThreadByID(widget.threadID)!.userID
+                        ??
                           "UNKNOWN USER",
                       style: DefaultTextStyle.of(context).style.apply(
                           color: Colors.grey[700],
