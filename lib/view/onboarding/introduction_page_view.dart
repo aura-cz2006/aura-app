@@ -27,14 +27,12 @@ class _IntroScreenState extends State<IntroScreen> {
   loc.Location location = loc.Location();
   late loc.LocationData _locationData;
   late bool _serviceEnabled;
-  late loc.PermissionStatus _permissionGranted;
+  late loc.PermissionStatus _permissionGranted = loc.PermissionStatus.denied;
 
   var addressController = TextEditingController(); // s edited content
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   GeocodingPlatform geocoding = GeocodingPlatform.instance;
   late List<PageViewModel> listPagesViewModel;
-
-  bool validAddress = false;
 
   List<PageViewModel> initPageViewModel(BuildContext context) {
     listPagesViewModel = [
@@ -56,27 +54,6 @@ class _IntroScreenState extends State<IntroScreen> {
               height: 175.0),
         ),
       ),
-      !validAddress ?
-      PageViewModel(
-        title: "Home Address",
-        image: const Center(
-          child: Icon(Icons.home, size: 50),
-        ),
-        bodyWidget: Center(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: homeaddress_bar(),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: submitButton(context),
-              ),
-            ],
-          ),
-        ),
-      ) :
       PageViewModel(
         title: "Request for Permission",
         image: const Center(
@@ -103,9 +80,28 @@ class _IntroScreenState extends State<IntroScreen> {
             ],
           ),
         ),
-      )
+      ),
+      PageViewModel(
+        title: "Home Address",
+        image: const Center(
+          child: Icon(Icons.home, size: 50),
+        ),
+        bodyWidget: Center(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: homeaddress_bar(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: submitButton(context),
+              ),
+            ],
+          ),
+        ),
+      ),
     ];
-
     return listPagesViewModel;
   }
 
@@ -124,10 +120,14 @@ class _IntroScreenState extends State<IntroScreen> {
           ),
           backgroundColor: Colors.blueAccent,
         ),
-        next: const Text("Next", style: TextStyle(color: Colors.white),),
-        back: const Text("Back", style: TextStyle(color: Colors.white),),
-        // skip: const Text("Skip"),
-        // done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
+        next: const Text(
+          "Next",
+          style: TextStyle(color: Colors.white),
+        ),
+        back: const Text(
+          "Back",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     ); //Material App
   }
@@ -146,10 +146,9 @@ class _IntroScreenState extends State<IntroScreen> {
                 border: OutlineInputBorder()),
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (value) {
-              if (_formKey.currentState!.validate()) {
-                FocusManager.instance.primaryFocus?.unfocus(); // exit keyboard
-              }
+              FocusManager.instance.primaryFocus?.unfocus(); // exit keyboard
             },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) {
               if (value!.isNotEmpty) {
                 return null;
@@ -164,8 +163,9 @@ class _IntroScreenState extends State<IntroScreen> {
   Widget submitButton(BuildContext context) {
     return Consumer<User_Manager>(builder: (context, userMgr, child) {
       return ElevatedButton(
-        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blueAccent)),
-        child: const Text("Submit"),
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.blueAccent)),
+        child: const Text("Done"),
         onPressed: () async {
           //error message for empty homeaddress field
           if (!_formKey.currentState!.validate()) {
@@ -181,7 +181,7 @@ class _IntroScreenState extends State<IntroScreen> {
             return;
           }
 
-          //Dialog boss to remind user to fill valid home address
+          //Dialog box to remind user to fill valid home address
           var addresses;
           try {
             print(addressController.text);
@@ -205,8 +205,23 @@ class _IntroScreenState extends State<IntroScreen> {
           userMgr.updateHomeAddress(userMgr.active_user_id,
               LatLng(interest.latitude, interest.longitude));
 
-          // TODO GO NEXT PAGE
-          validAddress = true;
+          //Indicate that the phone has done onboarding before.
+          if (_permissionGranted == loc.PermissionStatus.granted) {
+            Prefs.hasOnboarded();
+            context.go("/tabs/map");
+          } else {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return const AlertDialog(
+                      elevation: 10,
+                      scrollable: true,
+                      content: Center(
+                          child: Text("Please grant location permissions to continue!")));
+                });
+            return;
+
+          }
         },
       );
     });
@@ -214,22 +229,35 @@ class _IntroScreenState extends State<IntroScreen> {
 
   Widget acceptButton(BuildContext context) {
     return Consumer<User_Manager>(builder: (context, userMgr, child) {
-      return ElevatedButton(
-        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blueAccent)),
-        child: const Text("I Accept"),
-        onPressed: () async {
-          //Get user permission for location service
-          _permissionGranted = await location.hasPermission();
-          if (_permissionGranted == loc.PermissionStatus.denied) {
-            _permissionGranted = await location.requestPermission();
-            if (_permissionGranted != loc.PermissionStatus.granted) return;
-          }
-
-          //Indicate that the phone has done onboarding before.
-          Prefs.hasOnboarded();
-          context.go("/tabs/map");
-        },
-      );
+      return (_permissionGranted == loc.PermissionStatus.granted)
+          ? const ListTile(
+              leading: Icon(
+                Icons.check_circle,
+                color: Colors.green,
+              ),
+              title: Text(
+                "Location permissions granted!",
+                style:
+                    TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+              ),
+            )
+          : ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Colors.blueAccent)),
+              child: const Text("I Accept"),
+              onPressed: () {
+                //Get user permission for location service
+                setState(() async {
+                  _permissionGranted = await location.hasPermission();
+                  if (_permissionGranted == loc.PermissionStatus.denied) {
+                    _permissionGranted = await location.requestPermission();
+                    if (_permissionGranted != loc.PermissionStatus.granted)
+                      return;
+                  }
+                });
+              },
+            );
     });
   }
 }
