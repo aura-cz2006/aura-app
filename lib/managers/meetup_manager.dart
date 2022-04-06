@@ -1,21 +1,24 @@
 import 'package:aura/models/comment.dart';
 import 'package:aura/models/meetup.dart';
 import 'package:aura/util/manager.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 
 class Meetup_Manager extends Manager {
+  late String address;
+
   var meet_up_list = [
-    Meetup(DateTime.now().add(Duration(days: 2)), LatLng(1.34, 103.68), '1',
+    Meetup(DateTime.now().add(Duration(days: 2)), LatLng(1.38982,103.98233), '1',
         '1', 5, 'Table tennis', 'I love the high speed game.', DateTime.now()),
-    Meetup(DateTime.now().add(Duration(days: 1)), LatLng(1.3868, 103.8914), '2',
+    Meetup(DateTime.now().add(Duration(days: 1)), LatLng(1.27394,103.80877), '2',
         '2', 15, 'Hackathon', 'I love python.', DateTime.now()),
-    Meetup(DateTime.now().add(Duration(days: 4)), LatLng(1.3612, 103.8863), '3',
+    Meetup(DateTime.now().add(Duration(days: 4)), LatLng(1.26430,103.82231), '3',
         '3', 10, 'Muay Thai', 'I love beating people up.', DateTime.now()),
-    Meetup(DateTime.now().add(Duration(days: 4)), LatLng(1.2707, 103.8099), '4',
+    Meetup(DateTime.now().add(Duration(days: 4)), LatLng(1.34781,103.68616), '4',
         '4', 7, 'Botanic Gardens', 'I love plants.', DateTime.now()),
-    Meetup(DateTime.now().add(Duration(days: 4)), LatLng(1.3385, 103.7304), '5',
+    Meetup(DateTime.now().add(Duration(days: 4)), LatLng(1.28170,103.85774), '5',
         '5', 8, 'Sightseeing', 'I love exploring the city.', DateTime.now()),
-    Meetup(DateTime.now().add(Duration(days: 4)), LatLng(1.2942, 103.7861), '6',
+    Meetup(DateTime.now().add(Duration(days: 4)), LatLng(1.27855,103.83492), '6',
         '6', 2, 'Anime', 'I love Attack on Titan.', DateTime.now()),
   ];
 
@@ -62,6 +65,28 @@ class Meetup_Manager extends Manager {
   Meetup getMeetupByID(String meetupID) {
     return meet_up_list.firstWhere((m) => m.meetupID == meetupID);
   }
+
+  String getMeetupAddress(String meetupID){
+    convertMeetupAddress(meetupID);
+    return address;
+  }
+
+  void convertMeetupAddress(String meetupID) async {
+    Meetup m = getMeetupByID(meetupID);
+    var placemarks = await placemarkFromCoordinates(m.location.latitude, m.location.longitude);
+    var interest = placemarks.first;
+    address = interest.street! + ", " + interest.postalCode!;
+    print(m.title! + "     " + address); // todo
+  }
+
+  // Future<String> getMeetupAddress(String meetupID) async {
+  //   Meetup m = getMeetupByID(meetupID);
+  //   var placemarks = await placemarkFromCoordinates(m.location.latitude, m.location.longitude);
+  //   var interest = placemarks.first;
+  //   String address = interest.street! + ", " + interest.postalCode!;
+  //   print(m.title! + "     " + address); // todo
+  //   return address;
+  // }
 
   void cancelMeetup(String meetupID) {
     getMeetupByID(meetupID).cancel();
