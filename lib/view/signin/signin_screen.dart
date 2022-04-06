@@ -17,29 +17,41 @@ class _SigninScreenState extends State<SigninScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-          OutlinedButton(
-            onPressed: () {
-              signInWithGoogle().then((value) => {context.go("/tabs/map")});
-            },
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(
-                    Icons.logout,
-                    size: 30,
-                  ),
-                  SizedBox(width: 16),
-                  Text(
-                    "Sign in with Google",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ]),
-            style: ElevatedButton.styleFrom(
-              onPrimary: Colors.white,
-              primary: Colors.black,
-              fixedSize: const Size(300, 70),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0)),
+          Image.asset(
+            "assets/app_icon.png",
+            height: 150,
+          ),
+          const SizedBox(height: 25),
+          const Text("Welcome to Aura!", style: TextStyle(fontSize: 32),),
+          const SizedBox(height: 25),
+          Center(
+            child: OutlinedButton(
+              onPressed: () {
+                signInWithGoogle().then((value) => {context.go("/tabs/map")});
+              },
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.login,
+                      size: 24,
+                    ),
+                    SizedBox(width: 16),
+                    Text(
+                      "Sign in with Google",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ]),
+              style: ElevatedButton.styleFrom(
+                onPrimary: Colors.white,
+                primary: Colors.redAccent,
+                fixedSize: const Size(250, 50),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+              ),
             ),
           ),
         ]));
