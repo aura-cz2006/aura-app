@@ -1,10 +1,16 @@
 import 'dart:math';
+import 'package:aura/controllers/map_controller.dart';
 import 'package:aura/managers/map_manager.dart';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/view/tabs/map/layers/amenities/amenities_filter_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:provider/provider.dart';
+
+// void main() => runApp(MultiProvider(providers: [
+//       ChangeNotifierProvider(create: (context) => MapManager()),
+//       ChangeNotifierProvider(create: (context) => Meetup_Manager()),
+//     ], child: const MapboxTab()));
 
 class MapboxTab extends StatefulWidget {
   const MapboxTab({Key? key}) : super(key: key);
@@ -19,7 +25,7 @@ class _MapboxTabState extends State<MapboxTab> {
   // handle taps
   void _onFeatureTapped(
       dynamic featureId, Point<double> point, LatLng coordinates) {
-    _showSnackBar('feature', featureId);
+    _showSnackBar('feature', coordinates.toString());
   }
 
   void _onFillTapped(Fill fill) {
@@ -76,7 +82,7 @@ class _MapboxTabState extends State<MapboxTab> {
             GeojsonSourceProperties(
               attribution: "Dengue clusters data from data.gov.sg",
               data: // URL to a GeoJSON file, or inline GeoJSON
-                  mapMgr.dengueData,
+                  MapController.getDengueDataURL(),
               promoteId: 'Name', // TODO TESTING
             ));
         await controller.addFillLayer(
@@ -101,12 +107,13 @@ class _MapboxTabState extends State<MapboxTab> {
       }
 
       void showTaxis() async {
+        // MapController.fetchTaxiData(context); // todo doesnt work
         await controller.addSource(
           "taxi_locations",
           GeojsonSourceProperties(
             attribution: "Taxi availability data from data.gov.sg",
             data: // URL to a GeoJSON file, or inline GeoJSON
-                mapMgr.taxiData,
+                MapController.getTaxiDataURL(), //mapMgr.taxiData,
           ),
         );
         // await controller.addCircleLayer( // blue dots
@@ -130,25 +137,11 @@ class _MapboxTabState extends State<MapboxTab> {
 
       void showMeetups() async {
         // todo allow tapping
-        // todo move this part creating the json to controller/manager
-        Map<String, dynamic> meetupData = {
-          "type": "FeatureCollection",
-          "features": meetupMgr
-              .getMeetupsSortedByTimeOfMeetUp()
-              .map((m) => {
-                    "type": "Feature",
-                    "geometry": {
-                      "type": "Point",
-                      "coordinates": [m.location.longitude, m.location.latitude]
-                    }
-                  })
-              .toList()
-        };
         await controller.addSource(
           "meetup_locations",
           GeojsonSourceProperties(
             data: // URL to a GeoJSON file, or inline GeoJSON
-                meetupData,
+                MapController.getMeetupsData(context),
           ),
         );
         await controller.addSymbolLayer(
@@ -157,45 +150,34 @@ class _MapboxTabState extends State<MapboxTab> {
             const SymbolLayerProperties(
               iconColor: "#7C4DFF", // colour broken
               iconOpacity: 1,
-              iconImage: "restaurant-pizza-15", // no ppl icon
+              iconImage: "restaurant-pizza-15", // todo no ppl icon
               iconSize: 2,
             ));
       }
 
       void showAmenities() async {
         // todo move this part creating the json to controller/manager
-        Map<String, dynamic> amenitiesData = {};
-        for (String category in ['Healthcare', 'F&B']) {
-          //mapMgr.selectedCategories) {
-          amenitiesData = {
-            "type": "FeatureCollection",
-            "features": mapMgr.amenities[category]!
-                .map((a) => {
-                      "type": "Feature",
-                      "geometry": {
-                        "type": "Point",
-                        "coordinates": [a['lng'], a['lat']]
-                      }
-                    })
-                .toList()
-          };
+        Map<String, dynamic> amenitiesData =
+            MapController.getAmenitiesData(context);
+        amenitiesData.forEach((category, data) async {
           await controller.addSource(
             "amenities_${category}_locations",
             GeojsonSourceProperties(
-              data: // URL to a GeoJSON file, or inline GeoJSON
-                  amenitiesData,
+              data: data,
             ),
           );
           await controller.addSymbolLayer(
-              "amenities_${category}_locations",
-              "amenities_${category}_icons",
-              SymbolLayerProperties(
-                // iconColor: "#7C4DFF", // colour broken
-                iconOpacity: 1,
-                iconImage: mapMgr.categoryIcons[category], // no ppl icon
-                iconSize: 2,
-              ));
-        }
+            "amenities_${category}_locations",
+            "amenities_${category}_icons",
+            SymbolLayerProperties(
+              // iconColor: "#7C4DFF", // colour broken
+              iconOpacity: 1,
+              iconImage: MapController.getAmenityCategoryIcon(
+                  category, context), // no ppl icon
+              iconSize: 2,
+            ),
+          );
+        });
       }
 
       // add map layers after style is loaded

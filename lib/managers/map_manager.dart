@@ -19,6 +19,8 @@ class MapManager extends ChangeNotifier {
 
   late List<String> categories = categoryIcons.keys.toList();
 
+  List<String> selectedCategories = ['Healthcare', 'F&B'];
+
   final Map<String, List<Map<String, dynamic>>> amenities = {
     "Healthcare": [
       {"name": "Singapore General Hospital", "lat": 1.2804, "lng": 103.8348}
@@ -28,7 +30,27 @@ class MapManager extends ChangeNotifier {
     ]
   };
 
-  List<String> selectedCategories = [];
+  Map<String, Map<String, dynamic>> getAmenitiesGeojson() {
+    Map<String, Map<String, dynamic>> res = {};
+    for (String category in selectedCategories) {
+      //['Healthcare', 'F&B']
+      res[category] = {
+        "type": "FeatureCollection",
+        "features": (amenities[category] ??
+            [])
+                .map((a) => {
+                      "type": "Feature",
+                      "geometry": {
+                        "type": "Point",
+                        "coordinates": [a['lng'], a['lat']]
+                      }
+                    })
+                .toList()
+      };
+    }
+    print(res);
+    return res;
+  }
 
   // UnmodifiableListView<String> get categories =>
   //     UnmodifiableListView(_categories);
@@ -67,7 +89,9 @@ class MapManager extends ChangeNotifier {
 
   // * taxis
 
-  Map<String, dynamic> taxiData = {
+  Map<String, dynamic> taxiData = {};
+
+  /* {
     "type": "FeatureCollection",
     "crs": {
       "type": "link",
@@ -138,7 +162,11 @@ class MapManager extends ChangeNotifier {
         }
       }
     ]
-  };
+  }; */
+  void setTaxiData(Map<String, dynamic> fetchedTaxiData) {
+    taxiData = fetchedTaxiData;
+    notifyListeners();
+  }
 
   // * dengue
   Map<String, dynamic> dengueData = {
@@ -153,7 +181,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_1",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Hougang Ave 3 (Blk 24)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>2<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>13379104E0CB0133<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20210930143245<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Hougang Ave 3 (Blk 24)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>2<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>13379104E0CB0133<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20210930143245<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -185,7 +213,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_2",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Joo Chiat Rd \/ Onan Rd<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>3<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td>Plastic container, Flowerpot plate, Pail cover<\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>793519D48F10C1C6<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211007160145<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Joo Chiat Rd \/ Onan Rd<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>3<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td>Plastic container, Flowerpot plate, Pail cover<\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>793519D48F10C1C6<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211007160145<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -215,7 +243,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_3",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Hougang Ave 8 (Blk 626, 629, 630)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>3<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>C06458D3994A29EE<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211007160145<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Hougang Ave 8 (Blk 626, 629, 630)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>3<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>C06458D3994A29EE<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211007160145<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -243,7 +271,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_4",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Florence Rd \/ Hougang Ave 2 \/ Hougang Ave 2 (Blk 701, 702, 705, 706, 707, 708, 709, 710, 711, 712) \/ Jln Arif \/ Jln Tani \/ Lim Ah Pin Rd<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>153<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td>Hardened soil, Container, Flower pot plate, Fish bowl, Flower trough, Vase, Mop pail, Gully trap, Unused flower pot, Watering can, Discarded glass bottle, Dish tray, Procelain vase, Stryrofoam box, Blue drum<\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td>Fish bowl, Discarded plastic tray<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td>Gully trap, Carpark drain, Ground depression, Washbasin cover, Outlet pipe, Discarded plastic cup<\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>58AE9B6318BA11FB<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211007160145<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Florence Rd \/ Hougang Ave 2 \/ Hougang Ave 2 (Blk 701, 702, 705, 706, 707, 708, 709, 710, 711, 712) \/ Jln Arif \/ Jln Tani \/ Lim Ah Pin Rd<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>153<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td>Hardened soil, Container, Flower pot plate, Fish bowl, Flower trough, Vase, Mop pail, Gully trap, Unused flower pot, Watering can, Discarded glass bottle, Dish tray, Procelain vase, Stryrofoam box, Blue drum<\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td>Fish bowl, Discarded plastic tray<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td>Gully trap, Carpark drain, Ground depression, Washbasin cover, Outlet pipe, Discarded plastic cup<\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>58AE9B6318BA11FB<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211007160145<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -292,7 +320,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_5",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Telok Blangah Hts (Blk 85, 87)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>2<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>F5A28B69B56069BF<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211007160145<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Telok Blangah Hts (Blk 85, 87)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>2<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>F5A28B69B56069BF<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211007160145<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -325,7 +353,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_6",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Boon Lay Dr (Blk 257, 262)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>2<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>BEE1D5B62144DE5C<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211007160145<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Boon Lay Dr (Blk 257, 262)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>2<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>BEE1D5B62144DE5C<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211007160145<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -361,7 +389,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_7",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Lor 14 Geylang (Central Imperial) \/ Lor 16, 18 Geylang<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>3<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>867F760F30008EED<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211007160145<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Lor 14 Geylang (Central Imperial) \/ Lor 16, 18 Geylang<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>3<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>867F760F30008EED<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211007160145<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -391,7 +419,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_8",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Lor 2 Toa Payoh (Blk 99C, 101A, 101B, 116)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>6<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>F9300AEADDE77E32<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211006160646<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Lor 2 Toa Payoh (Blk 99C, 101A, 101B, 116)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>6<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>F9300AEADDE77E32<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211006160646<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -433,7 +461,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_9",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Hougang Ave 8 (Blk 614)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>3<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>A2564D1AF555F617<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211006160646<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Hougang Ave 8 (Blk 614)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>3<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>A2564D1AF555F617<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211006160646<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -472,7 +500,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_10",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Robey Cres \/ Robey Cres (D'zire)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>4<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>13B20E5EE694DFD2<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211005160716<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Robey Cres \/ Robey Cres (D'zire)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>4<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>13B20E5EE694DFD2<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211005160716<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -510,7 +538,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_11",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Lor 6, 7 Realty Pk<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>8<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>D0F67F243EFB1294<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211005160716<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Lor 6, 7 Realty Pk<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>8<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>D0F67F243EFB1294<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211005160716<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -548,7 +576,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_12",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Bishan St 11 (Bishan Loft) \/ Bishan St 13 (Blk 167, 171, 172)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>4<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>F4FCC6271B6958A7<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211005160716<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Bishan St 11 (Bishan Loft) \/ Bishan St 13 (Blk 167, 171, 172)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>4<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>F4FCC6271B6958A7<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211005160716<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -603,7 +631,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_13",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Hougang Ave 3 (Blk 22)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>2<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>940452F9394C3896<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211005160716<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Hougang Ave 3 (Blk 22)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>2<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>940452F9394C3896<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211005160716<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -639,7 +667,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_14",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Aroozoo Ave \/ Hougang Ave 1 (Blk 122) \/ Jln Pelikat (The Promenade @ Pelikat)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>3<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>FCAF3235FC7F0CD7<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211001154216<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Aroozoo Ave \/ Hougang Ave 1 (Blk 122) \/ Jln Pelikat (The Promenade @ Pelikat)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>3<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>FCAF3235FC7F0CD7<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20211001154216<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
@@ -692,7 +720,7 @@ class MapManager extends ChangeNotifier {
         "properties": {
           "Name": "kml_15",
           "Description":
-          "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Compassvale Lk (Blk 277A, 277B)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>2<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>F5E0329826EC2E99<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20210930143245<\/td> <\/tr><\/table><\/center>"
+              "<center><table><tr><th colspan='2' align='center'><em>Attributes<\/em><\/th><\/tr><tr bgcolor=\"#E3E3F3\"> <th>LOCALITY<\/th> <td>Compassvale Lk (Blk 277A, 277B)<\/td> <\/tr><tr bgcolor=\"\"> <th>CASE_SIZE<\/th> <td>2<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>NAME<\/th> <td>Dengue_Cluster<\/td> <\/tr><tr bgcolor=\"\"> <th>HYPERLINK<\/th> <td>https:\/\/www.nea.gov.sg\/dengue-zika\/dengue\/dengue-clusters<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>HOMES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>PUBLIC_PLACES<\/th> <td><\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>CONSTRUCTION_SITES<\/th> <td><\/td> <\/tr><tr bgcolor=\"\"> <th>INC_CRC<\/th> <td>F5E0329826EC2E99<\/td> <\/tr><tr bgcolor=\"#E3E3F3\"> <th>FMEL_UPD_D<\/th> <td>20210930143245<\/td> <\/tr><\/table><\/center>"
         },
         "geometry": {
           "type": "Polygon",
