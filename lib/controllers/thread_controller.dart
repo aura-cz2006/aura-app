@@ -9,14 +9,17 @@ import 'package:http/http.dart' as http;
 
 class ThreadController {
   static void fetchThreads(BuildContext context) async {
+    print("=======================ENTERED THREAD CONTROLLER==============================");
 
     // call api (convert to dart there) and receive api data
+    print("=======================ENTERING THREAD API============================");
     List<Thread> fetchedThreadItems = await DiscussionThreadApi.fetchTopicThreads();
-
+    print("=======================EXITED THREAD API============================");
     // call provider
     Provider.of<Thread_Manager>(context, listen: false).updateThreadList(
         fetchedThreadItems
     );
+    print("==========================EXITING THREAD CONTROLLER=============================");
   }
 
   static Future<int> createThread(
@@ -32,4 +35,4 @@ class ThreadController {
   static Future<int> deleteThread({required Thread thread}){
     return DiscussionThreadApi.deleteThread(thread: thread);
   }
-  }
+}

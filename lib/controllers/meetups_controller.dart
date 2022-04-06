@@ -16,20 +16,20 @@ class MeetupsController {
   }
 
   static Future<int> createComment(
-    {
-      required String meetup_id,
-      required String content
-    }) {
+      {
+        required String meetup_id,
+        required String content
+      }) {
 
     return MeetUpAPI.postMeetupComment(comment_text: content, meetup_id: meetup_id);
   }
 
   static Future<int> createMeetup(
-  {required String title,
-    required String content,
-    required int maxAttendees,
-    required DateTime timeofMeetup,
-    required LatLng location}) {
+      {required String title,
+        required String content,
+        required int maxAttendees,
+        required DateTime timeofMeetup,
+        required LatLng location}) {
     Meetup newMeetup = Meetup.toBackEnd(
         title: title,
         description: content,

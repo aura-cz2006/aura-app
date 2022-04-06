@@ -75,7 +75,7 @@ class MeetUpAPI{
           "location": json.encode(meetup.location_toback), //Todo: check if this location is a map
           "maxAttendees": meetup.maxAttendees.toString(),
         });
-  //print("RESPONSE POSTED@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    //print("RESPONSE POSTED@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     return response.statusCode; //200 == Success, 400 == Failure.
   }
 

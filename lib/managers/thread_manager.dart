@@ -8,7 +8,10 @@ class Thread_Manager extends Manager {
   ];
 
   void updateThreadList(List<Thread> threadList){
+    print("=============ENTERED THREAD MANAGER===============");
     thread_list = threadList;
+    print(threadList);
+    print("=============EXITING THREAD MANAGER===============");
   }
 
   List<Thread> getListOfThreadsSortedByLikes(DiscussionTopic topic) {

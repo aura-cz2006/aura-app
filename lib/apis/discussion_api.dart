@@ -9,6 +9,7 @@ import 'package:http_status_code/http_status_code.dart';
 
 class DiscussionThreadApi {
   static Future<List<Thread>> fetchTopicThreads() async {
+    print("================ENTERED THREAD API====================");
     Uri url = Uri.parse("${Config().routes["api"]}/discussions/");
 
     http.Response response = await http.get(url);
@@ -18,7 +19,7 @@ class DiscussionThreadApi {
 
       // use dart:convert to decode JSON
       List<dynamic> decodedJson =
-          json.decode(responseBody); // todo put this back
+      json.decode(responseBody); // todo put this back
       // List<Map<String, String>> _comment_map = List<Map<String, String>>.from(decodedJson['comments']);
 
       //print(decodedJson);
@@ -26,10 +27,10 @@ class DiscussionThreadApi {
       List<Thread> resList = (decodedJson).map((item) {
         return Thread.getFromJson(item);
       }).toList();
-
-      //print(resList);
+      print("=================THREAD LIST===========================");
+      print(resList);
       //print("HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO");
-
+      print("===================EXITING THREAD API========================");
       return resList;
     } else {
       print(

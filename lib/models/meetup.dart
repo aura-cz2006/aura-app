@@ -31,7 +31,7 @@ class Meetup {
     required this.timeOfMeetUp,
     required this.location_toback,
     required this.maxAttendees,
-});
+  });
 
   //Constructor for backend
   Meetup.fromBackEnd(

@@ -10,5 +10,5 @@ class Comment {
 
   Comment.toBackEnd({required this.text});
 
-  // factory Comment.fromJson(Map<String>)
+// factory Comment.fromJson(Map<String>)
 }

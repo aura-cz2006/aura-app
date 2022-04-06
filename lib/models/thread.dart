@@ -15,13 +15,13 @@ class Thread {
 
   // constructor for app
   Thread(
-    this.id,
-    this.title,
-    this.userID,
-    this.content,
-    this.topic,
-    this.timestamp,
-  );
+      this.id,
+      this.title,
+      this.userID,
+      this.content,
+      this.topic,
+      this.timestamp,
+      );
   //Constructor for backend
   Thread.fromBackEnd(
       this.id, this.title, this.userID,
