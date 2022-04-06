@@ -34,6 +34,8 @@ class _IntroScreenState extends State<IntroScreen> {
   GeocodingPlatform geocoding = GeocodingPlatform.instance;
   late List<PageViewModel> listPagesViewModel;
 
+  bool validAddress = false;
+
   List<PageViewModel> initPageViewModel(BuildContext context) {
     listPagesViewModel = [
       PageViewModel(
@@ -54,6 +56,7 @@ class _IntroScreenState extends State<IntroScreen> {
               height: 175.0),
         ),
       ),
+      !validAddress ?
       PageViewModel(
         title: "Home Address",
         image: const Center(
@@ -73,7 +76,7 @@ class _IntroScreenState extends State<IntroScreen> {
             ],
           ),
         ),
-      ),
+      ) :
       PageViewModel(
         title: "Request for Permission",
         image: const Center(
@@ -115,8 +118,14 @@ class _IntroScreenState extends State<IntroScreen> {
         showBackButton: true,
         showSkipButton: false,
         showDoneButton: false,
-        next: const Text("Next"),
-        back: const Text("Back"),
+        baseBtnStyle: TextButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          backgroundColor: Colors.blueAccent,
+        ),
+        next: const Text("Next", style: TextStyle(color: Colors.white),),
+        back: const Text("Back", style: TextStyle(color: Colors.white),),
         // skip: const Text("Skip"),
         // done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
       ),
@@ -155,6 +164,7 @@ class _IntroScreenState extends State<IntroScreen> {
   Widget submitButton(BuildContext context) {
     return Consumer<User_Manager>(builder: (context, userMgr, child) {
       return ElevatedButton(
+        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blueAccent)),
         child: const Text("Submit"),
         onPressed: () async {
           //error message for empty homeaddress field
@@ -166,8 +176,7 @@ class _IntroScreenState extends State<IntroScreen> {
                       elevation: 10,
                       scrollable: true,
                       content: Center(
-                          child: Text("You have not entered an address.\n"
-                              "\nPlease return to the previous page to enter an address.")));
+                          child: Text("You have not entered an address.")));
                 });
             return;
           }
@@ -175,8 +184,9 @@ class _IntroScreenState extends State<IntroScreen> {
           //Dialog boss to remind user to fill valid home address
           var addresses;
           try {
+            print(addressController.text);
             addresses =
-            await geocoding.locationFromAddress(addressController.text);
+                await geocoding.locationFromAddress(addressController.text);
           } on Exception catch (e) {
             showDialog(
                 context: context,
@@ -185,18 +195,18 @@ class _IntroScreenState extends State<IntroScreen> {
                       elevation: 10,
                       scrollable: true,
                       content: Center(
-                          child: Text("You have entered an invalid address!\n"
-                              "\nPlease return to the previous page to enter a valid address.")));
+                          child: Text(
+                              "You have entered an invalid address! \nPlease try again.")));
                 });
           }
           var interest = addresses.first;
-          print("Search location: ${LatLng( //TODO: Delete this line
-              interest.latitude, interest.longitude)}");
 
           //update User's homeaddress in manager
           userMgr.updateHomeAddress(userMgr.active_user_id,
               LatLng(interest.latitude, interest.longitude));
 
+          // TODO GO NEXT PAGE
+          validAddress = true;
         },
       );
     });
@@ -205,7 +215,8 @@ class _IntroScreenState extends State<IntroScreen> {
   Widget acceptButton(BuildContext context) {
     return Consumer<User_Manager>(builder: (context, userMgr, child) {
       return ElevatedButton(
-        child: Text("I Accept"),
+        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blueAccent)),
+        child: const Text("I Accept"),
         onPressed: () async {
           //Get user permission for location service
           _permissionGranted = await location.hasPermission();
