@@ -1,7 +1,10 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'package:aura/controllers/map_controller.dart';
 import 'package:aura/managers/map_manager.dart';
 import 'package:aura/managers/meetup_manager.dart';
+import 'package:aura/models/amenity_category.dart';
 import 'package:aura/view/tabs/map/layers/amenities/amenities_filter_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
@@ -76,7 +79,7 @@ class _MapboxTabState extends State<MapboxTab> {
       }
 
       // initialise map layers
-      void showDengueClusters() async {
+      void initDengueClustersLayer() async {
         await controller.addSource(
             "dengue_clusters",
             GeojsonSourceProperties(
@@ -88,10 +91,13 @@ class _MapboxTabState extends State<MapboxTab> {
         await controller.addFillLayer(
             "dengue_clusters",
             "dengue_polygon",
-            const FillLayerProperties(
+            FillLayerProperties(
                 fillColor: "#EF9A9A",
                 // circleRadius: ,
-                fillOpacity: 0.7));
+                fillOpacity: 0.7,
+                visibility: mapMgr.isLayerEnabled('dengue')
+                    ? "visible" // todo broken bc cant find enum
+                    : "none"));
         await controller.addSymbolLayer(
             "dengue_clusters",
             "dengue-count",
@@ -106,14 +112,14 @@ class _MapboxTabState extends State<MapboxTab> {
             ));
       }
 
-      void showTaxis() async {
-        // MapController.fetchTaxiData(context); // todo doesnt work
+      void initTaxisLayer() async {
+        MapController.fetchTaxiData(context); // todo doesnt work
         await controller.addSource(
           "taxi_locations",
           GeojsonSourceProperties(
             attribution: "Taxi availability data from data.gov.sg",
             data: // URL to a GeoJSON file, or inline GeoJSON
-                MapController.getTaxiDataURL(), //mapMgr.taxiData,
+                MapController.getTaxiDataURL(), //todo use mapMgr.taxiData, but it gives {}?
           ),
         );
         // await controller.addCircleLayer( // blue dots
@@ -135,7 +141,7 @@ class _MapboxTabState extends State<MapboxTab> {
             ));
       }
 
-      void showMeetups() async {
+      void initMeetupsLayer() async {
         // todo allow tapping
         await controller.addSource(
           "meetup_locations",
@@ -155,25 +161,26 @@ class _MapboxTabState extends State<MapboxTab> {
             ));
       }
 
-      void showAmenities() async {
-        // todo move this part creating the json to controller/manager
-        Map<String, dynamic> amenitiesData =
+      void initAmenitiesLayer() async {
+        MapController.fetchSelectedAmenities(context);
+        Map<AmenityCategory, dynamic> amenitiesData =
             MapController.getAmenitiesData(context);
+        print(amenitiesData);
         amenitiesData.forEach((category, data) async {
           await controller.addSource(
-            "amenities_${category}_locations",
+            "amenities_${CategoryConvertor.getQueryString(category)}_locations",
             GeojsonSourceProperties(
               data: data,
             ),
           );
           await controller.addSymbolLayer(
-            "amenities_${category}_locations",
-            "amenities_${category}_icons",
+            "amenities_${CategoryConvertor.getQueryString(category)}_locations",
+            "amenities_${CategoryConvertor.getQueryString(category)}_icons",
             SymbolLayerProperties(
               // iconColor: "#7C4DFF", // colour broken
               iconOpacity: 1,
               iconImage: MapController.getAmenityCategoryIcon(
-                  category, context), // no ppl icon
+                  category), // no ppl icon
               iconSize: 2,
             ),
           );
@@ -182,11 +189,19 @@ class _MapboxTabState extends State<MapboxTab> {
 
       // add map layers after style is loaded
       void _onStyleLoaded() async {
-        // todo add conditional logic and check for reload
-        showDengueClusters();
-        showTaxis();
-        showMeetups();
-        showAmenities();
+        initDengueClustersLayer();
+        initTaxisLayer();
+        initMeetupsLayer();
+        initAmenitiesLayer();
+
+        Timer timer = Timer.periodic(
+            //todo refresh data periodically
+            const Duration(seconds: 30), (t) {
+          // controller.setGeoJsonSource(
+          //     "dengue_clusters", mapMgr.isLayerEnabled('dengue') ? MapController.getDengueDataURL(context) : {});
+          controller.setGeoJsonSource(
+              "meetup_locations", MapController.getMeetupsData(context));
+        });
       }
 
       return Scaffold(
@@ -217,13 +232,13 @@ class _MapboxTabState extends State<MapboxTab> {
               padding: const EdgeInsets.only(top: 20, right: 8),
               child: ElevatedButton(
                 onPressed: () {
-                  mapMgr.setSelectedCategory('taxi');
+                  mapMgr.toggleLayer('taxis');
                 },
                 child: const Icon(Icons.car_repair, color: Colors.black),
                 style: ElevatedButton.styleFrom(
                   shape: const CircleBorder(),
                   padding: const EdgeInsets.all(16),
-                  primary: mapMgr.selectedCategories.contains('taxi')
+                  primary: mapMgr.isLayerEnabled('taxis')
                       ? Colors.blue
                       : Colors.white,
                   // <-- Button color
@@ -235,13 +250,13 @@ class _MapboxTabState extends State<MapboxTab> {
               padding: const EdgeInsets.only(top: 20, right: 8),
               child: ElevatedButton(
                 onPressed: () {
-                  mapMgr.setSelectedCategory('meetups');
+                  mapMgr.toggleLayer('meetups');
                 },
                 child: const Icon(Icons.people, color: Colors.black),
                 style: ElevatedButton.styleFrom(
                   shape: const CircleBorder(),
                   padding: const EdgeInsets.all(16),
-                  primary: mapMgr.selectedCategories.contains('meetups')
+                  primary: mapMgr.isLayerEnabled('meetups')
                       ? Colors.deepPurple
                       : Colors.white,
                   // <-- Button color
@@ -253,17 +268,15 @@ class _MapboxTabState extends State<MapboxTab> {
               padding: const EdgeInsets.only(top: 20, right: 8),
               child: ElevatedButton(
                 onPressed: () {
-                  mapMgr.setSelectedCategory('dengue');
+                  mapMgr.toggleLayer('dengue');
                 },
                 child: const Icon(Icons.bug_report, color: Colors.black),
                 style: ElevatedButton.styleFrom(
                   shape: const CircleBorder(),
                   padding: const EdgeInsets.all(16),
-                  primary: mapMgr.selectedCategories.contains('dengue')
+                  primary: mapMgr.isLayerEnabled('dengue')
                       ? Colors.green
                       : Colors.white,
-                  // <-- Button color
-                  // onPrimary: Colors.red, // <-- Splash color
                 ),
               ),
             ),

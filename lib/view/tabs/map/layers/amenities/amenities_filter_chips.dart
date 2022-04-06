@@ -1,4 +1,5 @@
 import 'package:aura/managers/map_manager.dart';
+import 'package:aura/models/amenity_category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,39 +18,38 @@ class _AmenitiesFilterChipsState extends State<AmenitiesFilterChips> {
         child: Consumer<MapManager>(builder: (context, mapManager, child) {
           return Row(
               children: mapManager.categories
-                  .map((category) => _amenityChipWrapper(category, 0x1111111))
+                  .map((category) => _AmenityChipWrapper(category, 0x1111111))
                   .toList());
         }));
   }
 }
 
-Widget _amenityChipWrapper(String text, int colour) {
+Widget _AmenityChipWrapper(AmenityCategory category, int colour) {
   return Container(
-      margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 30),
+      margin: const EdgeInsets.only(left: 10.0, right: 10.0, top: 30),
       //Spacing in between chips
-      child: amenityChipWidget(category: text));
+      child: AmenityChipWidget(category: category));
 }
 
-class amenityChipWidget extends StatefulWidget {
-  final String category;
+class AmenityChipWidget extends StatefulWidget {
+  final AmenityCategory category;
 
-  amenityChipWidget({required this.category});
+  const AmenityChipWidget({Key? key, required this.category}) : super(key: key);
 
   @override
-  _amenityChipWidgetState createState() => _amenityChipWidgetState();
+  _AmenityChipWidgetState createState() => _AmenityChipWidgetState();
 }
 
-class _amenityChipWidgetState extends State<amenityChipWidget> {
+class _AmenityChipWidgetState extends State<AmenityChipWidget> {
   @override
   Widget build(BuildContext context) {
     return Consumer<MapManager>(builder: (context, mapManager, child) {
       return ChoiceChip(
-        label: Text(widget.category),
-        labelStyle: TextStyle(color: Colors.black),
+        label: Text(CategoryConvertor.getReadable(widget.category)!),
+        labelStyle: const TextStyle(color: Colors.black),
         selected: mapManager.selectedCategories.contains(widget.category),
         elevation: 1.0,
         onSelected: (isSelected) {
-          print("trying to select chip.....");
           mapManager.setSelectedCategory(widget.category);
         },
         backgroundColor: Colors.white,
