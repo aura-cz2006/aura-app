@@ -37,7 +37,10 @@ class MeetUpAPI{
     print("Entered API\n");
     Uri url = Uri.parse(
         "${Config().routes["api"]}/meetups/");
-
+    print("URI parsed. Posting to server...\n");
+    print(url.toString());
+    print(json.encode(meetup.location_toback).runtimeType);
+    //print("Going to post to the HTTP now@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22");
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

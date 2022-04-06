@@ -258,5 +258,35 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
     attendeeController.dispose();
     super.dispose();
   }
+
+  void test()  {
+    addresses = geocoding.locationFromAddress(locationController.text);
+    interest = addresses.first;
+  }
+
+  void updateInterest() async {
+    try{
+      print("Checkpoint Address Validity: ENTERED\n");
+      addresses = await geocoding.locationFromAddress(locationController.text);
+      interest = await addresses.first;
+      print(LatLng(interest.latitude, interest.longitude));
+
+    } on Exception catch (e) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                elevation: 10,
+                scrollable: true,
+                content: Center(
+                    child: Container(
+                      child: Text("You have entered an invalid address!\n"
+                          "\nPlease return to the previous page to enter a valid address."),
+                    )
+                )
+            );
+          });
+    }
+  }
 }
 
