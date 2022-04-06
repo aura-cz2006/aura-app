@@ -1,3 +1,4 @@
+import 'package:aura/controllers/news_controller.dart';
 import 'package:aura/managers/map_manager.dart';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/view/tabs/map/layers/amenities/amenities_filter_chips.dart';
@@ -50,6 +51,8 @@ class _MapTabState extends State<MapTab> {
   @override
   void initState() {
     // initialise markers at each point in latLngList
+
+    NewsController.fetchNews(context); // get initial
 
     super.initState();
   }
