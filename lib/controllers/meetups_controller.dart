@@ -15,13 +15,21 @@ class MeetupsController {
         .updateMeetupList(fetchedMeetupItems);
   }
 
+  static Future<int> createComment(
+    {
+      required String meetup_id,
+      required String content
+    }) {
+
+    return MeetUpAPI.postMeetupComment(comment_text: content, meetup_id: meetup_id);
+  }
+
   static Future<int> createMeetup(
   {required String title,
     required String content,
     required int maxAttendees,
     required DateTime timeofMeetup,
     required LatLng location}) {
-    print("in MeetupController\n");
     Meetup newMeetup = Meetup.toBackEnd(
         title: title,
         description: content,
@@ -29,6 +37,13 @@ class MeetupsController {
         location_toback: locationLatLngtoMapForBackEnd(location),
         maxAttendees: maxAttendees);
     return MeetUpAPI.postMeetup(meetup: newMeetup);
+  }
+
+  static Future<int> deleteMeetupComment(
+      {required String meetup_id,
+        required String comment_id
+      }) {
+    return MeetUpAPI.deleteMeetupComment(meetup_id: meetup_id, comment_id: comment_id);
   }
 
   static Future<int> editMeetup(
