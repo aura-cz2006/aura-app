@@ -11,7 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(IntroScreen());
+void main() => runApp(const IntroScreen());
 
 typedef void isViewedCallBack(int isviewed);
 
@@ -25,77 +25,81 @@ class IntroScreen extends StatefulWidget {
 class _IntroScreenState extends State<IntroScreen> {
   bool permissionEnabled = false;
   loc.Location location = loc.Location();
-  late loc.LocationData _locationData;
-  late bool _serviceEnabled;
-  late loc.PermissionStatus _permissionGranted;
+  late loc.PermissionStatus _permissionGranted = loc.PermissionStatus.denied;
 
   var addressController = TextEditingController(); // s edited content
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   GeocodingPlatform geocoding = GeocodingPlatform.instance;
   late List<PageViewModel> listPagesViewModel;
 
-  List<PageViewModel> initPageViewModel(BuildContext context){
+  List<PageViewModel> initPageViewModel(BuildContext context) {
     listPagesViewModel = [
       PageViewModel(
         title: "Title of first page",
         body: "The map tab",
         image: Center(
-          child: Image.network("https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg", height: 175.0),
+          child: Image.network(
+              "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg",
+              height: 175.0),
         ),
       ),
       PageViewModel(
         title: "Title of second page",
         body: "The community tab",
         image: Center(
-          child: Image.network("https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg", height: 175.0),
-        ),
-      ),
-      PageViewModel(
-        title: "Home Address",
-        image: const Center(
-          child: Icon(Icons.home,size:30),
-        ),
-        bodyWidget: Center(
-          child:Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: homeaddress_bar(),
-              ),
-              // Padding(
-              //   padding: const EdgeInsets.all(10),
-              //   child: acceptButton(context),
-              // ),
-            ],
-          ),
+          child: Image.network(
+              "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
+              height: 175.0),
         ),
       ),
       PageViewModel(
         title: "Request for Permission",
         image: const Center(
-          child: Icon(Icons.location_on, color: Colors.lightBlueAccent, size: 30),
+          child:
+              Icon(Icons.location_on, color: Colors.lightBlueAccent, size: 30),
         ),
         bodyWidget: Center(
           child: Column(
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.all(10),
-                child: Text("This app requires GPS services to function. Therefore, we require you to enable the permission for this app to access the location service."),
+                child: Text(
+                    "This app requires GPS services to function. Therefore, we require you to enable the permission for this app to access the location service."),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                    "I agree to allow this app to access the location service on this phone."),
               ),
               Padding(
-                padding: EdgeInsets.all(10),
-                child: Text("I agree to allow this app to access the location service on this phone."),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: acceptButton(context),
               ),
             ],
           ),
         ),
-      )
+      ),
+      PageViewModel(
+        title: "Home Address",
+        image: const Center(
+          child: Icon(Icons.home, size: 50),
+        ),
+        bodyWidget: Center(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: homeaddress_bar(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: submitButton(context),
+              ),
+            ],
+          ),
+        ),
+      ),
     ];
-
     return listPagesViewModel;
   }
 
@@ -104,18 +108,29 @@ class _IntroScreenState extends State<IntroScreen> {
     return MaterialApp(
       home: IntroductionScreen(
         pages: initPageViewModel(context),
-        showNextButton: false,
-        showBackButton: false,
+        showNextButton: true,
+        showBackButton: true,
         showSkipButton: false,
         showDoneButton: false,
-        // skip: const Text("Skip"),
-        // done: const Text("Done", style: TextStyle(fontWeight: FontWeight.w600)),
-
+        baseBtnStyle: TextButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          backgroundColor: Colors.blueAccent,
+        ),
+        next: const Text(
+          "Next",
+          style: TextStyle(color: Colors.white),
+        ),
+        back: const Text(
+          "Back",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
-    );//Material App
+    ); //Material App
   }
 
-  Widget homeaddress_bar(){
+  Widget homeaddress_bar() {
     return Form(
       child: Form(
           key: _formKey,
@@ -127,6 +142,11 @@ class _IntroScreenState extends State<IntroScreen> {
                 labelText: "Home Address",
                 hintText: "Enter your home address here",
                 border: OutlineInputBorder()),
+            textInputAction: TextInputAction.done,
+            onFieldSubmitted: (value) {
+              FocusManager.instance.primaryFocus?.unfocus(); // exit keyboard
+            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) {
               if (value!.isNotEmpty) {
                 return null;
@@ -138,70 +158,105 @@ class _IntroScreenState extends State<IntroScreen> {
     );
   }
 
-  Widget acceptButton(BuildContext context) {
+  Widget submitButton(BuildContext context) {
     return Consumer<User_Manager>(builder: (context, userMgr, child) {
       return ElevatedButton(
-        child: Text("I Accept"),
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.blueAccent)),
+        child: const Text("Done"),
         onPressed: () async {
           //error message for empty homeaddress field
-          if (!_formKey.currentState!.validate()){
+          if (!_formKey.currentState!.validate()) {
             showDialog(
                 context: context,
                 builder: (context) {
-                  return AlertDialog(
+                  return const AlertDialog(
                       elevation: 10,
                       scrollable: true,
                       content: Center(
-                          child: Container(
-                            child: Text("You have not entered an address.\n"
-                                "\nPlease return to the previous page to enter an address."),
-                          )
-                      )
-                  );
+                          child: Text("You have not entered an address.")));
                 });
             return;
           }
 
-          //Dialog boss to remind user to fill valid home address
+          //Dialog box to remind user to fill valid home address
           var addresses;
-          try{
-            addresses = await geocoding.locationFromAddress(addressController.text);
+          try {
+            print(addressController.text);
+            addresses =
+                await geocoding.locationFromAddress(addressController.text);
           } on Exception catch (e) {
             showDialog(
                 context: context,
                 builder: (context) {
-                  return AlertDialog(
+                  return const AlertDialog(
                       elevation: 10,
                       scrollable: true,
                       content: Center(
-                          child: Container(
-                            child: Text("You have entered an invalid address!\n"
-                                "\nPlease return to the previous page to enter a valid address."),
-                          )
-                      )
-                  );
+                          child: Text(
+                              "You have entered an invalid address! \nPlease try again.")));
                 });
           }
           var interest = addresses.first;
-          print("Search location: ${LatLng( //TODO: Delete this line
-              interest.latitude, interest.longitude)}");
-
-          //Get user permission for location service
-          _permissionGranted = await location.hasPermission();
-          if (_permissionGranted == loc.PermissionStatus.denied){
-            _permissionGranted = await location.requestPermission();
-            if (_permissionGranted != loc.PermissionStatus.granted) return;
-          }
 
           //update User's homeaddress in manager
           userMgr.updateHomeAddress(userMgr.active_user_id,
               LatLng(interest.latitude, interest.longitude));
 
           //Indicate that the phone has done onboarding before.
-          Prefs.hasOnboarded();
-          context.go("/tabs/map");
+          if (_permissionGranted == loc.PermissionStatus.granted) {
+            Prefs.hasOnboarded();
+            context.go("/tabs/map");
+          } else {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return const AlertDialog(
+                      elevation: 10,
+                      scrollable: true,
+                      content: Center(
+                          child: Text(
+                              "Please grant location permissions to continue!")));
+                });
+            return;
+          }
         },
       );
+    });
+  }
+
+  Widget acceptButton(BuildContext context) {
+    return Consumer<User_Manager>(builder: (context, userMgr, child) {
+      return (_permissionGranted == loc.PermissionStatus.granted)
+          ? const ListTile(
+              leading: Icon(
+                Icons.check_circle,
+                color: Colors.green,
+              ),
+              title: Text(
+                "Location permissions granted!",
+                style:
+                    TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+              ),
+            )
+          : ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Colors.blueAccent)),
+              child: const Text("I Accept"),
+              onPressed: () async {
+                //Get user permission for location service
+                _permissionGranted = await location.hasPermission();
+                setState(() async {
+                  if (_permissionGranted == loc.PermissionStatus.denied) {
+                    _permissionGranted = await location.requestPermission();
+                    if (_permissionGranted != loc.PermissionStatus.granted) {
+                      return;
+                    }
+                  }
+                });
+              },
+            );
     });
   }
 }
