@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
 
 void main() => runApp(IntroScreen());
 
@@ -162,10 +163,39 @@ class _IntroScreenState extends State<IntroScreen> {
             return;
           }
 
+          //Check for Internet Connection (required to look up validity of address
+          try {
+            final internetConnection = await InternetAddress.lookup('example.com');
+            if (internetConnection.isNotEmpty && internetConnection[0].rawAddress.isNotEmpty) {
+              print('connected');
+            }
+          } on SocketException catch (e) {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                      elevation: 10,
+                      scrollable: true,
+                      content: Center(
+                          child: Container(
+                            child: Text("The following function requires internet connection!\n"
+                                "\nPlease connect to wifi or your personal data."),
+                          )
+                      )
+                  );
+                });
+            return;
+          }
+
           //Dialog boss to remind user to fill valid home address
           var addresses;
+          var interest;
           try{
             addresses = await geocoding.locationFromAddress(addressController.text);
+            interest = await addresses.first;
+            print("Search location: ${LatLng( //TODO: Delete this line
+                interest.latitude, interest.longitude)}");
+            print("Checkpoint 1\n");
           } on Exception catch (e) {
             showDialog(
                 context: context,
@@ -182,9 +212,8 @@ class _IntroScreenState extends State<IntroScreen> {
                   );
                 });
           }
-          var interest = addresses.first;
-          print("Search location: ${LatLng( //TODO: Delete this line
-              interest.latitude, interest.longitude)}");
+          print("Checkpoint 2\n");
+
 
           //Get user permission for location service
           _permissionGranted = await location.hasPermission();
