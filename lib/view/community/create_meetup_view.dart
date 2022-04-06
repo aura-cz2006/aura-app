@@ -210,7 +210,7 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
                     });
               }
               //Post thread to server
-              int response = await MeetupsController.createMeetupAlan(
+              int response = await MeetupsController.createMeetup(
                   title: titleController.text,
                   content: descriptionController.text,
                   maxAttendees: int.parse(attendeeController.text),

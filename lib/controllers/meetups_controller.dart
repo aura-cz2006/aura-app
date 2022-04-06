@@ -15,7 +15,7 @@ class MeetupsController {
         .updateMeetupList(fetchedMeetupItems);
   }
 
-  static Future<int> createMeetupAlan(
+  static Future<int> createMeetup(
   {required String title,
     required String content,
     required int maxAttendees,
@@ -31,18 +31,20 @@ class MeetupsController {
     return MeetUpAPI.postMeetup(meetup: newMeetup);
   }
 
-  static Future<int> createMeetup(
+  static Future<int> editMeetup(
       {required String title,
-      required String content,
-      required int maxAttendees,
-      required String userID,
-      required DateTime timeofMeetup,
-      required LatLng location}) {
-    Meetup meetUpToAdd = Meetup(timeofMeetup, location, 'placeholderID', userID,
-        maxAttendees, title, content, DateTime.now());
-
-    //print("MEETUP OBJECT CREATED@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-    return MeetUpAPI.postMeetup(meetup: meetUpToAdd);
+        required String content,
+        required int maxAttendees,
+        required DateTime timeofMeetup,
+        required LatLng location}) {
+    print("in MeetupController\n");
+    Meetup editMeetup = Meetup.toBackEnd(
+        title: title,
+        description: content,
+        timeOfMeetUp: timeofMeetup,
+        location_toback: locationLatLngtoMapForBackEnd(location),
+        maxAttendees: maxAttendees);
+    return MeetUpAPI.patchMeetup(meetup: editMeetup);
   }
 }
 

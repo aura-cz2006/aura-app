@@ -33,6 +33,28 @@ class MeetUpAPI{
     }
   }
 
+  static Future<int> patchMeetup({required Meetup meetup}) async {
+    print("Entered API\n");
+    Uri url = Uri.parse(
+        "${Config().routes["api"]}/meetups/${meetup.meetupID}");
+
+    //print("Going to post to the HTTP now@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22");
+    final response = await http.patch(url,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        encoding: Encoding.getByName('utf-8'),
+        body: {
+          'title': meetup.title!,
+          "description": meetup.description,
+          "meetupTime": meetup.timeOfMeetUp.toString(),
+          "location": json.encode(meetup.location_toback), //Todo: check if this location is a map
+          "maxAttendees": meetup.maxAttendees.toString(),
+        });
+    //print("RESPONSE POSTED@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    return response.statusCode; //200 == Success, 400 == Failure.
+  }
+
   static Future<int> postMeetup({required Meetup meetup}) async {
     print("Entered API\n");
     Uri url = Uri.parse(

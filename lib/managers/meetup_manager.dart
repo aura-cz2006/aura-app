@@ -1,6 +1,7 @@
 import 'package:aura/models/comment.dart';
 import 'package:aura/models/meetup.dart';
 import 'package:aura/util/manager.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 
 class Meetup_Manager extends Manager {
@@ -146,4 +147,15 @@ class Meetup_Manager extends Manager {
     return (meet_up_list.length+1).toString();
   }
 
+  String latlngToString(LatLng coord) {
+    GeocodingPlatform.instance;
+    var placemarks = placemarkFromCoordinates(coord.latitude, coord.longitude);
+    late String address;
+    placemarks.then((data) {
+      var interest = data.first;
+      address = interest.street! + ", " + interest.postalCode!;
+      return address;
+    });
+    return address;
+  }
 }
