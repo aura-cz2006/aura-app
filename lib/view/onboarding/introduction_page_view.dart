@@ -25,8 +25,6 @@ class IntroScreen extends StatefulWidget {
 class _IntroScreenState extends State<IntroScreen> {
   bool permissionEnabled = false;
   loc.Location location = loc.Location();
-  late loc.LocationData _locationData;
-  late bool _serviceEnabled;
   late loc.PermissionStatus _permissionGranted = loc.PermissionStatus.denied;
 
   var addressController = TextEditingController(); // s edited content
@@ -217,10 +215,10 @@ class _IntroScreenState extends State<IntroScreen> {
                       elevation: 10,
                       scrollable: true,
                       content: Center(
-                          child: Text("Please grant location permissions to continue!")));
+                          child: Text(
+                              "Please grant location permissions to continue!")));
                 });
             return;
-
           }
         },
       );
@@ -246,14 +244,15 @@ class _IntroScreenState extends State<IntroScreen> {
                   backgroundColor:
                       MaterialStateProperty.all(Colors.blueAccent)),
               child: const Text("I Accept"),
-              onPressed: () {
+              onPressed: () async {
                 //Get user permission for location service
+                _permissionGranted = await location.hasPermission();
                 setState(() async {
-                  _permissionGranted = await location.hasPermission();
                   if (_permissionGranted == loc.PermissionStatus.denied) {
                     _permissionGranted = await location.requestPermission();
-                    if (_permissionGranted != loc.PermissionStatus.granted)
+                    if (_permissionGranted != loc.PermissionStatus.granted) {
                       return;
+                    }
                   }
                 });
               },
