@@ -4,14 +4,14 @@ import 'package:latlong2/latlong.dart';
 import 'package:geocoding/geocoding.dart';
  
 class User_Manager extends Manager {
-  String active_user_id = "3";
+  String active_user_id = "brCMUZAa2KczEzEDxAJp3kYBrf63";
   late LatLng location_data;
 
 
   var user_list = [
     User('1', 'Ryan'),
     User('2', 'Nicole'),
-    User('3', 'Dyllon'),
+    User('brCMUZAa2KczEzEDxAJp3kYBrf63', 'Dyllon'),
     User('4', 'Alan'),
     User('5', 'Jamie'),
     User('6', 'Fath')
