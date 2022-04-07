@@ -35,23 +35,24 @@ class _IntroScreenState extends State<IntroScreen> {
   List<PageViewModel> initPageViewModel(BuildContext context) {
     listPagesViewModel = [
       PageViewModel(
-        title: "Title of first page",
-        body: "The map tab",
+        title: "Welcome to Aura",
+        body: "An all in one application for people in Singapore to meet, keep updated and connect",
         image: Center(
-          child: Image.network(
-              "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg",
+          child: Image.asset(
+              "assets/splash.jpg",
               height: 175.0),
         ),
       ),
-      PageViewModel(
-        title: "Title of second page",
-        body: "The community tab",
-        image: Center(
-          child: Image.network(
-              "https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg",
-              height: 175.0),
-        ),
-      ),
+      // PageViewModel(
+      //   title: "Interactive Map",
+      //   body: "The community tab",
+      //   image: Center(
+      //     child: Image.asset(
+      //         "assets/Map.png",
+      //         height: 175.0),
+      //   ),
+
+      // ),
       PageViewModel(
         title: "Request for Permission",
         image: const Center(
