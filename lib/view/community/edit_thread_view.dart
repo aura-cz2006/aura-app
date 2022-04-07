@@ -116,26 +116,32 @@ class _EditThreadViewState extends State<EditThreadView> {
     return Consumer<Thread_Manager>(builder: (context, thread_manager, child) {
       return ElevatedButton(
         child: const Text("Submit"),
-        onPressed: () {
-          setState(() async {
-            //Validation for empty fields. CANNOT SUBMIT IF EMPTY
-            if (!_formKey.currentState!.validate()) {
-              return;
-            }
-            // print(
-            //     "Text: ${titleController.text}, Content: ${contentController.text}"); // TODO REMOVE
-            int response = await ThreadController.patchThread(
-                //Update thread
-                thread: thread_manager.getThreadByID(widget.threadID)!,
-                title: titleController.text,
-                content: contentController.text);
+        onPressed: () async {
+          //Validation for empty fields. CANNOT SUBMIT IF EMPTY
+          if (!_formKey.currentState!.validate()) {
+            return;
+          }
 
-            if (response == 200) {
-              print("Patching Success!");
-              ThreadController.fetchThreads(context);
-              context
-                  .pop(); // Navigator.pop(context); //Return to previous, but updated thread
-            } else if (response == 400) {
+          print("======PATCHING THREAD============");
+          // print(
+          //     "Text: ${titleController.text}, Content: ${contentController.text}"); // TODO REMOVE
+          await ThreadController.patchThread(
+                  //Update thread
+                  thread: thread_manager.getThreadByID(widget.threadID)!,
+                  title: titleController.text,
+                  content: contentController.text)
+              .then((statcode) {
+                print("INSIDE PATCHING THREAD THEN");
+            if (statcode == 200) {
+              setState(() async {
+                await ThreadController.fetchThreads(context);
+                print("Patching Success!");
+                context.pop(); // Navigator.pop(context); //Return to previous, but updated thread
+              });
+            }
+                print("STATCODE!=200");
+
+            if (statcode != 200) {
               showDialog(
                   context: context,
                   builder: (context) {
@@ -144,10 +150,11 @@ class _EditThreadViewState extends State<EditThreadView> {
                         scrollable: true,
                         content: Center(
                             child: Container(
-                          child: Text("Unable to create thread.\n"
+                          child: Text("Unable to edit thread.\n"
                               "\n Please try again."),
                         )));
                   });
+              return;
             }
           });
         },

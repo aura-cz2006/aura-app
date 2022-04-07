@@ -79,6 +79,7 @@ class DiscussionThreadApi {
         "content": content,
       },
     );
+    print('============EXITING PATCHING THREAD=========================');
 
     return response.statusCode;
   }

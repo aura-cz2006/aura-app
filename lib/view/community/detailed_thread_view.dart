@@ -136,31 +136,37 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                               context.push(
                                   "${GoRouter.of(context).location}/edit");
                             } else if (value == "delete") {
-                              int response = await ThreadController.deleteThread(thread: threadMgr.getThreadByID(widget.threadID)!);
+                              await ThreadController.deleteThread(
+                                      thread: threadMgr
+                                          .getThreadByID(widget.threadID)!)
+                                  .then((statcode) {
+                                if (statcode == 200) {
+                                  setState(() async {
+                                    await ThreadController.fetchThreads(
+                                        context);
+                                    print("Delete Thread Success!");
+                                    context.pop();
+                                  });
+                                }
 
-                              if (response == 200) {print("Delete Thread Success!");}
-
-                              //Failure Message
-                              if (response == 400){
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                          elevation: 10,
-                                          scrollable: true,
-                                          content: Center(
-                                              child: Container(
-                                                child: Text("Unable to delete thread.\n"
-                                                    "\n Please try again."),
-                                              )
-                                          )
-                                      );
-                                    });
-                                return;
-                              }
-
-                              ThreadController.fetchThreads(context);
-                              context.pop();
+                                //Failure Message
+                                if (statcode == 400) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                            elevation: 10,
+                                            scrollable: true,
+                                            content: Center(
+                                                child: Container(
+                                              child: Text(
+                                                  "Unable to delete thread.\n"
+                                                  "\n Please try again."),
+                                            )));
+                                      });
+                                  return;
+                                }
+                              });
                             }
                           });
                         },
@@ -193,8 +199,7 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                 children: <Widget>[
                   const SizedBox(width: 16),
                   Text(
-                    threadMgr.getThreadByID(widget.threadID)?.userID
-                        ??
+                      threadMgr.getThreadByID(widget.threadID)?.userID ??
                           "UNKNOWN USER",
                       style: DefaultTextStyle.of(context).style.apply(
                           color: Colors.grey[700],
