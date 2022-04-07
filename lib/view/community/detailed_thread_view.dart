@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:aura/controllers/thread_controller.dart';
 import 'package:aura/managers/thread_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
@@ -130,12 +131,35 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                         threadMgr.getThreadByID(widget.threadID)!.userID)
                     ? PopupMenuButton(
                         onSelected: (value) {
-                          setState(() {
+                          setState(() async {
                             if (value == "edit") {
                               context.push(
                                   "${GoRouter.of(context).location}/edit");
                             } else if (value == "delete") {
-                              threadMgr.removeThread(widget.threadID);
+                              int response = await ThreadController.deleteThread(thread: threadMgr.getThreadByID(widget.threadID)!);
+
+                              if (response == 200) {print("Delete Thread Success!");}
+
+                              //Failure Message
+                              if (response == 400){
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                          elevation: 10,
+                                          scrollable: true,
+                                          content: Center(
+                                              child: Container(
+                                                child: Text("Unable to delete thread.\n"
+                                                    "\n Please try again."),
+                                              )
+                                          )
+                                      );
+                                    });
+                                return;
+                              }
+
+                              ThreadController.fetchThreads(context);
                               context.pop();
                             }
                           });
@@ -169,9 +193,8 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                 children: <Widget>[
                   const SizedBox(width: 16),
                   Text(
-                      userMgr.getUsernameByID(threadMgr
-                              .getThreadByID(widget.threadID)!
-                              .userID) ??
+                    threadMgr.getThreadByID(widget.threadID)?.userID
+                        ??
                           "UNKNOWN USER",
                       style: DefaultTextStyle.of(context).style.apply(
                           color: Colors.grey[700],

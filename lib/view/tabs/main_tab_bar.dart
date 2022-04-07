@@ -6,6 +6,10 @@ import 'package:aura/view/tabs/map/map_tab.dart';
 import 'package:aura/view/tabs/news/news_tab.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../controllers/meetups_controller.dart';
+import '../../controllers/news_controller.dart';
+import '../../controllers/thread_controller.dart';
 /* Navigation Tab Bar */
 
 const tabs = {0: "community", 1: "map", 2: "news"};
@@ -33,6 +37,14 @@ class _MainTabBarState extends State<MainTabBar> {
         .key;
 
     void changeTab(String newTabName) {
+      setState(() {
+        print("===============INITIALIZING MEETUPS====================");
+        MeetupsController.fetchMeetups(context);
+        print("=============EXITED MEETUP INTIALIZATION & ENTERING THREAD INITIALIZATION================");
+        ThreadController.fetchThreads(context);
+        print("===========EXITED THREAD INITIALIZATION============");
+        NewsController.fetchNews(context); // get initial
+      });
       GoRouter.of(context).go("/tabs/$newTabName");
     }
 

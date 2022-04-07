@@ -1,3 +1,5 @@
+import 'package:aura/apis/discussion_api.dart';
+import 'package:aura/controllers/thread_controller.dart';
 import 'package:aura/managers/thread_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/models/discussion_topic.dart';
@@ -87,23 +89,48 @@ class _CreateThreadViewState extends State<CreateThreadView> {
         width: 100,
         height: 50,
         child: Card(child: Consumer2<Thread_Manager, User_Manager>(
-            builder: (context, threadMgr, userMgr, child) {
+            builder: (context, threadCtrl, userMgr, child) {
           return ElevatedButton(
             child: const Text("Submit"),
-            onPressed: () {
-              setState(() {
+            onPressed: () async {
                 if (!_formKey.currentState!.validate()){
                   return;
                 }
+
                 //Create thread
-                threadMgr.addThread(
-                    titleController.text,
-                    contentController.text,
-                    widget.topic,
-                    userMgr.active_user_id //Not yet available
-                    );
-                context.pop();
-              });
+                await ThreadController.createThread(
+                  title : titleController.text,
+                  content : contentController.text,
+                  topic: widget.topic,
+                  userID: (userMgr.getUser(userMgr.active_user_id)!.username), //Not yet available
+                ).then((statcode)  {
+                  if (statcode == 200) {
+                    setState(() async {
+                      await ThreadController.fetchThreads(context);
+                      print("Posting Thread Success");
+                      context.pop();
+                    });
+                  }
+
+                  //Failure Message
+                  if (statcode == 400){
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                              elevation: 10,
+                              scrollable: true,
+                              content: Center(
+                                  child: Container(
+                                    child: Text("Unable to create thread.\n"
+                                        "\n Please try again."),
+                                  )
+                              )
+                          );
+                        });
+                    return;
+                  }
+                });
             },
           );
         })),

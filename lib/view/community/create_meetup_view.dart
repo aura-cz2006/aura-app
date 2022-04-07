@@ -1,3 +1,4 @@
+import 'package:aura/controllers/meetups_controller.dart';
 import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:aura/view/community/datetime_picker.dart';
@@ -6,6 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:io';
+import 'package:geocoding/geocoding.dart';
+import 'dart:async';
 
 void main() => runApp(const CreateMeetupView());
 
@@ -17,6 +21,9 @@ class CreateMeetupView extends StatefulWidget {
 }
 
 class _CreateMeetupViewState extends State<CreateMeetupView> {
+  GeocodingPlatform geocoding = GeocodingPlatform.instance;
+  late var addresses;
+  late var interest;
   final titleController = TextEditingController(); //Saves edited title
   final descriptionController = TextEditingController(); //Saves edited content
   final locationController = TextEditingController();
@@ -146,28 +153,96 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
             builder: (context, meetupMgr, userMgr, child) {
           return ElevatedButton(
             child: const Text("Submit"),
-            onPressed: () {
+            onPressed: () async {
               //Check and display warning message if empty fields
               if (!_formKey.currentState!.validate() || selectedDate.isBefore(DateTime.now())){
                 return;
               }
-              setState(() {
-                // print(Text('''Title: ${titleController.text}
-                // Date&Time: ${selectedDate}
-                // Location: 1.3483, 103.6831
-                // Content: ${descriptionController.text}
-                // '''));
-                //Create thread
-                meetupMgr.addMeetup(
-                  selectedDate,
-                  LatLng(1.1, 2.2),
-                  userMgr.active_user_id,
-                  int.parse(attendeeController.text),
-                  titleController.text,
-                  descriptionController.text,
-                );
-                context.pop();
-              });
+
+              // Check for Internet Connection (required to look up validity of address)
+              //If invalid address lke PO 123456, display error message box
+              try {
+                final internetConnection = await InternetAddress.lookup('example.com');
+                if (internetConnection.isNotEmpty && internetConnection[0].rawAddress.isNotEmpty) {
+                  print('connected');
+                }
+              } on SocketException catch (e) {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                          elevation: 10,
+                          scrollable: true,
+                          content: Center(
+                              child: Container(
+                                child: Text("The following function requires internet connection!\n"
+                                    "\nPlease connect to wifi or your personal data."),
+                              )
+                          )
+                      );
+                    });
+                return;
+              }
+              print("Checkpoint Internet Verification: CLEARED\n");
+
+              //VALIDITY FOR ADDRESS
+              var coord;
+              var coordinate;
+              print("Checkpoint Address Validity: ENTERING\n");
+              try{
+                print("Checkpoint Address Validity: ENTERED\n");
+                coord = await geocoding.locationFromAddress(locationController.text);
+                coordinate = await coord.first;
+              } on Exception catch (e) {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                          elevation: 10,
+                          scrollable: true,
+                          content: Center(
+                              child: Container(
+                                child: Text("You have entered an invalid address!\n"
+                                    "\nPlease return to the previous page to enter a valid address."),
+                              )
+                          )
+                      );
+                    });
+              }
+              //Post thread to server
+              int response = await MeetupsController.createMeetup(
+                  title: titleController.text,
+                  content: descriptionController.text,
+                  maxAttendees: int.parse(attendeeController.text),
+                  timeofMeetup: selectedDate,
+                  location: LatLng(coordinate.latitude, coordinate.longitude));
+
+              //Check if Post was successful
+              if (response == 200) {
+                print("Post Meetup Success");
+                setState(() {
+                  // Navigator.push
+                  MeetupsController.fetchMeetups(context);
+                  context.pop();
+                });
+              }
+              //Failure Message
+              if (response != 200){
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                          elevation: 10,
+                          scrollable: true,
+                          content: Center(
+                              child: Container(
+                                child: Text("Unable to create meetup.\n"
+                                    "\n Please try again."),
+                              )
+                          )
+                      );
+                    });
+              }
             },
           );
         }),
@@ -184,4 +259,35 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
     attendeeController.dispose();
     super.dispose();
   }
+
+  void test()  {
+    addresses = geocoding.locationFromAddress(locationController.text);
+    interest = addresses.first;
+  }
+
+  void updateInterest() async {
+    try{
+      print("Checkpoint Address Validity: ENTERED\n");
+      addresses = await geocoding.locationFromAddress(locationController.text);
+      interest = await addresses.first;
+      print(LatLng(interest.latitude, interest.longitude));
+
+    } on Exception catch (e) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                elevation: 10,
+                scrollable: true,
+                content: Center(
+                    child: Container(
+                      child: Text("You have entered an invalid address!\n"
+                          "\nPlease return to the previous page to enter a valid address."),
+                    )
+                )
+            );
+          });
+    }
+  }
 }
+

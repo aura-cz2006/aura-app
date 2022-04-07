@@ -15,5 +15,4 @@ class NewsController {
         fetchedNewsItems
     );
   }
-
 }

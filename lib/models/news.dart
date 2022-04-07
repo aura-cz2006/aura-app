@@ -6,13 +6,13 @@ import 'package:latlong2/latlong.dart';
 abstract class NewsItem {
   String id;
   DateTime dateTime;
-  LatLng location;
+  String location;
 
   // constructor
   NewsItem(this.id, this.dateTime, this.location);
 
   static IconData getIcon() {
-    return Icons.newspaper;
+    return Icons.rsvp;
   }
 
   String getText();
@@ -21,7 +21,7 @@ abstract class NewsItem {
 class DengueNewsItem extends NewsItem {
   int numCases;
 
-  DengueNewsItem(String id, DateTime dateTime, LatLng location, this.numCases)
+  DengueNewsItem(String id, DateTime dateTime, String location, this.numCases)
       : super(id, dateTime, location);
 
   static IconData getIcon() {
@@ -35,8 +35,7 @@ class DengueNewsItem extends NewsItem {
 
   factory DengueNewsItem.getFromJson(Map<String, dynamic> json) {
     DateTime dt = DateTime.parse(json['date']);
-    LatLng location = LatLng(json['location']['lat'], json['location']['lng']);
-    return DengueNewsItem(json['id'], dt, location, json['numCases']);
+    return DengueNewsItem(json['id'], dt, json['location'], json['numCases']);
   }
 }
 
@@ -46,7 +45,7 @@ class EventNewsItem extends NewsItem {
   String fee;
   String websiteURL;
 
-  EventNewsItem(String id, DateTime dateTime, LatLng location, this.eventTitle,
+  EventNewsItem(String id, DateTime dateTime, String location, this.eventTitle,
       this.fee, this.websiteURL)
       : super(id, dateTime, location);
 
@@ -61,8 +60,8 @@ class EventNewsItem extends NewsItem {
 
   factory EventNewsItem.getFromJson(Map<String, dynamic> json) {
     DateTime dt = DateTime.parse(json['date']);
-    LatLng location = LatLng(json['location']['lat'], json['location']['lng']);
-    return EventNewsItem(json['id'], dt, location, json['eventTitle'],
+    // LatLng location = LatLng(json['location']['lat'], json['location']['lng']);
+    return EventNewsItem(json['id'], dt, json['location'], json['eventTitle'],
         json['fee'], json['url']);
   }
 }
@@ -73,7 +72,7 @@ class MarketNewsItem extends NewsItem {
 
   // List<LatLng> alternativeMarkets = []; // todo if have time
 
-  MarketNewsItem(String id, DateTime dateTime, LatLng location, this.marketName,
+  MarketNewsItem(String id, DateTime dateTime, String location, this.marketName,
       this.reopeningDate)
       : super(id, dateTime, location);
 
@@ -88,10 +87,10 @@ class MarketNewsItem extends NewsItem {
 
   factory MarketNewsItem.getFromJson(Map<String, dynamic> json) {
     DateTime dt = DateTime.parse(json['date']);
-    LatLng location = LatLng(json['location']['lat'], json['location']['lng']);
+    // LatLng location = LatLng(json['location']['lat'], json['location']['lng']);
     DateTime reopening_dt = DateTime.parse(json['reopeningDate']);
     return MarketNewsItem(
-        json['id'], dt, location, json['marketName'], reopening_dt);
+        json['id'], dt, json['location'], json['marketName'], reopening_dt);
   }
 }
 
@@ -99,7 +98,7 @@ class UpgradingNewsItem extends NewsItem {
   String desc;
   DateTime expectedEnd;
 
-  UpgradingNewsItem(String id, DateTime dateTime, LatLng location, this.desc,
+  UpgradingNewsItem(String id, DateTime dateTime, String location, this.desc,
       this.expectedEnd)
       : super(id, dateTime, location);
 
@@ -114,9 +113,9 @@ class UpgradingNewsItem extends NewsItem {
 
   factory UpgradingNewsItem.getFromJson(Map<String, dynamic> json) {
     DateTime dt = DateTime.parse(json['date']);
-    LatLng location = LatLng(json['location']['lat'], json['location']['lng']);
+    // LatLng location = LatLng(json['location']['lat'], json['location']['lng']);
     DateTime end_dt = DateTime.parse(json['endDate']);
     return UpgradingNewsItem(
-        json['id'], dt, location, json['desc'], end_dt);
+        json['id'], dt, json['location'], json['desc'], end_dt);
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:aura/controllers/meetups_controller.dart';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/managers/user_manager.dart';
 import 'package:aura/widgets/app_bar_back_button.dart';
@@ -76,12 +77,32 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
                   icon: Icon(Icons.send, color: Colors.grey[900]),
                   onPressed: () {
                     if (textCtrl.text != "") {
-                      setState(() {
-                        meetupMgr.addComment(widget.meetupID,
-                            userMgr.active_user_id, textCtrl.text);
-                        textCtrl.clear(); // clear text
-                        FocusManager.instance.primaryFocus
-                            ?.unfocus(); // exit keyboard
+                      setState(() async {
+                        int response = await MeetupsController.createComment(meetup_id: widget.meetupID, content: textCtrl.text);
+
+                        if (response == 200){
+                          MeetupsController.fetchMeetups(context);
+                          print("Comment Successful!");
+                          textCtrl.clear(); // clear text
+                          FocusManager.instance.primaryFocus
+                              ?.unfocus(); // exit keyboard
+                        }
+                        if (response != 200){
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                    elevation: 10,
+                                    scrollable: true,
+                                    content: Center(
+                                        child: Container(
+                                          child: Text("Unable to delete comment.\n"
+                                              "\n Please try again."),
+                                        )
+                                    )
+                                );
+                              });
+                        }
                       });
                     }
                   },
@@ -129,12 +150,36 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                       meetupMgr.canEditMeetup(widget.meetupID))
                   ? PopupMenuButton(
                       onSelected: (value) {
-                        setState(() {
+                        setState(() async {
                           if (value == "edit") {
                             context.push(
                                 "${GoRouter.of(context).location}/editMeetup");
                           } else if (value == "delete") {
-                            meetupMgr.cancelMeetup(widget.meetupID);
+                            int response = await MeetupsController.deleteMeetup(meetup: meetupMgr.getMeetupByID(widget.meetupID));
+
+                            if (response == 200) {
+                              print("Delete Meetup Success!");
+                            }
+
+                            //Failure Message
+                            if (response == 400){
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                        elevation: 10,
+                                        scrollable: true,
+                                        content: Center(
+                                            child: Container(
+                                              child: Text("Unable to delete meetup.\n"
+                                                  "\n Please try again."),
+                                            )
+                                        )
+                                    );
+                                  });
+                            }
+
+                            MeetupsController.fetchMeetups(context);
                             context.pop();
                           }
                         });
@@ -398,10 +443,30 @@ class _DisplayMeetupCommentsState extends State<DisplayMeetupComments> {
                     trailing: (userMgr.active_user_id == c.userID)
                         ? PopupMenuButton(
                             onSelected: (value) {
-                              setState(() {
+                              setState(() async {
                                 if (value == "delete") {
-                                  meetupMgr.removeComment(
-                                      widget.meetupID, c.commentID);
+                                  int response = await MeetupsController.deleteMeetupComment(meetup_id: widget.meetupID, comment_id: c.commentID);
+
+                                  if (response == 200){
+                                    MeetupsController.fetchMeetups(context);
+                                    print("Comment Deleted!");
+                                  }
+                                  if (response != 200){
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                              elevation: 10,
+                                              scrollable: true,
+                                              content: Center(
+                                                  child: Container(
+                                                    child: Text("Unable to delete comment.\n"
+                                                        "\n Please try again."),
+                                                  )
+                                              )
+                                          );
+                                        });
+                                  }
                                 }
                               });
                             },
