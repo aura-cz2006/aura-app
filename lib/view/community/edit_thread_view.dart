@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:aura/controllers/thread_controller.dart';
 import 'package:aura/managers/thread_manager.dart';
 import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,8 @@ class EditThreadView extends StatefulWidget {
 class _EditThreadViewState extends State<EditThreadView> {
   var titleController = TextEditingController(); //Saves edited title
   var contentController = TextEditingController(); //Saves edited content
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); //For validation of user input
+  final GlobalKey<FormState> _formKey =
+      GlobalKey<FormState>(); //For validation of user input
 
   TextEditingController _initTitleController(String og_title) {
     titleController.text = og_title;
@@ -44,22 +46,25 @@ class _EditThreadViewState extends State<EditThreadView> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AuraAppBar(
-          title: const Text('Edit Thread'),
-        ),
-        body: Form(
-          key: _formKey,
-          child: Center(
-            child: Column(
-              children: [
-                Padding(padding: const EdgeInsets.all(5), child: titleField()),
-                Padding(padding: const EdgeInsets.all(5), child: contentField()),
-                Padding(padding: const EdgeInsets.all(5), child: submitButton(context))
-              ],
-            ),
+          appBar: AuraAppBar(
+            title: const Text('Edit Thread'),
           ),
-        )
-      ),
+          body: Form(
+            key: _formKey,
+            child: Center(
+              child: Column(
+                children: [
+                  Padding(
+                      padding: const EdgeInsets.all(5), child: titleField()),
+                  Padding(
+                      padding: const EdgeInsets.all(5), child: contentField()),
+                  Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: submitButton(context))
+                ],
+              ),
+            ),
+          )),
     );
   }
 
@@ -74,8 +79,8 @@ class _EditThreadViewState extends State<EditThreadView> {
             hintText: "Enter the title of your post here",
             border: OutlineInputBorder()),
         textInputAction: TextInputAction.next,
-        validator: (value){
-          if (value!.isNotEmpty){
+        validator: (value) {
+          if (value!.isNotEmpty) {
             return null;
           } else {
             return "Please enter a title.";
@@ -96,8 +101,8 @@ class _EditThreadViewState extends State<EditThreadView> {
             hintText: "Enter the content of your post here",
             border: OutlineInputBorder()),
         textInputAction: TextInputAction.done,
-        validator: (value){
-          if (value!.isNotEmpty){
+        validator: (value) {
+          if (value!.isNotEmpty) {
             return null;
           } else {
             return "Please enter the contents of your post.";
@@ -112,20 +117,38 @@ class _EditThreadViewState extends State<EditThreadView> {
       return ElevatedButton(
         child: const Text("Submit"),
         onPressed: () {
-          setState(() {
+          setState(() async {
             //Validation for empty fields. CANNOT SUBMIT IF EMPTY
-            if (!_formKey.currentState!.validate()){
+            if (!_formKey.currentState!.validate()) {
               return;
             }
             // print(
             //     "Text: ${titleController.text}, Content: ${contentController.text}"); // TODO REMOVE
-            thread_manager.editThread(
+            int response = await ThreadController.patchThread(
                 //Update thread
-                widget.threadID,
-                titleController.text,
-                contentController.text);
-            context
-                .pop(); // Navigator.pop(context); //Return to previous, but updated thread
+                thread: thread_manager.getThreadByID(widget.threadID)!,
+                title: titleController.text,
+                content: contentController.text);
+
+            if (response == 200) {
+              print("Patching Success!");
+              ThreadController.fetchThreads(context);
+              context
+                  .pop(); // Navigator.pop(context); //Return to previous, but updated thread
+            } else if (response == 400) {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                        elevation: 10,
+                        scrollable: true,
+                        content: Center(
+                            child: Container(
+                          child: Text("Unable to create thread.\n"
+                              "\n Please try again."),
+                        )));
+                  });
+            }
           });
         },
       );

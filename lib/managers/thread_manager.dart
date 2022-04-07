@@ -5,29 +5,14 @@ import 'package:aura/util/manager.dart';
 
 class Thread_Manager extends Manager {
   var thread_list = [
-    Thread('1', 'Otters spotted at Marina Bay Sands!', '1',
-        'what a rare sight!', DiscussionTopic.NATURE, DateTime.now()),
-    Thread(
-        '2',
-        'Rafflesia spotted at Raffles City',
-        '4',
-        'what a gorgeous specimen! \nI love plants! \nBotanics is my favourite hobby, I could go on and on about it for days \nIn short, I love plants!',
-        DiscussionTopic.NATURE,
-        DateTime.now().add(const Duration(days: 2))),
-    Thread('3', 'Delicious Japanese food at Ion Orchard', '1',
-        'Yummy and affordable', DiscussionTopic.FOOD, DateTime.now()),
-    Thread('4', 'New SSD out on the market!', '3',
-        'so much memory at such an affordable price!', DiscussionTopic.IT, DateTime.now()),
-    Thread('5', 'New Muay Thai facility in NTU', '5',
-        'Time to beat some people', DiscussionTopic.SPORTS, DateTime.now()),
-    Thread(
-        '6',
-        'Attack on Titan Exhibition at Art Science Museum!',
-        '6',
-        'Rumbling, rumbling, it\'s coming!',
-        DiscussionTopic.GENERAL,
-        DateTime.now())
   ];
+
+  void updateThreadList(List<Thread> threadList){
+    print("=============ENTERED THREAD MANAGER===============");
+    thread_list = threadList;
+    print(threadList);
+    print("=============EXITING THREAD MANAGER===============");
+  }
 
   List<Thread> getListOfThreadsSortedByLikes(DiscussionTopic topic) {
     var curr_list = getThreadsByTopic(topic);
@@ -102,13 +87,8 @@ class Thread_Manager extends Manager {
     return thread.numLikes();
   }
 
-  String generateUniqThreadID(){
-    return (thread_list.length+1).toString();
-  }
-
-  void addThread(String title, String content, DiscussionTopic topic, String userID) {
-    thread_list.add(Thread(generateUniqThreadID(), title, userID, content, topic, DateTime.now()));
-    notifyListeners();
+  static String generateUniqThreadID(){
+    return (10).toString(); //TODO: we need to change this
   }
 
   void removeThread(String threadID) {

@@ -15,3 +15,8 @@ Run the following command to successfully build the apk
 ```bash
     flutter build apk --no-tree-shake-icons
 ```
+
+# fastlane ci/cd
+1. Install ruby 3
+2. Install fastlane tools via ruby, `bundle update`
+3. Run fastlane, `bundle exec fastlane [lane]`

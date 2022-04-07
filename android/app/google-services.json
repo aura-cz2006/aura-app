@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:731430801311:android:47662b2c29821da66477aa",
+        "mobilesdk_app_id": "1:731430801311:android:01abb6dea6ffb8336477aa",
         "android_client_info": {
-          "package_name": "com.example.aura"
+          "package_name": "com.auraapp.aura"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "731430801311-e0eaud64k4q9ln6ga03f2mg4qpqohekg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.auraapp.aura",
+            "certificate_hash": "725b12408ec7dc94531c213c54920a92eb213a2f"
+          }
+        },
         {
           "client_id": "731430801311-1iim1mf202us3ffldj6dl88ae4v3hcua.apps.googleusercontent.com",
           "client_type": 3
