@@ -109,6 +109,10 @@ class Meetup {
     return result;
   }
 
+  // Future create(Map<String, dynamic> json) {
+  //   Meetup meetup =
+  // }
+
   factory Meetup.getFromJson(Map<String, dynamic> json) {
     // print("LatLng type looks like this!!!!!!!!!!!!!!!!! ");
     // print(LatLng((json['location']['lat']), (json['location']['lng'])));
@@ -124,8 +128,9 @@ class Meetup {
         constructCommentsListfromStringList(json['comments']),
         List<String>.from(json['rsvpAttendees']),
         json['isCancelled']);
-
-    meetup.latLngtoAddress(LatLng((json['location']['lat']), (json['location']['lng'])));
+    //
+    // meetup.latLngtoAddress(LatLng((json['location']['lat']), (json['location']['lng'])));
+    // print("Addres========================${meetup.address}================");
     return meetup;
   }
 

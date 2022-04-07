@@ -35,11 +35,20 @@ class Thread {
     }
   );
 
+  // id: json['id'].toString(),
+  // title: json['title'],
+  // userID: json['author_user_id'],
+  // content: json['content'],
+  // topic: TopicConverter.parsable2topic(json['topic']),
+  // timestamp: DateTime.parse(json['date']),
+  // comments: comments, //constructCommentsListfromStringList(json['comments'])
+  // likedBy: likes, //List<String>.from(json['likedBy'])
+
 
   @override
   String toString() {
     //todo remove this ???
-    return 'Thread: {id: $id, title: ${title ?? ""}}';
+    return 'Thread: {id: $id, title: ${title ?? ""}, userID: ${userID}, content: ${content}, topic: ${topic}, timestamp: ${timestamp}, comments: ${comments}, likes: ${likedBy}';
   }
 
   void addComment(String userID, String text) {
@@ -90,19 +99,19 @@ class Thread {
   }
 
   factory Thread.getFromJson(Map<String, dynamic> json){
-    List<Comment> comments = [Comment("1", "3", DateTime.now(), "text")];
-    List<String> likes = [];
+    List<Comment> comments = [Comment("1", "2", DateTime.now(), "testing")];
+    List<String> likes = ["1"];
     //json['id'], json['title'], json['userID'],
     //         json['content'], TopicConverter.parsable2topic(json['topic']),
     //         DateTime.parse(json['date']), comments,   List<String>.from(json['likedBy'])
     print("id: ${json['id'].toString()}");
     print("title: ${json['title']}, runtype: ${json['title'].runtimeType}");
-    print("topic: ${TopicConverter.parsable2topic(json['topic'])}, runtype = ${TopicConverter.parsable2topic(json['topic']).runtimeType} ");
-    print("Comment: ${comments}, runtype = ${comments.runtimeType}");
     print("author_user_id: ${json['author_user_id']}");
+    print("content: ${json['content']}, runtype:  ${json['content'].runtimeType}");
+    print("Fetching Thread. Topic: ${TopicConverter.parsable2topic(json['topic'])}, runtype = ${TopicConverter.parsable2topic(json['topic']).runtimeType} ");
+    print("Comment: ${comments}, runtype = ${comments.runtimeType}");
 
-
-    return Thread.fromBackEnd(
+    Thread thread = Thread.fromBackEnd(
         id: json['id'].toString(),
         title: json['title'],
         userID: json['author_user_id'],
@@ -110,8 +119,12 @@ class Thread {
         topic: TopicConverter.parsable2topic(json['topic']),
         timestamp: DateTime.parse(json['date']),
         comments: comments, //constructCommentsListfromStringList(json['comments'])
-        likedBy: List<String>.from(json['liked_by']), //List<String>.from(json['likedBy'])
+        likedBy: likes, //List<String>.from(json['likedBy'])
     );
+    print("${thread}");
+    print("Exiting======");
+
+    return thread;
   }
 }
 

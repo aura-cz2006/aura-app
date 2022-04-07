@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 import 'package:aura/config/config.dart';
@@ -39,18 +40,24 @@ class DiscussionThreadApi {
 
   static Future<int> postThread({required Thread thread}) async {
     Uri url = Uri.parse(
-        "${Config().routes["api"]}/discussions/${thread.topic.topic2readable()}/threads");
+        "${Config().routes["api"]}/discussions/${thread.topic.topic2parsable()}/threads");
+
+    var token = await FirebaseAuth.instance.currentUser?.getIdToken();
+    print(token);
+
+    print("Posting Thread. Topic: ${thread.topic.topic2parsable()}");
 
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer ${token}"
         },
         encoding: Encoding.getByName('utf-8'),
         body: {
           'title': thread.title!,
           "userID": thread.userID,
           "content": thread.content,
-          "topic": thread.topic.topic2readable(), //DiscussionTopic
+          "topic": thread.topic.topic2parsable(), //DiscussionTopic
           "timestamp": thread.timestamp.toString(),
         });
 

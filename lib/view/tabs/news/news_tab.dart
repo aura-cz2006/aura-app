@@ -117,6 +117,7 @@ class _NewsTabState extends State<NewsTab> {
                                             popup.button(
                                                 label: 'Redirect',
                                                 onPressed: () async {
+                                                  print(n.websiteURL);
                                                   if (!await launch(
                                                       n.websiteURL)) {
                                                     throw 'Could not launch ${n.websiteURL}';

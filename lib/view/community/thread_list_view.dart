@@ -166,7 +166,7 @@ class ThreadListViewState extends State<ThreadListView> {
                                     children: <Widget>[
                                       const SizedBox(width: 16),
                                       Text(
-                                        "Posted by: ${t.userID}", //TODO: lookup username via consumer
+                                        "Posted by: ${shortenUserName(t.userID)}", //TODO: lookup username via consumer
                                         // todo: fix/change how we use DefaultTextStyle
                                         // style: DefaultTextStyle.of(context)
                                         //     .style
@@ -195,4 +195,13 @@ class ThreadListViewState extends State<ThreadListView> {
               })),
     );
   }
+}
+
+
+String shortenUserName(String name){
+  if (name.length>=15){
+    String short = name.substring(0,11);
+    return short+"...";
+  }
+  return name;
 }

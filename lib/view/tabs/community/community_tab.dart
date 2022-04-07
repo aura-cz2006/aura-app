@@ -34,19 +34,19 @@ class _CommunityTabState extends State<CommunityTab> {
         title: const Text('Community'),
         hasBackButton: false,
         actions: [
-          Consumer<NotificationManager>(
-              builder: (context, notificationData, child) => Badge(
-                    position: BadgePosition.topEnd(top: 8, end: 3),
-                    badgeContent: Text(
-                      notificationData.getNumUnreadNotifications().toString(),
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.notifications),
-                      onPressed: () =>
-                          context.push("/tabs/community/notifications"),
-                    ),
-                  )),
+          // Consumer<NotificationManager>(
+          //     builder: (context, notificationData, child) => Badge(
+          //           position: BadgePosition.topEnd(top: 8, end: 3),
+          //           badgeContent: Text(
+          //             notificationData.getNumUnreadNotifications().toString(),
+          //             style: const TextStyle(color: Colors.white, fontSize: 12),
+          //           ),
+          //           child: IconButton(
+          //             icon: const Icon(Icons.notifications),
+          //             onPressed: () =>
+          //                 context.push("/tabs/community/notifications"),
+          //           ),
+          //         )),
           IconButton(
             icon: const Icon(
               Icons.settings,
