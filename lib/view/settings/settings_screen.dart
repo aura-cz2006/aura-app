@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,11 +7,19 @@ import 'package:go_router/go_router.dart';
 
 void main() => runApp(const SettingsScreen());
 
+void printFirebaseIdToken() async {
+  var token = await FirebaseAuth.instance.currentUser?.getIdToken();
+  print("++++++ firebase token ++++++++");
+  log(token ?? "");
+}
+
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    printFirebaseIdToken();
+
     return MaterialApp(
         home: Scaffold(
             appBar: AuraAppBar(
@@ -54,10 +64,13 @@ class SettingsScreen extends StatelessWidget {
                         height: 300,
                         fit: BoxFit.cover,
                       ))),
-              Padding(padding: EdgeInsets.symmetric(vertical:10), child: Text(
-                user.displayName ?? "no name",
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-              )),
+              Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    user.displayName ?? "no name",
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 24),
+                  )),
               Text(user.email ?? "no email")
             ]);
           } else {
