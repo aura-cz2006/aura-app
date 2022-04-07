@@ -66,7 +66,7 @@ class DiscussionThreadApi {
 
   static Future<int> patchThread({required Thread thread, required String title, required String content}) async {
     Uri url = Uri.parse(
-        "${Config().routes["api"]}/discussions/${thread.topic.topic2readable()}/threads/${thread.id}");
+        "${Config().routes["api"]}/discussions/${thread.topic.topic2parsable()}/threads/${thread.id}");
 
     final response = await http.patch(
       url,
@@ -85,7 +85,7 @@ class DiscussionThreadApi {
 
   static Future<int> deleteThread({required Thread thread}) async {
     Uri url = Uri.parse(
-        "${Config().routes["api"]}/discussions/${thread.topic.topic2readable()}/threads/${thread.id}");
+        "${Config().routes["api"]}/discussions/${thread.topic.topic2parsable()}/threads/${thread.id}");
 
     final response = await http.delete(
       url,

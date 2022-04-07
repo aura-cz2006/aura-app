@@ -92,42 +92,45 @@ class _CreateThreadViewState extends State<CreateThreadView> {
             builder: (context, threadCtrl, userMgr, child) {
           return ElevatedButton(
             child: const Text("Submit"),
-            onPressed: () {
-              setState(() async {
+            onPressed: () async {
                 if (!_formKey.currentState!.validate()){
                   return;
                 }
+
                 //Create thread
-                int response = await ThreadController.createThread(
-                    title : titleController.text,
-                    content : contentController.text,
-                    topic: widget.topic,
-                    userID: userMgr.active_user_id //Not yet available
-                    );
-                if (response == 200) {print("Posting Thread Success");}
+                await ThreadController.createThread(
+                  title : titleController.text,
+                  content : contentController.text,
+                  topic: widget.topic,
+                  userID: (userMgr.getUser(userMgr.active_user_id)!.username), //Not yet available
+                ).then((statcode)  {
+                  if (statcode == 200) {
+                    setState(() async {
+                      await ThreadController.fetchThreads(context);
+                      print("Posting Thread Success");
+                      context.pop();
+                    });
+                  }
 
-                //Failure Message
-                if (response == 400){
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                            elevation: 10,
-                            scrollable: true,
-                            content: Center(
-                                child: Container(
-                                  child: Text("Unable to create thread.\n"
-                                      "\n Please try again."),
-                                )
-                            )
-                        );
-                      });
-                  return;
-                }
-                ThreadController.fetchThreads(context);
-
-                context.pop();
-              });
+                  //Failure Message
+                  if (statcode == 400){
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                              elevation: 10,
+                              scrollable: true,
+                              content: Center(
+                                  child: Container(
+                                    child: Text("Unable to create thread.\n"
+                                        "\n Please try again."),
+                                  )
+                              )
+                          );
+                        });
+                    return;
+                  }
+                });
             },
           );
         })),

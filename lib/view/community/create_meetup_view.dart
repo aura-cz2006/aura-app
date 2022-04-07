@@ -219,8 +219,9 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
 
               //Check if Post was successful
               if (response == 200) {
-                print("Success");
+                print("Post Meetup Success");
                 setState(() {
+                  // Navigator.push
                   MeetupsController.fetchMeetups(context);
                   context.pop();
                 });
