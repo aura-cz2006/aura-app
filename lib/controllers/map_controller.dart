@@ -1,4 +1,4 @@
-import 'package:aura/api_handler/map_api.dart';
+import 'package:aura/apis/map_api.dart';
 import 'package:aura/managers/map_manager.dart';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/models/amenity_category.dart';

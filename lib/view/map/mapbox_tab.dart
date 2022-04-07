@@ -260,7 +260,9 @@ class _MapboxTabState extends State<MapboxTab> {
           }
         }
         if (type == 'amenities' || type == 'all') {
-          // await controller.removeLayer();
+          for (AmenityCategory category in mapMgr.amenitiesData.keys) {
+            await controller.removeLayer("amenities_${CategoryConvertor.getQueryString(category)}_locations");
+          }
           Map<AmenityCategory, dynamic> amenitiesData =
               MapController.getAmenitiesData(context);
           amenitiesData.forEach((category, data) async {

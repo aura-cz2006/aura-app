@@ -7,7 +7,7 @@ import 'package:latlong2/latlong.dart';
 MarkerLayerOptions amenitiesMarkerLayer ( MapManager mapManager ) {
 
   List<Marker> _amenitiesMarkers =
-  mapManager.amenities.entries
+  mapManager.amenitiesData.entries
       .where((element) =>
       mapManager.selectedCategories.contains(element.key))
       .map((element) => element.value)
