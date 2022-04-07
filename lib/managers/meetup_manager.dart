@@ -161,4 +161,20 @@ class Meetup_Manager extends Manager {
     });
     return address;
   }
+
+  Map<String, dynamic> getMeetupsGeojson() {
+    return {
+      "type": "FeatureCollection",
+      "features": getMeetupsSortedByTimeOfMeetUp()
+          .map((m) => {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [m.location.longitude, m.location.latitude]
+        }
+      })
+          .toList()
+    };
+  }
+
 }

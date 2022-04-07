@@ -1,4 +1,5 @@
 import 'package:aura/managers/map_manager.dart';
+import 'package:aura/models/amenity_category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +36,7 @@ Widget rowChips() {
 /*
 * Controls spacing between chips
 * */
-Widget _amenityChipWrapper(String text, int colour) {
+Widget _amenityChipWrapper(AmenityCategory text, int colour) {
   return Container(
       margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 30), //Spacing in between chips
       child: amenityChipWidget(category: text));
@@ -47,7 +48,7 @@ Widget _amenityChipWrapper(String text, int colour) {
 // }
 
 class amenityChipWidget extends StatefulWidget {
-  final String category;
+  final AmenityCategory category;
 
   amenityChipWidget({required this.category});
 
@@ -62,7 +63,7 @@ class _amenityChipWidgetState extends State<amenityChipWidget> {
   Widget build(BuildContext context) {
     return Consumer<MapManager>(builder: (context, mapManager, child) {
       return ChoiceChip(
-        label: Text(widget.category),
+        label: Text(CategoryConvertor.getReadable(widget.category)??""),
         labelStyle: TextStyle(color: Colors.black),
         selected: mapManager.selectedCategories.contains(widget.category),
         elevation: 1.0,
