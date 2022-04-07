@@ -7,7 +7,7 @@ import 'package:http_status_code/http_status_code.dart';
 
 class MapApi {
   static Future<Map<String, dynamic>> fetchTaxiData() async {
-    // todo unused bc cannot decode correctly
+    // todo unused
     Uri url = Uri.parse(
         "https://api.data.gov.sg/v1/transport/taxi-availability"); //Uri.parse("${Config().routes["api"]}/proxy/taxis/");
 
@@ -50,6 +50,22 @@ class MapApi {
                 "lng": double.parse(x['LatLng'].split(',')[1])
               })
           .toList();
+      return res;
+    } else {
+      print(
+          "ERROR fetching taxi data: ${response.statusCode} ${getStatusMessage(response.statusCode)}");
+      return [];
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> fetchBusStopData() async {
+    Uri url = Uri.parse("${Config().routes["api"]}/proxy/buses/busstops");
+
+    http.Response response = await http.get(url);
+
+    if (response.statusCode == StatusCode.OK) {
+      String responseBody = response.body;
+      List<Map<String, dynamic>> res = json.decode(responseBody)['busstops'];
       return res;
     } else {
       print(

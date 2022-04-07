@@ -38,4 +38,13 @@ class MapController {
     return CategoryConvertor.getIcon(category) ?? "marker-15";
   }
 
+  static void fetchBusStopData(BuildContext context) async {
+    List<Map<String, dynamic>> fetchedBusStopData = await MapApi.fetchBusStopData();
+
+    // call provider
+    Provider.of<MapManager>(context, listen: false).setBusStopData(
+        fetchedBusStopData
+    );
+  }
+
 }

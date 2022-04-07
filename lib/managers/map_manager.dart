@@ -767,6 +767,28 @@ class MapManager extends Manager {
   List<AmenityCategory> selectedCategories = [];
 
   Map<AmenityCategory, List<dynamic>> amenitiesData = {};
+
+  List<Map<String, dynamic>> busStopData = [];
+  void setBusStopData(List<Map<String, dynamic>> newData) {
+    busStopData = newData;
+    notifyListeners();
+  }
+  Map<String, dynamic> getBusStopDataGeojson() {
+    Map<String, dynamic> res = {};
+      res = {
+        "type": "FeatureCollection",
+        "features": (busStopData)
+            .map((b) => {
+          "type": "Feature",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [b['Longitude'], b['Latitude']]
+          }
+        })
+            .toList()
+    };
+    return res;
+  }
   // {
   //   AmenityCategory.Pharmacies: [
   //     {"name": "Singapore General Hospital", "lat": 1.2804, "lng": 103.8348}
