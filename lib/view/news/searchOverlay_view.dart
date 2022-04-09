@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aura/managers/user_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
@@ -58,8 +60,60 @@ class _searchOverlayState extends State<searchOverlay> {
                       borderRadius: BorderRadius.circular(18.0)))),
           child: Text("Submit"),
           onPressed: () async {
-            if (!_formKey.currentState!.validate()) {
+            //Check and display warning message if empty fields
+            if (!_formKey.currentState!.validate()){
               return;
+            }
+
+            // Check for Internet Connection (required to look up validity of address)
+            //If invalid address lke PO 123456, display error message box
+            try {
+              final internetConnection = await InternetAddress.lookup('example.com');
+              if (internetConnection.isNotEmpty && internetConnection[0].rawAddress.isNotEmpty) {
+                print('connected');
+              }
+            } on SocketException catch (e) {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                        elevation: 10,
+                        scrollable: true,
+                        content: Center(
+                            child: Container(
+                              child: Text("The following function requires internet connection!\n"
+                                  "\nPlease connect to wifi or your personal data."),
+                            )
+                        )
+                    );
+                  });
+              return;
+            }
+            print("Checkpoint Internet Verification: CLEARED\n");
+
+            //VALIDITY FOR ADDRESS
+            var coord;
+            var coordinate;
+            print("Checkpoint Address Validity: ENTERING\n");
+            try{
+              print("Checkpoint Address Validity: ENTERED\n");
+              coord = await geocoding.locationFromAddress(searchController.text);
+              coordinate = await coord.first;
+            } on Exception catch (e) {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                        elevation: 10,
+                        scrollable: true,
+                        content: Center(
+                            child: Container(
+                              child: Text("You have entered an invalid address!\n"
+                                  "\nPlease return to the previous page to enter a valid address."),
+                            )
+                        )
+                    );
+                  });
             }
             var addresses = await geocoding.locationFromAddress(searchController.text);
             var interest = addresses.first;

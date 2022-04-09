@@ -7,7 +7,7 @@ import 'package:http_status_code/http_status_code.dart';
 
 class NewsApi {
   static Future<List<NewsItem>> fetchNews() async {
-    Uri url = Uri.parse("${Config().routes["api"]}/news");
+    Uri url = Uri.parse("${Config().routes["api"]}/news/");
 
     http.Response response = await http.get(url);
 

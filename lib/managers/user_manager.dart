@@ -5,7 +5,7 @@ import 'package:geocoding/geocoding.dart';
  
 class User_Manager extends Manager {
   String active_user_id = "1";
-  late LatLng location_data;
+  late LatLng location_data = getUser(active_user_id)!.homeaddress_coord;
 
 
   var user_list = [
@@ -25,6 +25,7 @@ class User_Manager extends Manager {
       }
     }
   }
+
 
   void updateHomeAddress_String(String id, LatLng coord) async {
     var placemarks = await placemarkFromCoordinates(coord.latitude, coord.longitude);

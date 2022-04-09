@@ -81,7 +81,7 @@ class _locationFabState extends State<locationFab> {
                 _serviceEnabled = await location.requestService();
                 if (!_serviceEnabled) return;
               }
-              //TODO: Ask for permission during onboarding
+
               _permissionGranted = await location.hasPermission();
               if (_permissionGranted == PermissionStatus.denied){
                 _permissionGranted = await location.requestPermission();
@@ -108,7 +108,11 @@ class _locationFabState extends State<locationFab> {
             child: Icon(Icons.home),
             label: "Home",
             backgroundColor: Colors.redAccent,
-            onTap: (){},
+            onTap: (){
+              setState(() {
+                userMgr.updateLocation(userMgr.getUser(userMgr.active_user_id)!.homeaddress_coord);
+              });
+            },
           )
         ],
       );
