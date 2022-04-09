@@ -6,10 +6,11 @@ import 'package:provider/provider.dart';
 typedef AmenityChipTapCallback = void Function(AmenityCategory category);
 
 class AmenityChip extends StatefulWidget {
+  final void Function(bool)? onSelected;
   final AmenityCategory category;
 
   const AmenityChip(
-      {Key? key, required this.category})
+      {Key? key, required this.category, this.onSelected})
       : super(key: key);
 
   @override
@@ -28,9 +29,7 @@ class _AmenityChipState extends State<AmenityChip> {
               labelStyle: const TextStyle(color: Colors.black),
               selected: mapManager.selectedCategories.contains(widget.category),
               elevation: 1.0,
-              onSelected: (isSelected) {
-                mapManager.setSelectedCategory(widget.category);
-              },
+              onSelected: widget.onSelected,
               backgroundColor: Colors.white,
               //todo
               selectedColor: Colors.lightBlueAccent,

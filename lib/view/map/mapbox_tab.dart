@@ -171,7 +171,7 @@ class _MapboxTabState extends State<MapboxTab> {
       void initAmenitiesLayer() async {
         print(">>>>>>>> INIT AMENITIES LAYER");
         Map<AmenityCategory, dynamic> amenitiesData =
-            MapController.getAmenitiesData(context);
+            MapController.getAmenitiesGeojson(context);
         // amenitiesData.forEach((category, data)
         for (AmenityCategory category in mapMgr.categories) {
           String queryString = CategoryConvertor.getQueryString(category)!;
@@ -181,14 +181,14 @@ class _MapboxTabState extends State<MapboxTab> {
               data: amenitiesData[category],
             ),
           );
-          await controller.addSymbolLayer(
-              "amenities_${queryString}_locations",
-              "amenities_${queryString}_icons",
-              SymbolLayerProperties(
-                iconOpacity: 1,
-                iconImage: CategoryConvertor.getIcon(category),
-                iconSize: 2,
-              ));
+          // await controller.addSymbolLayer(
+          //     "amenities_${queryString}_locations",
+          //     "amenities_${queryString}_icons",
+          //     SymbolLayerProperties(
+          //       iconOpacity: 1,
+          //       iconImage: CategoryConvertor.getIcon(category),
+          //       iconSize: 2,
+          //     ));
         }
       }
 
@@ -246,58 +246,41 @@ class _MapboxTabState extends State<MapboxTab> {
         }
       }
 
-      void updateAllAmenitiesLayers() async {
-        print(">>>>>>>>> UPDATE AMENITIES");
-        var amenitiesData = MapController.getAmenitiesData(context);
-        for (AmenityCategory category
-            in amenitiesData.keys //mapMgr.amenitiesData.keys
-                .where((category) => mapMgr.isCategorySelected(category))) {
-          // todo check
-          String queryString = CategoryConvertor.getQueryString(category)!;
-          print(">>>>>> AUTO UPDATING $queryString <<<<<<<");
-          // var visibleFeatures =
-          // await controller.queryRenderedFeaturesInRect(
-          //   // NE, SW
-          //     Rect.fromPoints(const Offset(104.131, 1.493),
-          //         const Offset(103.557, 1.129)),
-          //     ["amenities_${queryString}_locations"],
-          //     null);
-          // if (visibleFeatures.isEmpty) {
-          //   print(">>>>>>> ADDING $queryString SOURCE <<<<<<<<<<<<");
-          //   await controller.addSource(
-          //     "amenities_${queryString}_locations",
-          //     GeojsonSourceProperties(
-          //       data: amenitiesData[category],
-          //     ),
-          //   );
-          // } else {
-          //   print(">>>>>>> REMOVING $queryString LAYER <<<<<<<<<<<<");
-          //   await controller.removeLayer(
-          //       "amenities_${queryString}_locations");
-          // }
-          // await controller.addSymbolLayer(
-          //     "amenities_${queryString}_locations",
-          //     "amenities_${queryString}_icons",
-          //     SymbolLayerProperties(
-          //       iconOpacity: 1,
-          //       iconImage: MapController.getAmenityCategoryIcon(category),
-          //       iconSize: 2,
-          //     ));
-          try {
-            await controller.removeLayer("amenities_${queryString}_locations");
-          } catch (CannotRemoveLayerException) {
-            print("ERROR REMOVING LAYER FOR $queryString");
-          }
-          await controller.addSymbolLayer(
-              "amenities_${queryString}_locations",
-              "amenities_${queryString}_icons",
-              SymbolLayerProperties(
-                iconOpacity: 1,
-                iconImage: MapController.getAmenityCategoryIcon(category),
-                iconSize: 2,
-              ));
-        }
-      }
+      // void updateAmenitiesLayer(AmenityCategory category) async {
+      //   String queryString = CategoryConvertor.getQueryString(category)!;
+      //   try {
+      //     print(">>>> REMOVE $queryString LAYER");
+      //     await controller.removeLayer("amenities_${queryString}_locations");
+      //   } catch (error) {
+      //     print("ERROR REMOVING LAYER FOR $queryString");
+      //   }
+      //   print(">>>> ADD $queryString LAYER");
+      //   await controller.addSymbolLayer(
+      //       "amenities_${queryString}_locations",
+      //       "amenities_${queryString}_icons",
+      //       SymbolLayerProperties(
+      //         iconOpacity: 1,
+      //         iconImage: MapController.getAmenityCategoryIcon(category),
+      //         iconSize: 2,
+      //       ));
+      // }
+      //
+      // void updateAllAmenitiesLayers() async {
+      //   print(">>>>>>>>> UPDATE AMENITIES");
+      //   for (AmenityCategory category in mapMgr.categories) {
+      //     // todo check
+      //     if (mapMgr.isCategorySelected(category)) {
+      //       updateAmenitiesLayer(category);
+      //     } else {
+      //       try {
+      //         await controller.removeLayer(
+      //             "amenities_${CategoryConvertor.getQueryString(category)}_locations");
+      //       } catch (error) {
+      //         print("ERROR REMOVING LAYER");
+      //       }
+      //     }
+      //   }
+      // }
 
       // add map layers after style is loaded
       void _onStyleLoaded() async {
@@ -312,7 +295,7 @@ class _MapboxTabState extends State<MapboxTab> {
           updateTaxiLayer();
           updateDengueLayer();
           updateMeetupsLayer();
-          updateAllAmenitiesLayers();
+          // updateAllAmenitiesLayers(); // todo no update bc static
         });
       }
 
@@ -343,40 +326,35 @@ class _MapboxTabState extends State<MapboxTab> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child:
-                    Consumer<MapManager>(builder: (context, mapManager, child) {
-                  return Row(
-                      children: mapManager.categories.map((category) {
-                    return GestureDetector(
-                        onTap: () async {
-                          String queryString =
-                              CategoryConvertor.getQueryString(category)!;
-                          print(">>>>>>>> USER TAPPED $queryString!");
-                          var amenitiesData =
-                              MapController.getAmenitiesData(context);
-                          try {
-                            await controller.removeLayer(
-                                "amenities_${queryString}_locations");
-                          } catch (CannotRemoveLayerException) {
-                            print("ERROR REMOVING LAYER FOR $queryString");
-                          }
-                          await controller.addSymbolLayer(
-                              "amenities_${queryString}_locations",
-                              "amenities_${queryString}_icons",
-                              SymbolLayerProperties(
-                                iconOpacity: 1,
-                                iconImage: MapController.getAmenityCategoryIcon(
-                                    category),
-                                iconSize: 2,
-                              ));
-                        },
-                        child: AmenityChip(category: category));
-                  }).toList());
-                })),
-            // AmenitiesFilterChips(
-            //   onTap: () => updateAmenitiesLayer(),
-            // ),
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                  children: mapMgr.categories
+                      .map((category) => AmenityChip(
+                            category: category,
+                            onSelected: (bool selected) async {
+                              mapMgr.toggleSelectedCategory(category);
+                              String queryString =
+                                  CategoryConvertor.getQueryString(category)!;
+                              print(">>>>>>>> USER TAPPED $queryString: $selected !");
+                              if (selected) {
+                                await controller.addSymbolLayer(
+                                    "amenities_${queryString}_locations",
+                                    "amenities_${queryString}_icons",
+                                    SymbolLayerProperties(
+                                      iconOpacity: 1,
+                                      iconImage: CategoryConvertor.getIcon(category),
+                                      iconSize: 2,
+                                    ));
+                                  print(">>>> USER ADD $queryString LAYER");
+                              } else {
+                                await controller.removeLayer(
+                                    "amenities_${queryString}_icons");
+                                print(">>>> USER REMOVE $queryString LAYER");
+                              }
+                            },
+                          ))
+                      .toList()),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 20, right: 8),
               child: ElevatedButton(

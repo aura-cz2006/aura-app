@@ -69,7 +69,7 @@ class _amenityChipWidgetState extends State<amenityChipWidget> {
         elevation: 1.0,
         onSelected: (isSelected) {
           print("trying to select chip.....");
-          mapManager.setSelectedCategory(widget.category);
+          mapManager.toggleSelectedCategory(widget.category);
         },
         backgroundColor: Colors.white,
         selectedColor: Colors.blue,
