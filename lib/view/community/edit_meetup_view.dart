@@ -218,7 +218,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
                               scrollable: true,
                               content: Center(
                                   child: Container(
-                                    child: Text("The following function requires internet connection!\n"
+                                    child: const Text("The following function requires internet connection!\n"
                                         "\nPlease connect to wifi or your personal data."),
                                   )
                               )
@@ -245,7 +245,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
                               scrollable: true,
                               content: Center(
                                   child: Container(
-                                    child: Text("You have entered an invalid address!\n"
+                                    child: const Text("You have entered an invalid address!\n"
                                         "\nPlease return to the previous page to enter a valid address."),
                                   )
                               )
@@ -285,7 +285,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
                                 scrollable: true,
                                 content: Center(
                                     child: Container(
-                                      child: Text("Unable to create meetup.\n"
+                                      child: const Text("Unable to create meetup.\n"
                                           "\n Please try again."),
                                     )
                                 )
