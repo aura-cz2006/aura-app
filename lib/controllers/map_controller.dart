@@ -10,41 +10,62 @@ class MapController {
     Map<String, dynamic> fetchedTaxiData = await MapApi.fetchTaxiData();
 
     // call provider
-    Provider.of<MapManager>(context, listen: false).setTaxiData(
-        fetchedTaxiData
-    );
+    Provider.of<MapManager>(context, listen: false)
+        .setTaxiData(fetchedTaxiData);
   }
-  static void fetchSelectedAmenities(BuildContext context) async {
-    List<AmenityCategory> selectedCat = Provider.of<MapManager>(context, listen: false).selectedCategories;
-    for (AmenityCategory category in selectedCat) {
-      List<dynamic> fetchedAmenitiesData = await MapApi.fetchAmenitiesData(category);
-      Provider.of<MapManager>(context, listen: false).updateAmenitiesData(category,
-          fetchedAmenitiesData
-      );
+
+  static void fetchAmenitiesData(BuildContext context) async {
+    for (AmenityCategory category
+        in Provider.of<MapManager>(context, listen: false).categories) {
+      List<dynamic> fetchedAmenitiesData =
+          await MapApi.fetchAmenitiesData(category);
+      Map<String, dynamic> geojson = {
+        "type": "FeatureCollection",
+        "features": fetchedAmenitiesData
+            .map((a) => {
+                  "type": "Feature",
+                  "geometry": {
+                    "type": "Point",
+                    "coordinates": [a['lng'], a['lat']]
+                  }
+                })
+            .toList()
+      };
+      Provider.of<MapManager>(context, listen: false)
+          .updateAmenitiesGeojsonData(category, geojson);
     }
   }
 
-  static String getTaxiDataURL() { return "https://api.data.gov.sg/v1/transport/taxi-availability";}
-  static String getDengueDataURL() { return "https://geo.data.gov.sg/dengue-cluster/2021/10/07/geojson/dengue-cluster.geojson";}
+  static String getTaxiDataURL() {
+    return "https://api.data.gov.sg/v1/transport/taxi-availability";
+  }
+
+  static String getDengueDataURL() {
+    return "https://geo.data.gov.sg/dengue-cluster/2021/10/07/geojson/dengue-cluster.geojson";
+  }
+
   static Map<String, dynamic> getMeetupsData(BuildContext context) {
-    //todo call meetup controller to fetch (need to merge w other branch first)
-    return Provider.of<Meetup_Manager>(context, listen: false).getMeetupsGeojson();
+//todo call meetup controller to fetch (need to merge w other branch first)
+    return Provider.of<Meetup_Manager>(context, listen: false)
+        .getMeetupsGeojson();
   }
-  static Map<AmenityCategory, dynamic> getAmenitiesData(BuildContext context) {
-    fetchSelectedAmenities(context);
-    return Provider.of<MapManager>(context, listen: false).getAmenitiesGeojson();
+
+  static Map<AmenityCategory, dynamic> getAmenitiesGeojson(
+      BuildContext context) {
+    fetchAmenitiesData(context);
+    return Provider.of<MapManager>(context, listen: false).amenitiesGeojsonData;
   }
-  static String getAmenityCategoryIcon(AmenityCategory category) {
-    return CategoryConvertor.getIcon(category) ?? "marker-15";
-  }
+
+  // static String getAmenityCategoryIcon(AmenityCategory category) {
+  //   return CategoryConvertor.getIcon(category) ?? "marker-15";
+  // }
 
   static void fetchBusStopData(BuildContext context) async {
-    List<Map<String, dynamic>> fetchedBusStopData = await MapApi.fetchBusStopData();
+    List<Map<String, dynamic>> fetchedBusStopData =
+        await MapApi.fetchBusStopData();
 
-    // call provider
-    Provider.of<MapManager>(context, listen: false).setBusStopData(
-        fetchedBusStopData
-    );
+// call provider
+    Provider.of<MapManager>(context, listen: false)
+        .setBusStopData(fetchedBusStopData);
   }
-
 }

@@ -39,10 +39,10 @@ class MapApi {
     http.Response response = await http.get(url);
 
     if (response.statusCode == StatusCode.OK) {
-      String responseBody = response.body;
-      List<dynamic> res = json
-          .decode(responseBody)['query']
-          .where((x) => x["FeatCount"] == null)
+      Map<String, dynamic> responseBody = json
+          .decode(response.body);
+      List<dynamic> res = responseBody['query']
+          .where((x) => x["NAME"] != null) // ignore metadata //todo fix where called on null
           .toList()
           .map((x) => {
                 "name": x['NAME'],
