@@ -238,7 +238,7 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
               // TODO: display location address instead of coordinates
               leading: const Icon(Icons.pin_drop),
               title: Text(
-                  "LAT ${meetupMgr.getMeetupByID(widget.meetupID).location.latitude}, LONG ${meetupMgr.getMeetupByID(widget.meetupID).location.longitude}"),
+                  "Address: ${meetupMgr.getMeetupByID(widget.meetupID).address}"),
             ),
             ListTile(
               leading: const Icon(Icons.access_time_filled),
@@ -445,28 +445,35 @@ class _DisplayMeetupCommentsState extends State<DisplayMeetupComments> {
                             onSelected: (value) {
                               setState(() async {
                                 if (value == "delete") {
-                                  int response = await MeetupsController.deleteMeetupComment(meetup_id: widget.meetupID, comment_id: c.commentID);
+                                  await MeetupsController.deleteMeetupComment(
+                                      meetup_id: widget.meetupID,
+                                      comment_id: c.commentID).then((statcode)
+                                  {
+                                    if (statcode == 200){
+                                      setState(() async {
+                                        print("Comment Deleted!");
+                                        await MeetupsController.fetchMeetups(context);
+                                        context.pop();
+                                      });
+                                    }
 
-                                  if (response == 200){
-                                    MeetupsController.fetchMeetups(context);
-                                    print("Comment Deleted!");
-                                  }
-                                  if (response != 200){
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                              elevation: 10,
-                                              scrollable: true,
-                                              content: Center(
-                                                  child: Container(
-                                                    child: Text("Unable to delete comment.\n"
-                                                        "\n Please try again."),
-                                                  )
-                                              )
-                                          );
-                                        });
-                                  }
+                                    if (statcode != 200){
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                                elevation: 10,
+                                                scrollable: true,
+                                                content: Center(
+                                                    child: Container(
+                                                      child: Text("Unable to delete comment.\n"
+                                                          "\n Please try again."),
+                                                    )
+                                                )
+                                            );
+                                          });
+                                    }
+                                  });
                                 }
                               });
                             },

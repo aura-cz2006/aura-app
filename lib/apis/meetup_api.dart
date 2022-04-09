@@ -3,7 +3,9 @@ import 'package:aura/models/meetup.dart';
 import 'package:aura/config/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_status_code/http_status_code.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:geocoding/geocoding.dart';
 
 
 class MeetUpAPI{
@@ -19,11 +21,16 @@ class MeetUpAPI{
       List<dynamic> decodedJson =
       json.decode(responseBody); // todo put this back
 
-      List<Meetup> resList = (decodedJson).map((item) {
+      List<Meetup> resList = await (decodedJson).map((item) {
         return Meetup.getFromJson(item);
       }).toList();
+      for (Meetup item in resList){
+        print("Title: ${item.title}, Location: ${item.location}");
+      }
 
-      print(resList);
+      for(Meetup item in resList){
+        await item.addAddress();
+      }
 
       return resList;
     } else {
@@ -64,10 +71,13 @@ class MeetUpAPI{
     Uri url = Uri.parse(
         "${Config().routes["api"]}/meetups/${meetup.meetupID}");
 
+    // var token = await FirebaseAuth.instance.currentUser?.getIdToken();
+
     //print("Going to post to the HTTP now@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22");
     final response = await http.patch(url,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
+          // "Authorization": "Bearer ${token}"
         },
         encoding: Encoding.getByName('utf-8'),
         body: {
@@ -87,11 +97,13 @@ class MeetUpAPI{
         "${Config().routes["api"]}/meetups/");
     print("URI parsed. Posting to server...\n");
     print(url.toString());
-    print(json.encode(meetup.location_toback).runtimeType);
+    // var token = await FirebaseAuth.instance.currentUser?.getIdToken();
+
     //print("Going to post to the HTTP now@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22");
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
+          // "Authorization": "Bearer ${token}"
         },
         encoding: Encoding.getByName('utf-8'),
         body: {
@@ -109,10 +121,13 @@ class MeetUpAPI{
     Uri url = Uri.parse(
         "${Config().routes["api"]}/meetups/${meetup.meetupID}");
 
+    // var token = await FirebaseAuth.instance.currentUser?.getIdToken();
+
     final response = await http.delete(
       url,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
+        // "Authorization": "Bearer ${token}"
       },
       encoding: Encoding.getByName('utf-8'),
     );
@@ -123,10 +138,13 @@ class MeetUpAPI{
   static Future<int> postMeetupComment({required String comment_text, required String meetup_id}) async {
     Uri url = Uri.parse(
         "${Config().routes["api"]}/discussions/${meetup_id}/comments");
+    var token = await FirebaseAuth.instance.currentUser?.getIdToken();
+
     //print("Going to post to the HTTP now@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@22");
     final response = await http.post(url,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer ${token}"
         },
         encoding: Encoding.getByName('utf-8'),
         body: {
@@ -141,10 +159,13 @@ class MeetUpAPI{
     Uri url = Uri.parse(
         "${Config().routes["api"]}/discussions/${meetup_id}/comments/${comment_id}");
 
+    // var token = await FirebaseAuth.instance.currentUser?.getIdToken();
+
     final response = await http.delete(
       url,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
+        // "Authorization": "Bearer ${token}"
       },
       encoding: Encoding.getByName('utf-8'),
     );
@@ -152,3 +173,4 @@ class MeetUpAPI{
     return response.statusCode;
   }
 }
+

@@ -202,6 +202,15 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                                     ),
                                   ],
                                 ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    const SizedBox(width: 16),
+                                    Text(
+                                      "Location: ${meetupMgr.getMeetupByID(m.meetupID).address}",
+                                    ),
+                                  ],
+                                ),
                                 const SizedBox(height: 16),
                               ]),
                             ),

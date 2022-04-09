@@ -260,38 +260,39 @@ class _EditMeetupViewState extends State<EditMeetupView> {
                   print(LatLng(coordinate.latitude, coordinate.longitude));
                   //Post thread to server
 
-                  int response = await MeetupsController.createMeetup(
+                  await MeetupsController.createMeetup(
                       title: titleController.text,
                       content: descriptionController.text,
                       maxAttendees: int.parse(maxAttendeesController.text),
                       timeofMeetup: selectedDate??meetupMgr.getMeetupByID(widget.meetupID).timeOfMeetUp,
-                      location: LatLng(coordinate.latitude, coordinate.longitude));
-
-                  //Check if Post was successful
-                  if (response == 200) {
-                    print("Patch Meetup Success!");
-                    setState(() {
-                      MeetupsController.fetchMeetups(context);
-                      context.pop();
-                    });
-                  }
-                  //Failure Message
-                  if (response != 200){
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                              elevation: 10,
-                              scrollable: true,
-                              content: Center(
-                                  child: Container(
-                                    child: Text("Unable to create meetup.\n"
-                                        "\n Please try again."),
-                                  )
-                              )
-                          );
-                        });
-                  }
+                      location: LatLng(coordinate.latitude, coordinate.longitude)).then((statcode)
+                  {
+                    //Check if Post was successful
+                    if (statcode == 200) {
+                      print("Patch Meetup Success!");
+                      setState(() async {
+                        await MeetupsController.fetchMeetups(context);
+                        context.pop();
+                      });
+                    }
+                    //Failure Message
+                    if (statcode != 200){
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                                elevation: 10,
+                                scrollable: true,
+                                content: Center(
+                                    child: Container(
+                                      child: Text("Unable to create meetup.\n"
+                                          "\n Please try again."),
+                                    )
+                                )
+                            );
+                          });
+                    }
+                  });
                 },
               ),
             ),
