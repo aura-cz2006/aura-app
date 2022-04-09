@@ -32,6 +32,15 @@ class _MeetUpListViewState extends State<MeetUpListView> {
   var dropdownValue = 'Most Recent';
 
   @override
+  void initState(){
+    super.initState();
+
+    final myModel = Provider.of<Meetup_Manager>(context, listen: false);
+    meetup_list = myModel.getMeetupsSortedByCreationDateTime();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
@@ -40,7 +49,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
           body: Consumer2<Meetup_Manager, User_Manager>(
               builder: (context, meetupMgr, userMgr, child) {
                 Future<void> _handleRefresh () async {
-                  MeetupsController.fetchMeetups(context);
+                  await MeetupsController.fetchMeetups(context);
                 }
                 return Column(children: [
                   Row(
@@ -70,13 +79,21 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                             } else if (newValue == 'Most Attendees') {
                               meetup_list =
                                   meetupMgr.getMeetupsSortedByMostAttendees();
+                            } else if (newValue == 'My Meetups') {
+                              meetup_list =
+                                  meetupMgr.getMeetupsSortedByUser(user_ID: userMgr.active_user_id);
+                            } else if (newValue == 'My RSVP') {
+                              meetup_list =
+                                  meetupMgr.getMeetupsSortedByRSVP(user_ID: userMgr.active_user_id);
                             }
                           });
                         },
                         items: <String>[
                           'Most Recent',
                           'Starting Soon',
-                          'Most Attendees'
+                          'Most Attendees',
+                          'My Meetups',
+                          'My RSVP'
                         ].map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -96,9 +113,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                       animSpeedFactor: 3,
                       onRefresh: _handleRefresh,
                       child: ListView(
-                          children: ((meetup_list.isEmpty)
-                              ? meetupMgr.getMeetupsSortedByCreationDateTime()
-                              : meetup_list)
+                          children: (meetup_list)
                               .map(
                                 (m) => Card(
                               child: InkWell(

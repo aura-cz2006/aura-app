@@ -33,6 +33,15 @@ class ThreadListViewState extends State<ThreadListView> {
   late var thread_list = [];
   final filter = ProfanityFilter();
   var dropdownValue = 'Most Likes'; // default sort
+
+  @override
+  void initState(){
+    super.initState();
+
+    final myModel = Provider.of<Thread_Manager>(context, listen: false);
+    thread_list = myModel.getListOfThreadsSortedByLikes(widget.topic);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,7 +52,7 @@ class ThreadListViewState extends State<ThreadListView> {
           body: Consumer2<Thread_Manager, User_Manager>(
               builder: (context, threadMgr, userMgr, child) {
                 Future<void> _handleRefresh () async {
-                  ThreadController.fetchThreads(context);
+                  await ThreadController.fetchThreads(context);
                 }
                 return Column(children: [
                   Row(
@@ -70,10 +79,16 @@ class ThreadListViewState extends State<ThreadListView> {
                             } else if (newValue == 'Most Recent') {
                               thread_list = threadMgr
                                   .getListOfThreadsSortedByTime(widget.topic);
+                            } else if (newValue == 'My Threads') {
+                              print("Sorting by user");
+                              thread_list = threadMgr
+                                  .getListOfThreadsSortedByUser(topic: widget.topic,
+                                  user_id: userMgr.active_user_id);
+                              print(thread_list);
                             }
                           });
                         },
-                        items: <String>['Most Likes', 'Most Recent']
+                        items: <String>['Most Likes', 'Most Recent', 'My Threads']
                             .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
@@ -95,10 +110,7 @@ class ThreadListViewState extends State<ThreadListView> {
                       child: ListView(
                           shrinkWrap: true,
                           physics: const ScrollPhysics(),
-                          children: ((thread_list.isEmpty)
-                              ? threadMgr
-                              .getListOfThreadsSortedByLikes(widget.topic)
-                              : thread_list)
+                          children: (thread_list)
                               .map((t) => Card(
                               child: InkWell(
                                   onTap: () => context.push(
