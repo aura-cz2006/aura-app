@@ -87,7 +87,7 @@ class Meetup_Manager extends Manager {
     }
 
     print(desired_list);
-    return [];
+    return desired_list;
     
   }
 
