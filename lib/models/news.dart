@@ -15,7 +15,8 @@ abstract class NewsItem {
     return Icons.rsvp;
   }
 
-  String getText();
+  String getNewsTitle();
+  String getNewsDetails();
 }
 
 class DengueNewsItem extends NewsItem {
@@ -29,8 +30,13 @@ class DengueNewsItem extends NewsItem {
   }
 
   @override
-  String getText() {
-    return "New dengue cluster detected at $location ($numCases cases).";
+  String getNewsTitle() {
+    return "New dengue cluster detected";
+  }
+
+  @override
+  String getNewsDetails() {
+    return "Location: $location \nCases: $numCases";
   }
 
   factory DengueNewsItem.getFromJson(Map<String, dynamic> json) {
@@ -54,8 +60,12 @@ class EventNewsItem extends NewsItem {
   }
 
   @override
-  String getText() {
-    return "New event \"$eventTitle\" hosted at $location (fee: $fee).";
+  String getNewsTitle() {
+    return "New event \"$eventTitle\"";
+  }
+  @override
+  String getNewsDetails() {
+    return "Location: $location \nFee: $fee";
   }
 
   factory EventNewsItem.getFromJson(Map<String, dynamic> json) {
@@ -81,8 +91,12 @@ class MarketNewsItem extends NewsItem {
   }
 
   @override
-  String getText() {
-    return "$marketName will be closed until ${DateFormat('yyyy-MM-dd').format(reopeningDate)}.";
+  String getNewsTitle() {
+    return "$marketName will be temporarily closed";
+  }
+  @override
+  String getNewsDetails() {
+    return "Location: $location \nReopening Date: ${DateFormat('yyyy-MM-dd').format(reopeningDate)}";
   }
 
   factory MarketNewsItem.getFromJson(Map<String, dynamic> json) {
@@ -107,8 +121,12 @@ class UpgradingNewsItem extends NewsItem {
   }
 
   @override
-  String getText() {
-    return "Upgrading works at $location: $desc (expected completion: \$${DateFormat('yyyy-MM-dd').format(expectedEnd)} ).";
+  String getNewsTitle() {
+    return "Upgrading works at $location";
+  }
+  @override
+  String getNewsDetails() {
+    return "$desc \nExpected Completion: ${DateFormat('yyyy-MM-dd').format(expectedEnd)}";
   }
 
   factory UpgradingNewsItem.getFromJson(Map<String, dynamic> json) {
