@@ -22,9 +22,10 @@ class Meetup_Manager extends Manager {
 
   void updateMeetupList(List<Meetup> meetupList){
     meet_up_list = meetupList;
-    for (Meetup meetup in meet_up_list){
-      print(meetup.getSummary());
-    }
+    // for (Meetup meetup in meet_up_list){
+    //   print(meetup.getSummary());
+    // }
+    print(meetupList);
   }
 
   List<Meetup> getValidMeetups() {

@@ -38,12 +38,17 @@ class _MainTabBarState extends State<MainTabBar> {
 
     void changeTab(String newTabName) {
       setState(() {
-        print("===============INITIALIZING MEETUPS====================");
-        MeetupsController.fetchMeetups(context);
-        print("=============EXITED MEETUP INTIALIZATION & ENTERING THREAD INITIALIZATION================");
-        ThreadController.fetchThreads(context);
-        print("===========EXITED THREAD INITIALIZATION============");
-        NewsController.fetchNews(context); // get initial
+        print(newTabName);
+        if (newTabName == 'community'){
+          print("===============INITIALIZING MEETUPS====================");
+          MeetupsController.fetchMeetups(context);
+          print("=============EXITED MEETUP INTIALIZATION & ENTERING THREAD INITIALIZATION================");
+          ThreadController.fetchThreads(context);
+          print("===========EXITED THREAD INITIALIZATION============");
+        }
+        if (newTabName == 'news'){
+          NewsController.fetchNews(context); // get initial
+        }
       });
       GoRouter.of(context).go("/tabs/$newTabName");
     }
