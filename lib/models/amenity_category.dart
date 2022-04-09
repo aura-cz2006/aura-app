@@ -22,7 +22,7 @@ extension CategoryConvertor on AmenityCategory {
     AmenityCategory.Pharmacies: ["Pharmacies", "registered_pharmacy", "hospital-15"],
     AmenityCategory.CommunityCenters: ["Community Centers", "communityclubs", "town-hall-15"],
     AmenityCategory.Police: ["Police", "spf_establishments", "police-15"],
-    AmenityCategory.Parks: ["Parks", "nationalparks", "police-15"],
+    AmenityCategory.Parks: ["Parks", "nationalparks", "garden-15"],
     AmenityCategory.Hotels: ["Hotels", "hotels", "lodging-15"],
     AmenityCategory.FireStations: ["Fire Stations", "firestation", "fire-station-15"],
     AmenityCategory.Museums: ["Museums", "museum", "museum-15"],

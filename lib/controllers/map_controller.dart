@@ -17,9 +17,6 @@ class MapController {
   static void fetchAmenitiesData(BuildContext context) async {
     for (AmenityCategory category
         in Provider.of<MapManager>(context, listen: false).categories) {
-      // todo resolve concurrent modification during iteration
-      print(
-          "=========== FETCHING FOR ${CategoryConvertor.getQueryString(category)}");
       List<dynamic> fetchedAmenitiesData =
           await MapApi.fetchAmenitiesData(category);
       Map<String, dynamic> geojson = {

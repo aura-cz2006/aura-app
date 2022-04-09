@@ -27,6 +27,7 @@ class _AmenityChipState extends State<AmenityChip> {
             child: ChoiceChip(
               label: Text(CategoryConvertor.getReadable(widget.category)!),
               labelStyle: const TextStyle(color: Colors.black),
+              // avatar: CategoryConvertor.getIcon(widget.category)!, // todo add icon to filter chips
               selected: mapManager.selectedCategories.contains(widget.category),
               elevation: 1.0,
               onSelected: widget.onSelected,

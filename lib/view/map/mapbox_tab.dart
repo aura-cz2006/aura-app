@@ -4,7 +4,7 @@ import 'package:aura/controllers/map_controller.dart';
 import 'package:aura/managers/map_manager.dart';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/models/amenity_category.dart';
-import 'package:aura/view/tabs/map/layers/amenities/amenities_filter_chips.dart';
+import 'package:aura/view/map/amenities_filter_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:provider/provider.dart';
@@ -163,13 +163,12 @@ class _MapboxTabState extends State<MapboxTab> {
             "meetup_icons",
             const SymbolLayerProperties(
               iconOpacity: 1,
-              iconImage: "restaurant-pizza-15", // todo no ppl icon
+              iconImage: "heart-15", // todo no ppl icon
               iconSize: 2,
             ));
       }
 
       void initAmenitiesLayer() async {
-        print(">>>>>>>> INIT AMENITIES LAYER");
         Map<AmenityCategory, dynamic> amenitiesData =
             MapController.getAmenitiesGeojson(context);
         // amenitiesData.forEach((category, data)
@@ -246,42 +245,6 @@ class _MapboxTabState extends State<MapboxTab> {
         }
       }
 
-      // void updateAmenitiesLayer(AmenityCategory category) async {
-      //   String queryString = CategoryConvertor.getQueryString(category)!;
-      //   try {
-      //     print(">>>> REMOVE $queryString LAYER");
-      //     await controller.removeLayer("amenities_${queryString}_locations");
-      //   } catch (error) {
-      //     print("ERROR REMOVING LAYER FOR $queryString");
-      //   }
-      //   print(">>>> ADD $queryString LAYER");
-      //   await controller.addSymbolLayer(
-      //       "amenities_${queryString}_locations",
-      //       "amenities_${queryString}_icons",
-      //       SymbolLayerProperties(
-      //         iconOpacity: 1,
-      //         iconImage: MapController.getAmenityCategoryIcon(category),
-      //         iconSize: 2,
-      //       ));
-      // }
-      //
-      // void updateAllAmenitiesLayers() async {
-      //   print(">>>>>>>>> UPDATE AMENITIES");
-      //   for (AmenityCategory category in mapMgr.categories) {
-      //     // todo check
-      //     if (mapMgr.isCategorySelected(category)) {
-      //       updateAmenitiesLayer(category);
-      //     } else {
-      //       try {
-      //         await controller.removeLayer(
-      //             "amenities_${CategoryConvertor.getQueryString(category)}_locations");
-      //       } catch (error) {
-      //         print("ERROR REMOVING LAYER");
-      //       }
-      //     }
-      //   }
-      // }
-
       // add map layers after style is loaded
       void _onStyleLoaded() async {
         initDengueLayer();
@@ -335,7 +298,6 @@ class _MapboxTabState extends State<MapboxTab> {
                               mapMgr.toggleSelectedCategory(category);
                               String queryString =
                                   CategoryConvertor.getQueryString(category)!;
-                              print(">>>>>>>> USER TAPPED $queryString: $selected !");
                               if (selected) {
                                 await controller.addSymbolLayer(
                                     "amenities_${queryString}_locations",
@@ -345,11 +307,9 @@ class _MapboxTabState extends State<MapboxTab> {
                                       iconImage: CategoryConvertor.getIcon(category),
                                       iconSize: 2,
                                     ));
-                                  print(">>>> USER ADD $queryString LAYER");
                               } else {
                                 await controller.removeLayer(
                                     "amenities_${queryString}_icons");
-                                print(">>>> USER REMOVE $queryString LAYER");
                               }
                             },
                           ))
