@@ -18,7 +18,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    printFirebaseIdToken();
+    // printFirebaseIdToken();
 
     return MaterialApp(
         home: Scaffold(
@@ -90,10 +90,12 @@ class SettingsScreen extends StatelessWidget {
           size: 24,
         ),
         SizedBox(width: 16),
-        Text(
+        Expanded(child: Text(
           "Change Home Address",
           style: TextStyle(fontSize: 16, color: Colors.black),
-        ),
+          overflow: TextOverflow.ellipsis,
+          softWrap: false,
+        )),
       ]),
       onPressed: () {
         GoRouter.of(context).push("/settings/change_home_address");
@@ -126,6 +128,8 @@ class SettingsScreen extends StatelessWidget {
         Text(
           "Sign Out",
           style: TextStyle(fontSize: 16, color: Colors.white),
+          overflow: TextOverflow.ellipsis,
+          softWrap: false,
         ),
       ]),
       style: ElevatedButton.styleFrom(

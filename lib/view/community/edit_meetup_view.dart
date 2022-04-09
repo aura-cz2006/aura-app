@@ -218,8 +218,8 @@ class _EditMeetupViewState extends State<EditMeetupView> {
                               scrollable: true,
                               content: Center(
                                   child: Container(
-                                    child: Text("The following function requires internet connection!\n"
-                                        "\nPlease connect to wifi or your personal data."),
+                                    child: const Text("The following function requires internet connection!\n"
+                                        "\nPlease connect to wifi or your personal data.", softWrap: true,),
                                   )
                               )
                           );

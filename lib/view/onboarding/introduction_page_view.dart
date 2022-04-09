@@ -65,12 +65,12 @@ class _IntroScreenState extends State<IntroScreen> {
               const Padding(
                 padding: EdgeInsets.all(10),
                 child: Text(
-                    "This app requires GPS services to function. Therefore, we require you to enable the permission for this app to access the location service."),
+                    "This app requires GPS services to function. Therefore, we require you to enable the permission for this app to access the location service.", softWrap: true,),
               ),
               const Padding(
                 padding: EdgeInsets.all(10),
                 child: Text(
-                    "I agree to allow this app to access the location service on this phone."),
+                    "I agree to allow this app to access the location service on this phone.", softWrap: true,),
               ),
               Padding(
                 padding: const EdgeInsets.all(10),
@@ -175,7 +175,7 @@ class _IntroScreenState extends State<IntroScreen> {
                       elevation: 10,
                       scrollable: true,
                       content: Center(
-                          child: Text("You have not entered an address.")));
+                          child: Text("You have not entered an address.", softWrap: true)));
                 });
             return;
           }
@@ -195,7 +195,7 @@ class _IntroScreenState extends State<IntroScreen> {
                       scrollable: true,
                       content: Center(
                           child: Text(
-                              "You have entered an invalid address! \nPlease try again.")));
+                              "You have entered an invalid address! \nPlease try again.", softWrap: true,)));
                 });
           }
           var interest = addresses.first;
@@ -217,7 +217,7 @@ class _IntroScreenState extends State<IntroScreen> {
                       scrollable: true,
                       content: Center(
                           child: Text(
-                              "Please grant location permissions to continue!")));
+                              "Please grant location permissions to continue!", softWrap: true,)));
                 });
             return;
           }
@@ -238,6 +238,7 @@ class _IntroScreenState extends State<IntroScreen> {
                 "Location permissions granted!",
                 style:
                     TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                softWrap: true,
               ),
             )
           : ElevatedButton(

@@ -122,8 +122,8 @@ class _CreateThreadViewState extends State<CreateThreadView> {
                               scrollable: true,
                               content: Center(
                                   child: Container(
-                                    child: Text("Unable to create thread.\n"
-                                        "\n Please try again."),
+                                    child: const Text("Unable to create thread.\n"
+                                        "\n Please try again.", softWrap: true,),
                                   )
                               )
                           );

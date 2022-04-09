@@ -78,16 +78,17 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
                   onPressed: () {
                     if (textCtrl.text != "") {
                       setState(() async {
-                        int response = await MeetupsController.createComment(meetup_id: widget.meetupID, content: textCtrl.text);
+                        int response = await MeetupsController.createComment(
+                            meetup_id: widget.meetupID, content: textCtrl.text);
 
-                        if (response == 200){
+                        if (response == 200) {
                           MeetupsController.fetchMeetups(context);
                           print("Comment Successful!");
                           textCtrl.clear(); // clear text
                           FocusManager.instance.primaryFocus
                               ?.unfocus(); // exit keyboard
                         }
-                        if (response != 200){
+                        if (response != 200) {
                           showDialog(
                               context: context,
                               builder: (context) {
@@ -96,11 +97,12 @@ class _DetailedMeetupViewState extends State<DetailedMeetupView> {
                                     scrollable: true,
                                     content: Center(
                                         child: Container(
-                                          child: Text("Unable to delete comment.\n"
-                                              "\n Please try again."),
-                                        )
-                                    )
-                                );
+                                      child: const Text(
+                                        "Unable to delete comment.\n"
+                                        "\n Please try again.",
+                                        softWrap: true,
+                                      ),
+                                    )));
                               });
                         }
                       });
@@ -155,14 +157,16 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                             context.push(
                                 "${GoRouter.of(context).location}/editMeetup");
                           } else if (value == "delete") {
-                            int response = await MeetupsController.deleteMeetup(meetup: meetupMgr.getMeetupByID(widget.meetupID));
+                            int response = await MeetupsController.deleteMeetup(
+                                meetup:
+                                    meetupMgr.getMeetupByID(widget.meetupID));
 
                             if (response == 200) {
                               print("Delete Meetup Success!");
                             }
 
                             //Failure Message
-                            if (response == 400){
+                            if (response == 400) {
                               showDialog(
                                   context: context,
                                   builder: (context) {
@@ -171,11 +175,12 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                                         scrollable: true,
                                         content: Center(
                                             child: Container(
-                                              child: Text("Unable to delete meetup.\n"
-                                                  "\n Please try again."),
-                                            )
-                                        )
-                                    );
+                                          child: const Text(
+                                            "Unable to delete meetup.\n"
+                                            "\n Please try again.",
+                                            softWrap: true,
+                                          ),
+                                        )));
                                   });
                             }
 
@@ -213,15 +218,21 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
               children: <Widget>[
                 const SizedBox(width: 16),
                 Text(
-                    userMgr.getUsernameByID(
-                        meetupMgr.getMeetupByID(widget.meetupID).userID)!,
-                    style: DefaultTextStyle.of(context).style.apply(
-                        color: Colors.grey[700], fontStyle: FontStyle.italic)),
+                  userMgr.getUsernameByID(
+                      meetupMgr.getMeetupByID(widget.meetupID).userID)!,
+                  style: DefaultTextStyle.of(context).style.apply(
+                      color: Colors.grey[700], fontStyle: FontStyle.italic),
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                ),
                 const SizedBox(width: 16),
                 Text(
-                    "Posted at ${DateFormat('yyyy-MM-dd kk:mm').format(meetupMgr.getMeetupByID(widget.meetupID).createdAt)}",
-                    style: DefaultTextStyle.of(context).style.apply(
-                        color: Colors.grey[700], fontStyle: FontStyle.italic)),
+                  "Posted at ${DateFormat('yyyy-MM-dd kk:mm').format(meetupMgr.getMeetupByID(widget.meetupID).createdAt)}",
+                  style: TextStyle(
+                      color: Colors.grey[700], fontStyle: FontStyle.italic),
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                ),
               ],
             ),
             ListTile(
@@ -238,12 +249,17 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
               // TODO: display location address instead of coordinates
               leading: const Icon(Icons.pin_drop),
               title: Text(
-                  "LAT ${meetupMgr.getMeetupByID(widget.meetupID).location.latitude}, LONG ${meetupMgr.getMeetupByID(widget.meetupID).location.longitude}"),
+                "LAT ${meetupMgr.getMeetupByID(widget.meetupID).location.latitude}, LONG ${meetupMgr.getMeetupByID(widget.meetupID).location.longitude}",
+                softWrap: true,
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.access_time_filled),
-              title: Text(DateFormat('yyyy-MM-dd kk:mm').format(
-                  meetupMgr.getMeetupByID(widget.meetupID).timeOfMeetUp)),
+              title: Text(
+                DateFormat('yyyy-MM-dd kk:mm').format(
+                    meetupMgr.getMeetupByID(widget.meetupID).timeOfMeetUp),
+                softWrap: true,
+              ),
             ),
             Row(
               children: (meetupMgr.hasElapsed(widget.meetupID) ||
@@ -388,11 +404,17 @@ class _DisplayAttendeesState extends State<DisplayAttendees> {
               return ListTile(
                 leading: const Icon(Icons.people),
                 title: widget.isCancelled
-                    ? const Text("NO ATTENDEES",
+                    ? const Text(
+                        "NO ATTENDEES",
                         style: TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.bold))
-                    : Text("${widget.currNumAttendees} "
-                        "/ ${widget.maxAttendees}    ATTENDEES"),
+                            color: Colors.red, fontWeight: FontWeight.bold),
+                        softWrap: true,
+                      )
+                    : Text(
+                        "${widget.currNumAttendees} "
+                        "/ ${widget.maxAttendees}    ATTENDEES",
+                        softWrap: true,
+                      ),
               );
             },
             body: SizedBox(
@@ -402,7 +424,11 @@ class _DisplayAttendeesState extends State<DisplayAttendees> {
                 itemExtent: 60,
                 children: widget.attendeeList
                     .map((String userName) => ListTile(
-                          title: Text(userName),
+                          title: Text(
+                            userName,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: false,
+                          ),
                         ))
                     .toList(),
               ),
@@ -445,13 +471,16 @@ class _DisplayMeetupCommentsState extends State<DisplayMeetupComments> {
                             onSelected: (value) {
                               setState(() async {
                                 if (value == "delete") {
-                                  int response = await MeetupsController.deleteMeetupComment(meetup_id: widget.meetupID, comment_id: c.commentID);
+                                  int response = await MeetupsController
+                                      .deleteMeetupComment(
+                                          meetup_id: widget.meetupID,
+                                          comment_id: c.commentID);
 
-                                  if (response == 200){
+                                  if (response == 200) {
                                     MeetupsController.fetchMeetups(context);
                                     print("Comment Deleted!");
                                   }
-                                  if (response != 200){
+                                  if (response != 200) {
                                     showDialog(
                                         context: context,
                                         builder: (context) {
@@ -460,11 +489,10 @@ class _DisplayMeetupCommentsState extends State<DisplayMeetupComments> {
                                               scrollable: true,
                                               content: Center(
                                                   child: Container(
-                                                    child: Text("Unable to delete comment.\n"
-                                                        "\n Please try again."),
-                                                  )
-                                              )
-                                          );
+                                                child: Text(
+                                                    "Unable to delete comment.\n"
+                                                    "\n Please try again."),
+                                              )));
                                         });
                                   }
                                 }
