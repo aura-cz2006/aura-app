@@ -9,12 +9,9 @@ import 'package:http/http.dart' as http;
 
 class ThreadController {
   static Future<void> fetchThreads(BuildContext context) async {
-    print("=======================ENTERED THREAD CONTROLLER==============================");
 
     // call api (convert to dart there) and receive api data
-    print("=======================ENTERING THREAD API============================");
     List<Thread> fetchedThreadItems = await DiscussionThreadApi.fetchTopicThreads();
-    print("=======================EXITED THREAD API============================");
     // call provider
     Provider.of<Thread_Manager>(context, listen: false).updateThreadList(
         fetchedThreadItems

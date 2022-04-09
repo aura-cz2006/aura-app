@@ -146,7 +146,7 @@ class _EditThreadViewState extends State<EditThreadView> {
                               scrollable: true,
                               content: Center(
                                   child: Container(
-                                    child: Text("Unable to create thread.\n"
+                                    child: const Text("Unable to create thread.\n"
                                         "\n Please try again."),
                                   )));
                         });
