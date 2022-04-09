@@ -122,33 +122,36 @@ class _EditThreadViewState extends State<EditThreadView> {
             if (!_formKey.currentState!.validate()) {
               return;
             }
-            // print(
-            //     "Text: ${titleController.text}, Content: ${contentController.text}"); // TODO REMOVE
-            int response = await ThreadController.patchThread(
+
+            await ThreadController.patchThread(
                 //Update thread
                 thread: thread_manager.getThreadByID(widget.threadID)!,
                 title: titleController.text,
-                content: contentController.text);
+                content: contentController.text).then((statcode) {
+                  if (statcode == 200){
+                    setState(() async {
+                      await ThreadController.fetchThreads(
+                          context);
+                      print("Patch Thread Success!");
+                      context.pop();
+                    });
+                  }
 
-            if (response == 200) {
-              print("Patching Success!");
-              ThreadController.fetchThreads(context);
-              context
-                  .pop(); // Navigator.pop(context); //Return to previous, but updated thread
-            } else if (response == 400) {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                        elevation: 10,
-                        scrollable: true,
-                        content: Center(
-                            child: Container(
-                          child: Text("Unable to create thread.\n"
-                              "\n Please try again."),
-                        )));
-                  });
-            }
+                  if (statcode !=200){
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                              elevation: 10,
+                              scrollable: true,
+                              content: Center(
+                                  child: Container(
+                                    child: Text("Unable to create thread.\n"
+                                        "\n Please try again."),
+                                  )));
+                        });
+                  }
+            });
           });
         },
       );
