@@ -855,8 +855,12 @@ class MapManager extends Manager {
     notifyListeners();
   }
 
-  bool isLayerEnabled(String layerName) {
+  bool isLayerSelected(String layerName) {
     return selectedLayers.contains(layerName);
+  }
+
+  bool isCategorySelected(AmenityCategory category) {
+    return selectedCategories.contains(category);
   }
 
   void setTaxiData(Map<String, dynamic> fetchedTaxiData) {

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:aura/apis/map_api.dart';
 import 'package:aura/managers/map_manager.dart';
 import 'package:aura/managers/meetup_manager.dart';
@@ -15,8 +17,9 @@ class MapController {
     );
   }
   static void fetchSelectedAmenities(BuildContext context) async {
-    List<AmenityCategory> selectedCat = Provider.of<MapManager>(context, listen: false).selectedCategories;
-    for (AmenityCategory category in selectedCat) {
+    List<AmenityCategory> selectedCat = List.from(Provider.of<MapManager>(context, listen: false).selectedCategories);
+    for (AmenityCategory category in selectedCat) { // todo resolve concurrent modification during iteration
+      print("=========== FETCHING FOR ${CategoryConvertor.getQueryString(category)}");
       List<dynamic> fetchedAmenitiesData = await MapApi.fetchAmenitiesData(category);
       Provider.of<MapManager>(context, listen: false).updateAmenitiesData(category,
           fetchedAmenitiesData

@@ -3,66 +3,39 @@ import 'package:aura/models/amenity_category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AmenitiesFilterChips extends StatefulWidget {
-  final VoidCallback onTap;
-  const AmenitiesFilterChips({Key? key, required this.onTap}) : super(key: key);
+typedef AmenityChipTapCallback = void Function(AmenityCategory category);
 
-  @override
-  State<AmenitiesFilterChips> createState() => _AmenitiesFilterChipsState();
-}
-
-class _AmenitiesFilterChipsState extends State<AmenitiesFilterChips> {
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Consumer<MapManager>(builder: (context, mapManager, child) {
-          return Row(
-              children: mapManager.categories
-                  .map((category) => _AmenityChipWrapper(category, widget.onTap))
-                  .toList());
-        }));
-  }
-}
-
-Widget _AmenityChipWrapper(AmenityCategory category, VoidCallback onTap) {
-  return Container(
-      margin: const EdgeInsets.only(left: 10.0, right: 10.0, top: 30),
-      //Spacing in between chips
-      child: AmenityChipWidget(category: category, onTap: onTap));
-}
-
-class AmenityChipWidget extends StatefulWidget {
+class AmenityChip extends StatefulWidget {
   final AmenityCategory category;
-  final VoidCallback onTap; // new code
 
-  const AmenityChipWidget(
-      {Key? key, required this.category, required this.onTap})
+  const AmenityChip(
+      {Key? key, required this.category})
       : super(key: key);
 
   @override
-  _AmenityChipWidgetState createState() => _AmenityChipWidgetState();
+  _AmenityChipState createState() => _AmenityChipState();
 }
 
-class _AmenityChipWidgetState extends State<AmenityChipWidget> {
+class _AmenityChipState extends State<AmenityChip> {
   @override
   Widget build(BuildContext context) {
     return Consumer<MapManager>(builder: (context, mapManager, child) {
-      return GestureDetector(
-        onTap: widget.onTap,
-        child: ChoiceChip(
-          label: Text(CategoryConvertor.getReadable(widget.category)!),
-          labelStyle: const TextStyle(color: Colors.black),
-          selected: mapManager.selectedCategories.contains(widget.category),
-          elevation: 1.0,
-          onSelected: (isSelected) {
-            mapManager.setSelectedCategory(widget.category);
-          },
-          backgroundColor: Colors.white, //todo
-          selectedColor: Colors.lightBlueAccent,
-          disabledColor: Colors.grey,
-        ),
-      );
+      return Container(
+            margin: const EdgeInsets.only(left: 10.0, right: 10.0, top: 30),
+            //Spacing in between chips
+            child: ChoiceChip(
+              label: Text(CategoryConvertor.getReadable(widget.category)!),
+              labelStyle: const TextStyle(color: Colors.black),
+              selected: mapManager.selectedCategories.contains(widget.category),
+              elevation: 1.0,
+              onSelected: (isSelected) {
+                mapManager.setSelectedCategory(widget.category);
+              },
+              backgroundColor: Colors.white,
+              //todo
+              selectedColor: Colors.lightBlueAccent,
+              disabledColor: Colors.grey,
+            ),);
     });
   }
 }
