@@ -136,12 +136,17 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                               context.push(
                                   "${GoRouter.of(context).location}/edit");
                             } else if (value == "delete") {
-                              int response = await ThreadController.deleteThread(thread: threadMgr.getThreadByID(widget.threadID)!);
+                              int response =
+                                  await ThreadController.deleteThread(
+                                      thread: threadMgr
+                                          .getThreadByID(widget.threadID)!);
 
-                              if (response == 200) {print("Delete Thread Success!");}
+                              if (response == 200) {
+                                print("Delete Thread Success!");
+                              }
 
                               //Failure Message
-                              if (response == 400){
+                              if (response == 400) {
                                 showDialog(
                                     context: context,
                                     builder: (context) {
@@ -150,11 +155,12 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                                           scrollable: true,
                                           content: Center(
                                               child: Container(
-                                                child: Text("Unable to delete thread.\n"
-                                                    "\n Please try again."),
-                                              )
-                                          )
-                                      );
+                                            child: Text(
+                                              "Unable to delete thread.\n"
+                                              "\n Please try again.",
+                                              softWrap: true,
+                                            ),
+                                          )));
                                     });
                                 return;
                               }
@@ -193,19 +199,22 @@ class _DisplayFullThreadState extends State<DisplayFullThread> {
                 children: <Widget>[
                   const SizedBox(width: 16),
                   Text(
-                    threadMgr.getThreadByID(widget.threadID)?.userID
-                        ??
-                          "UNKNOWN USER",
-                      style: DefaultTextStyle.of(context).style.apply(
-                          color: Colors.grey[700],
-                          fontStyle: FontStyle.italic)),
+                    threadMgr.getThreadByID(widget.threadID)?.userID ??
+                        "UNKNOWN USER",
+                    style: DefaultTextStyle.of(context).style.apply(
+                        color: Colors.grey[700], fontStyle: FontStyle.italic),
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                  ),
                   const SizedBox(width: 16),
                   Text(
-                      DateFormat('yyyy-MM-dd kk:mm').format(
-                          threadMgr.getThreadByID(widget.threadID)!.timestamp),
-                      style: DefaultTextStyle.of(context).style.apply(
-                          color: Colors.grey[700],
-                          fontStyle: FontStyle.italic)),
+                    DateFormat('yyyy-MM-dd kk:mm').format(
+                        threadMgr.getThreadByID(widget.threadID)!.timestamp),
+                    style: DefaultTextStyle.of(context).style.apply(
+                        color: Colors.grey[700], fontStyle: FontStyle.italic),
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                  ),
                 ],
               ),
               ListTile(
@@ -291,12 +300,17 @@ class _DisplayThreadCommentsState extends State<DisplayThreadComments> {
           children: threadMgr
               .getCommentsForThread(widget.threadID)
               .map((c) => ListTile(
-                    title: Text(filter.censor(c.text ?? "")),
+                    title: Text(
+                      filter.censor(c.text ?? ""),
+                      softWrap: true,
+                    ),
                     subtitle: Text(
-                        "${userMgr.getUsernameByID(c.userID)}    ${DateFormat('yyyy-MM-dd kk:mm').format(c.timestamp)}",
-                        style: DefaultTextStyle.of(context).style.apply(
-                            color: Colors.grey[700],
-                            fontStyle: FontStyle.italic)),
+                      "${userMgr.getUsernameByID(c.userID)}    ${DateFormat('yyyy-MM-dd kk:mm').format(c.timestamp)}",
+                      style: DefaultTextStyle.of(context).style.apply(
+                          color: Colors.grey[700], fontStyle: FontStyle.italic),
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                    ),
                     trailing: (userMgr.active_user_id == c.userID)
                         ? PopupMenuButton(
                             onSelected: (value) {

@@ -145,7 +145,7 @@ class _EditThreadViewState extends State<EditThreadView> {
                         content: Center(
                             child: Container(
                           child: Text("Unable to create thread.\n"
-                              "\n Please try again."),
+                              "\n Please try again.", softWrap: true,),
                         )));
                   });
             }

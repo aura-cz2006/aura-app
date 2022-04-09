@@ -70,6 +70,8 @@ class _SigninScreenState extends State<SigninScreen> {
                                   fontSize: 16,
                                   color: Colors.white,
                                 ),
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
                               ),
                             ]),
                         style: ElevatedButton.styleFrom(

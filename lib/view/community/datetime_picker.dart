@@ -72,7 +72,7 @@ class _DatetimePickerState extends State<DatetimePicker> {
           primary: Colors.lightBlueAccent,
         ),
         onPressed: () => Pick_DateTime(context),
-        child: Text(getDate(), style: TextStyle(color: Colors.black)),
+        child: Text(getDate(), style: TextStyle(color: Colors.black), softWrap: true,),
       );
 
   Future Pick_DateTime(BuildContext context) async {

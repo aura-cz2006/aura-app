@@ -29,30 +29,30 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
   final locationController = TextEditingController();
   final attendeeController = TextEditingController();
   DateTime selectedDate = DateTime.now();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>(); //For validating empty fields
+  final GlobalKey<FormState> _formKey =
+      GlobalKey<FormState>(); //For validating empty fields
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AuraAppBar(
-            title: const Text('Create Meetup')),
-        body: Form(
-          key: _formKey,
-          child: Center(
-            child: ListView(
-              children: [
-                Padding(padding: EdgeInsets.all(5), child: titleField()),
-                Padding(padding: EdgeInsets.all(5), child: attendeeField()),
-                Padding(padding: EdgeInsets.all(5), child: selectTime()),
-                Padding(padding: EdgeInsets.all(5), child: locationField()),
-                Padding(padding: EdgeInsets.all(5), child: contentField()),
-                Padding(padding: EdgeInsets.all(5), child: submitButton(context))
-              ],
+          appBar: AuraAppBar(title: const Text('Create Meetup')),
+          body: Form(
+            key: _formKey,
+            child: Center(
+              child: ListView(
+                children: [
+                  Padding(padding: EdgeInsets.all(5), child: titleField()),
+                  Padding(padding: EdgeInsets.all(5), child: attendeeField()),
+                  Padding(padding: EdgeInsets.all(5), child: selectTime()),
+                  Padding(padding: EdgeInsets.all(5), child: locationField()),
+                  Padding(padding: EdgeInsets.all(5), child: contentField()),
+                  Padding(
+                      padding: EdgeInsets.all(5), child: submitButton(context))
+                ],
+              ),
             ),
-          ),
-        )
-      ),
+          )),
     );
   }
 
@@ -64,8 +64,8 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
             labelText: "Location",
             hintText: "Enter the location of meet up here",
             border: OutlineInputBorder()),
-        validator: (value){
-          if (value!.isNotEmpty){
+        validator: (value) {
+          if (value!.isNotEmpty) {
             return null;
           } else {
             return "Please enter a location.";
@@ -77,11 +77,11 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
         children: [
           const Padding(
             padding: EdgeInsets.only(top: 5, left: 5, right: 8, bottom: 5),
-            child:
-                Text("Date & Time: ", style: TextStyle(fontSize: 15)),
+            child: Text("Date & Time: ", style: TextStyle(fontSize: 15)),
           ),
           Padding(
-              padding: const EdgeInsets.only(top: 5, left: 8, right: 5, bottom: 5),
+              padding:
+                  const EdgeInsets.only(top: 5, left: 8, right: 5, bottom: 5),
               child: DatetimePicker(
                   date_reference: DateTime.now(),
                   onClicked: (DateTime val) =>
@@ -98,8 +98,8 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
             border: OutlineInputBorder()),
         keyboardType: TextInputType.number,
         textInputAction: TextInputAction.next,
-        validator: (value){
-          if (value!.isNotEmpty){
+        validator: (value) {
+          if (value!.isNotEmpty) {
             return null;
           } else {
             return "Please enter the maximum number of attendees.";
@@ -116,8 +116,8 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
             border: OutlineInputBorder()),
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.next,
-        validator: (value){
-          if (value!.isNotEmpty){
+        validator: (value) {
+          if (value!.isNotEmpty) {
             return null;
           } else {
             return "Please enter a title.";
@@ -134,8 +134,8 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
             labelText: "Content",
             hintText: "Enter the content of your post here",
             border: OutlineInputBorder()),
-        validator: (value){
-          if (value!.isNotEmpty){
+        validator: (value) {
+          if (value!.isNotEmpty) {
             return null;
           } else {
             return "Please enter a description.";
@@ -155,15 +155,18 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
             child: const Text("Submit"),
             onPressed: () async {
               //Check and display warning message if empty fields
-              if (!_formKey.currentState!.validate() || selectedDate.isBefore(DateTime.now())){
+              if (!_formKey.currentState!.validate() ||
+                  selectedDate.isBefore(DateTime.now())) {
                 return;
               }
 
               // Check for Internet Connection (required to look up validity of address)
               //If invalid address lke PO 123456, display error message box
               try {
-                final internetConnection = await InternetAddress.lookup('example.com');
-                if (internetConnection.isNotEmpty && internetConnection[0].rawAddress.isNotEmpty) {
+                final internetConnection =
+                    await InternetAddress.lookup('example.com');
+                if (internetConnection.isNotEmpty &&
+                    internetConnection[0].rawAddress.isNotEmpty) {
                   print('connected');
                 }
               } on SocketException catch (e) {
@@ -175,11 +178,12 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
                           scrollable: true,
                           content: Center(
                               child: Container(
-                                child: Text("The following function requires internet connection!\n"
-                                    "\nPlease connect to wifi or your personal data."),
-                              )
-                          )
-                      );
+                            child: const Text(
+                              "The following function requires internet connection!\n"
+                              "\nPlease connect to wifi or your personal data.",
+                              softWrap: true,
+                            ),
+                          )));
                     });
                 return;
               }
@@ -189,9 +193,10 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
               var coord;
               var coordinate;
               print("Checkpoint Address Validity: ENTERING\n");
-              try{
+              try {
                 print("Checkpoint Address Validity: ENTERED\n");
-                coord = await geocoding.locationFromAddress(locationController.text);
+                coord = await geocoding
+                    .locationFromAddress(locationController.text);
                 coordinate = await coord.first;
               } on Exception catch (e) {
                 showDialog(
@@ -202,11 +207,9 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
                           scrollable: true,
                           content: Center(
                               child: Container(
-                                child: Text("You have entered an invalid address!\n"
-                                    "\nPlease return to the previous page to enter a valid address."),
-                              )
-                          )
-                      );
+                            child: Text("You have entered an invalid address!\n"
+                                "\nPlease return to the previous page to enter a valid address.", softWrap: true,),
+                          )));
                     });
               }
               //Post thread to server
@@ -227,7 +230,7 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
                 });
               }
               //Failure Message
-              if (response != 200){
+              if (response != 200) {
                 showDialog(
                     context: context,
                     builder: (context) {
@@ -236,11 +239,9 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
                           scrollable: true,
                           content: Center(
                               child: Container(
-                                child: Text("Unable to create meetup.\n"
-                                    "\n Please try again."),
-                              )
-                          )
-                      );
+                            child: Text("Unable to create meetup.\n"
+                                "\n Please try again.", softWrap: true,),
+                          )));
                     });
               }
             },
@@ -260,18 +261,17 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
     super.dispose();
   }
 
-  void test()  {
+  void test() {
     addresses = geocoding.locationFromAddress(locationController.text);
     interest = addresses.first;
   }
 
   void updateInterest() async {
-    try{
+    try {
       print("Checkpoint Address Validity: ENTERED\n");
       addresses = await geocoding.locationFromAddress(locationController.text);
       interest = await addresses.first;
       print(LatLng(interest.latitude, interest.longitude));
-
     } on Exception catch (e) {
       showDialog(
           context: context,
@@ -281,13 +281,10 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
                 scrollable: true,
                 content: Center(
                     child: Container(
-                      child: Text("You have entered an invalid address!\n"
-                          "\nPlease return to the previous page to enter a valid address."),
-                    )
-                )
-            );
+                  child: Text("You have entered an invalid address!\n"
+                      "\nPlease return to the previous page to enter a valid address.", softWrap: true,),
+                )));
           });
     }
   }
 }
-

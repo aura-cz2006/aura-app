@@ -85,12 +85,15 @@ class _CommunityTabState extends State<CommunityTab> {
                         ),
                         child: Text(
                           topic.topic2readable(),
+                          maxLines: 2,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 48,
                             fontWeight: FontWeight.w500,
                           ),
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
                         ),
                       )),
                 ))
