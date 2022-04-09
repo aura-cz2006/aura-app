@@ -26,5 +26,6 @@ doc/api/
 
 
 .flutter-plugins
+.flutter-plugins-dependencies
 generated_plugin_registrant.dart
 /android/app/google-services.json
