@@ -67,6 +67,30 @@ class Meetup_Manager extends Manager {
     return validList;
   }
 
+  List<Meetup> getMeetupsSortedByUser({required String user_ID}){
+    var user_list = getValidMeetups().where((element) => (element.userID == user_ID)).toList();
+    user_list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return user_list;
+  }
+
+  List<Meetup> getMeetupsSortedByRSVP({required String user_ID}){
+    List<Meetup> rsvp_list = getValidMeetups()
+        .where((element) => (element.rsvpAttendees.isNotEmpty)).toList();
+    // List<Meetup> desired_list = rsvp_list.where((element) => element.rsvpAttendees.contains(user_ID));
+    List<Meetup> desired_list = [];
+    for (Meetup meetup in rsvp_list){
+      for (String attendeeID in meetup.rsvpAttendees){
+        if (attendeeID == user_ID){
+          desired_list.add(meetup);
+        }
+      }
+    }
+
+    print(desired_list);
+    return [];
+    
+  }
+
   Meetup getMeetupByID(String meetupID) {
     return meet_up_list.firstWhere((m) => m.meetupID == meetupID);
   }

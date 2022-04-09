@@ -20,6 +20,18 @@ class Thread_Manager extends Manager {
     return curr_list;
   } //
 
+  List<Thread> getListOfThreadsSortedByUser({required DiscussionTopic topic, required String user_id}) {
+    print("sorted user");
+    var curr_list = getThreadsByTopic(topic);
+    for(Thread t in curr_list){
+      print("thread userID: ${t.userID}, Active UserID: ${user_id}");
+    }
+
+    var user_list = curr_list.where((element) => (element.userID == user_id)).toList();
+    user_list.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    return user_list;
+  }
+
   List<Thread> getListOfThreadsSortedByTime(DiscussionTopic topic) {
     var curr_list = getThreadsByTopic(topic);
     curr_list.sort((a, b) => b.timestamp.compareTo(a.timestamp));
