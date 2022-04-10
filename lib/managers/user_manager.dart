@@ -22,6 +22,7 @@ class User_Manager extends Manager {
     User new_user = User(id, name);
     new_user.updateHomeAddress(home_address);
     user_list.add(new_user);
+    updateHomeAddress_String(id, home_address);
   }
 
 
