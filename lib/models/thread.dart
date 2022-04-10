@@ -102,8 +102,8 @@ class Thread {
   }
 
   factory Thread.getFromJson(Map<String, dynamic> json){
-    List<Comment> comments = [Comment("1", "2", DateTime.now(), "testing")];
-    List<String> likes = ["1"];
+    List<Comment> comments = [];
+    List<String> likes = [];
     //json['id'], json['title'], json['userID'],
     //         json['content'], TopicConverter.parsable2topic(json['topic']),
     //         DateTime.parse(json['date']), comments,   List<String>.from(json['likedBy'])
