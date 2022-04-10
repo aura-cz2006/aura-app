@@ -67,11 +67,13 @@ class DiscussionThreadApi {
   static Future<int> patchThread({required Thread thread, required String title, required String content}) async {
     Uri url = Uri.parse(
         "${Config().routes["api"]}/discussions/${thread.topic.topic2parsable()}/threads/${thread.id}");
+    var token = await FirebaseAuth.instance.currentUser?.getIdToken();
 
     final response = await http.patch(
       url,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": "Bearer ${token}"
       },
       encoding: Encoding.getByName('utf-8'),
       body: {
@@ -86,11 +88,13 @@ class DiscussionThreadApi {
   static Future<int> deleteThread({required Thread thread}) async {
     Uri url = Uri.parse(
         "${Config().routes["api"]}/discussions/${thread.topic.topic2parsable()}/threads/${thread.id}");
+    var token = await FirebaseAuth.instance.currentUser?.getIdToken();
 
     final response = await http.delete(
       url,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": "Bearer ${token}"
       },
       encoding: Encoding.getByName('utf-8'),
     );

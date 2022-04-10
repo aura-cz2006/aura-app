@@ -39,7 +39,7 @@ class _IntroScreenState extends State<IntroScreen> {
         body: "An all in one application for people in Singapore to meet, keep updated and connect",
         image: Center(
           child: Image.asset(
-              "assets/splash.jpg",
+              "assets/screen_icon_trans.png",
               height: 175.0),
         ),
       ),
@@ -201,8 +201,9 @@ class _IntroScreenState extends State<IntroScreen> {
           var interest = addresses.first;
 
           //update User's homeaddress in manager
-          userMgr.updateHomeAddress(userMgr.active_user_id,
-              LatLng(interest.latitude, interest.longitude));
+          // userMgr.updateHomeAddress(userMgr.active_user_id,
+          //     LatLng(interest.latitude, interest.longitude));
+          userMgr.location_data = LatLng(interest.latitude, interest.longitude);
 
           //Indicate that the phone has done onboarding before.
           if (_permissionGranted == loc.PermissionStatus.granted) {

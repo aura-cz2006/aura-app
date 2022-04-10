@@ -1,6 +1,9 @@
+import 'package:aura/managers/user_manager.dart';
 import 'package:aura/util/sign_in_google.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({Key? key}) : super(key: key);
@@ -48,38 +51,51 @@ class _SigninScreenState extends State<SigninScreen> {
                     ),
                     const SizedBox(height: 25),
                     Center(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          signInWithGoogle()
-                              .then((value) => {context.go("/tabs/map")});
-                          setState(() {
-                            _isLoading = true;
-                          });
-                        },
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(
-                                Icons.login,
-                                size: 24,
-                              ),
-                              SizedBox(width: 16),
-                              Text(
-                                "Sign in with Google",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
+                      child: Consumer<User_Manager>(builder: (context, userMgr, child) {
+                        return OutlinedButton(
+                          onPressed: () {
+                            signInWithGoogle()
+                                .then((value) {
+                                  userMgr.createUser(
+                                      id: value.user!.uid,
+                                      name: value.user!.displayName!,
+                                    home_address: userMgr.location_data,
+                                  );
+                                  context.go("/tabs/map");
+                                });
+                            setState(() {
+                              userMgr.active_user_id = (FirebaseAuth.instance.currentUser?.uid)!;
+                              userMgr.active_user_name = (FirebaseAuth.instance.currentUser?.displayName)!;
+                              // print("UserID: ${userMgr.active_user_id}, Name: ${userMgr.active_user_name}");
+
+                              _isLoading = true;
+                            });
+                          },
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(
+                                  Icons.login,
+                                  size: 24,
                                 ),
-                              ),
-                            ]),
-                        style: ElevatedButton.styleFrom(
-                          onPrimary: Colors.white,
-                          primary: Colors.redAccent,
-                          fixedSize: const Size(250, 50),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                        ),
-                      ),
+                                SizedBox(width: 16),
+                                Text(
+                                  "Sign in with Google",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ]),
+                          style: ElevatedButton.styleFrom(
+                            onPrimary: Colors.white,
+                            primary: Colors.redAccent,
+                            fixedSize: const Size(250, 50),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                          ),
+                        );
+                      })
                     ),
                   ]));
   }

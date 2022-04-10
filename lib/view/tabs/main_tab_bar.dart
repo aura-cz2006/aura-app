@@ -1,15 +1,18 @@
 import 'package:aura/view/map/mapbox_tab.dart';
 import 'package:aura/view/onboarding/introduction_page_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:aura/view/tabs/community/community_tab.dart';
 import 'package:aura/view/tabs/map/map_tab.dart';
 import 'package:aura/view/tabs/news/news_tab.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../controllers/meetups_controller.dart';
 import '../../controllers/news_controller.dart';
 import '../../controllers/thread_controller.dart';
+import '../../managers/user_manager.dart';
 /* Navigation Tab Bar */
 
 const tabs = {0: "community", 1: "map", 2: "news"};
@@ -28,6 +31,14 @@ class _MainTabBarState extends State<MainTabBar> {
   @override
   void initState(){
     super.initState();
+
+    final userMgr = Provider.of<User_Manager>(context, listen: false);
+
+    userMgr.active_user_id = (FirebaseAuth.instance.currentUser!.uid);
+    userMgr.active_user_name = (FirebaseAuth.instance.currentUser!.displayName)!;
+    // todo: uncomment below lines
+    // userMgr.updateLocation(userMgr.getUser(userMgr.active_user_id)!.homeaddress_coord);
+    // print("Local Address: ${userMgr.location_data}, ID: ${userMgr.active_user_id}, Name: ${userMgr.active_user_name}");
   }
 
   @override
@@ -38,12 +49,17 @@ class _MainTabBarState extends State<MainTabBar> {
 
     void changeTab(String newTabName) {
       setState(() {
-        print("===============INITIALIZING MEETUPS====================");
-        MeetupsController.fetchMeetups(context);
-        print("=============EXITED MEETUP INTIALIZATION & ENTERING THREAD INITIALIZATION================");
-        ThreadController.fetchThreads(context);
-        print("===========EXITED THREAD INITIALIZATION============");
-        NewsController.fetchNews(context); // get initial
+        print(newTabName);
+        if (newTabName == 'community'){
+          print("===============INITIALIZING MEETUPS====================");
+          MeetupsController.fetchMeetups(context);
+          print("=============EXITED MEETUP INTIALIZATION & ENTERING THREAD INITIALIZATION================");
+          ThreadController.fetchThreads(context);
+          print("===========EXITED THREAD INITIALIZATION============");
+        }
+        if (newTabName == 'news'){
+          NewsController.fetchNews(context); // get initial
+        }
       });
       GoRouter.of(context).go("/tabs/$newTabName");
     }

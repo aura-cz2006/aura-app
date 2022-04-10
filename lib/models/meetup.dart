@@ -113,6 +113,11 @@ class Meetup {
   //   Meetup meetup =
   // }
 
+  Future<void> addAddress() async {
+    this.address = await latLngtoAddress(this.location);
+    // print("address = ${this.address}");
+  }
+
   factory Meetup.getFromJson(Map<String, dynamic> json) {
     // print("LatLng type looks like this!!!!!!!!!!!!!!!!! ");
     // print(LatLng((json['location']['lat']), (json['location']['lng'])));
@@ -133,11 +138,11 @@ class Meetup {
     // print("Addres========================${meetup.address}================");
     return meetup;
   }
-
-  void latLngtoAddress(LatLng coord) async {
-    var placemarks = await placemarkFromCoordinates(coord.latitude, coord.longitude);
-    var interest = placemarks.first;
-    String address = interest.street! + ", " + interest.postalCode!;
-    this.address = address;
-  }
 }
+
+Future<String> latLngtoAddress(LatLng coord) async {
+  var placemarks = await placemarkFromCoordinates(coord.latitude, coord.longitude);
+  var interest = placemarks.first;
+  return interest.street! + ", " + interest.postalCode!;
+}
+
