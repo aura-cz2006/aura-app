@@ -208,24 +208,12 @@ class ThreadListViewState extends State<ThreadListView> {
                                       children: <Widget>[
                                         const SizedBox(width: 16),
                                         Text(
-                                          "Posted by: ${shortenUserName(t.displayName)}", //TODO: lookup username via consumer
-                                          // todo: fix/change how we use DefaultTextStyle
-                                          // style: DefaultTextStyle.of(context)
-                                          //     .style
-                                          //     .apply(
-                                          //         color: Colors.grey[700],
-                                          //         fontStyle: FontStyle.italic)
+                                          "Posted by: ${shortenUserName(t.displayName)}",
                                         ),
                                         const SizedBox(width: 16),
                                         Text(
                                           DateFormat('yyyy-MM-dd kk:mm').format(t
-                                              .timestamp), // TODO: lookup username via consumer
-                                          // todo: fix/change how we use DefaultTextStyle
-                                          // style: DefaultTextStyle.of(context)
-                                          //     .style
-                                          //     .apply(
-                                          //         color: Colors.grey[700],
-                                          //         fontStyle: FontStyle.italic)
+                                              .timestamp),
                                         ),
                                       ],
                                     ),

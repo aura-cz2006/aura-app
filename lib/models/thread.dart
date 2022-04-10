@@ -46,16 +46,17 @@ class Thread {
   // comments: comments, //constructCommentsListfromStringList(json['comments'])
   // likedBy: likes, //List<String>.from(json['likedBy'])
 
-
+  /*
+  For debugging purposes
+   */
   @override
   String toString() {
-    //todo remove this ???
     return 'Thread: {id: $id, title: ${title ?? ""}, userID: ${userID}, displayName: ${displayName}, content: ${content}, topic: ${topic}, timestamp: ${timestamp}, comments: ${comments}, likes: ${likedBy}';
   }
 
   void addComment(String userID, String text) {
     Comment newC = Comment('commentID', userID, DateTime.now(),
-        text); // todo set up unique comment id
+        text);
     comments.add(newC);
   }
 

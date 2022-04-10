@@ -63,10 +63,7 @@ class _searchOverlayState extends State<searchOverlay> {
             }
             var addresses = await geocoding.locationFromAddress(searchController.text);
             var interest = addresses.first;
-            print("Search location: ${LatLng( //TODO: Delete this line
-                interest.latitude, interest.longitude)}");
             userMgr.updateLocation(LatLng(interest.latitude, interest.longitude));
-            print("Saved Location: ${userMgr.getLocation()}");  //TODO: Delete this line
             closeOverlay();
           },
         ),

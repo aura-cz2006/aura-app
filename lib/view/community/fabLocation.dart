@@ -81,7 +81,7 @@ class _locationFabState extends State<locationFab> {
                 _serviceEnabled = await location.requestService();
                 if (!_serviceEnabled) return;
               }
-              //TODO: Ask for permission during onboarding
+
               _permissionGranted = await location.hasPermission();
               if (_permissionGranted == PermissionStatus.denied){
                 _permissionGranted = await location.requestPermission();
@@ -90,7 +90,6 @@ class _locationFabState extends State<locationFab> {
 
               location.changeSettings(); //Ensure accuracy is high
               _locationData = await location.getLocation();
-              print("Current Location: ${LatLng(_locationData.latitude!, _locationData.longitude!)}"); //TODO: Delete this line
               setState(() {
                 userMgr.updateLocation(LatLng(_locationData.latitude!, _locationData.longitude!));
               });

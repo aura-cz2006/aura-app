@@ -34,7 +34,6 @@ class _EditMeetupViewState extends State<EditMeetupView> {
   GeocodingPlatform geocoding = GeocodingPlatform.instance;
   late var addresses;
   late var interest;
-  late int og_meetup_attendeesize;
 
   final titleController = TextEditingController(); //Saves edited title
   final descriptionController = TextEditingController(); //Saves edited content
@@ -45,9 +44,8 @@ class _EditMeetupViewState extends State<EditMeetupView> {
 
 
   TextEditingController _setControllerText(
-      TextEditingController ctrl, String text, bool attendee_flag) {
+      TextEditingController ctrl, String text) {
     ctrl.text = text;
-    if (attendee_flag == true) {og_meetup_attendeesize = int.parse(text);}
     return ctrl;
   }
 
@@ -82,7 +80,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
         keyboardType: TextInputType.multiline,
         maxLines: null,
         controller: _setControllerText(locationController,
-            meetupMgr.getMeetupByID(widget.meetupID).address, false),
+            meetupMgr.getMeetupByID(widget.meetupID).address),
         decoration: const InputDecoration(
             labelText: "Location",
             hintText: "Enter the location of meet up here",
@@ -119,11 +117,11 @@ class _EditMeetupViewState extends State<EditMeetupView> {
     });
   }
 
-  Widget maxAttendeesField() { //todo raise error if new value < currNumAttendees
+  Widget maxAttendeesField() {
     return Consumer<Meetup_Manager>(builder: (context, meetupMgr, child) {
       return TextFormField(
         controller: _setControllerText(maxAttendeesController,
-            meetupMgr.getMeetupByID(widget.meetupID).maxAttendees.toString(),true),
+            meetupMgr.getMeetupByID(widget.meetupID).maxAttendees.toString()),
         decoration: const InputDecoration(
             labelText: "Number of attendees",
             hintText: "Enter the maximum number of attendees",
@@ -133,8 +131,8 @@ class _EditMeetupViewState extends State<EditMeetupView> {
         validator: (value){
           if (value!.isNotEmpty){
             return null;
-          } else if (int.parse(value) < og_meetup_attendeesize) {
-            return "Invalid maximum number of attendees. ${og_meetup_attendeesize} people have already RSVPed to this meetup.";
+          } else if (int.parse(value) < meetupMgr.getMeetupByID(widget.meetupID).rsvpAttendees.length) {
+            return "Invalid maximum number of attendees. ${meetupMgr.getMeetupByID(widget.meetupID).rsvpAttendees.length} people have already RSVPed to this meetup.";
           } else {
             return "Please enter the maximum number of attendees.";
           }
@@ -148,7 +146,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
       return TextFormField(
         // onChanged: (value) => setState(() => this.title = value), //og.title = value
         controller: _setControllerText(titleController,
-            meetupMgr.getMeetupByID(widget.meetupID).title ?? "", false),
+            meetupMgr.getMeetupByID(widget.meetupID).title ?? ""),
         decoration: const InputDecoration(
             labelText: "Title",
             hintText: "Enter the title of your post here",
@@ -172,7 +170,7 @@ class _EditMeetupViewState extends State<EditMeetupView> {
         keyboardType: TextInputType.multiline,
         maxLines: null,
         controller: _setControllerText(descriptionController,
-            meetupMgr.getMeetupByID(widget.meetupID).description ?? "", false),
+            meetupMgr.getMeetupByID(widget.meetupID).description ?? ""),
         decoration: const InputDecoration(
             labelText: "Content",
             hintText: "Enter the content of your post here",

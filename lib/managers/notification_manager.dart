@@ -11,7 +11,7 @@ class NotificationManager extends Manager {
     ThreadNotification("2", ThreadNotifType.NEW_COMMENT, false, "n03"),
     MeetupNotification("3", MeetupNotifType.REMINDER, true, "n02"),
     MeetupNotification("4", MeetupNotifType.SUCCESSFULLY_RSVP, false, "n01")
-  ]; // TODO: get notifications from api
+  ];
 
   bool _isUpdating = false;
 

@@ -58,13 +58,6 @@ class Thread_Manager extends Manager {
     return getThreadByID(thread_id)!.comments;
   }
 
-  void editThread(String thread_id, String new_title, String new_content) {
-    var threadforEdit = getThreadByID(thread_id);
-    threadforEdit!.title = new_title;
-    threadforEdit.content = new_content;
-    notifyListeners();
-  }
-
   void removeLike(String threadID, String userID) {
     Thread thread = getThreadByID(threadID)!;
     thread.removeLike(userID);
@@ -97,14 +90,5 @@ class Thread_Manager extends Manager {
   int getNumLikes(String threadID) {
     Thread thread = getThreadByID(threadID)!;
     return thread.numLikes();
-  }
-
-  static String generateUniqThreadID(){
-    return (10).toString(); //TODO: we need to change this
-  }
-
-  void removeThread(String threadID) {
-    thread_list.remove(getThreadByID(threadID));
-    notifyListeners();
   }
 }

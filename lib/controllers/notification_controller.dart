@@ -4,7 +4,6 @@ import '../managers/notification_manager.dart';
 class NotificationController {
   static void fetchNotifications() async {
     // NotificationManager().setUpdating(true);
-    // todo: handle api call here
   }
 
   static void setRead(String notifID, bool readStatus) { // ! deprecated - should be removed

@@ -20,16 +20,12 @@ class DiscussionThreadApi {
 
       // use dart:convert to decode JSON
       List<dynamic> decodedJson =
-      json.decode(responseBody); // todo put this back
-      // List<Map<String, String>> _comment_map = List<Map<String, String>>.from(decodedJson['comments']);
+      json.decode(responseBody);
 
       List<Thread> resList = (decodedJson).map((item) {
         return Thread.getFromJson(item);
       }).toList();
-      print("=================THREAD LIST===========================");
-      print(resList);
-      //print("HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO HELLO");
-      print("===================EXITING THREAD API========================");
+      print("List: ${resList}");
       return resList;
     } else {
       print(

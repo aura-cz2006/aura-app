@@ -89,8 +89,6 @@ class _ChangeHomeAddressScreenState extends State<ChangeHomeAddressScreen> {
           var addresses =
               await geocoding.locationFromAddress(newaddressController.text);
           var interest = addresses.first;
-          print("Search location: ${LatLng( //TODO: Delete this line
-              interest.latitude, interest.longitude)}");
 
           setState(() {
             if (!_formKey.currentState!.validate()) {

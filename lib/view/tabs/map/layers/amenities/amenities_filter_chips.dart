@@ -58,7 +58,7 @@ class _AmenityChipWidgetState extends State<AmenityChipWidget> {
           onSelected: (isSelected) {
             mapManager.setSelectedCategory(widget.category);
           },
-          backgroundColor: Colors.white, //todo
+          backgroundColor: Colors.white,
           selectedColor: Colors.lightBlueAccent,
           disabledColor: Colors.grey,
         ),

@@ -27,7 +27,6 @@ class MapController {
   static String getTaxiDataURL() { return "https://api.data.gov.sg/v1/transport/taxi-availability";}
   static String getDengueDataURL() { return "https://geo.data.gov.sg/dengue-cluster/2021/10/07/geojson/dengue-cluster.geojson";}
   static Map<String, dynamic> getMeetupsData(BuildContext context) {
-    //todo call meetup controller to fetch (need to merge w other branch first)
     return Provider.of<Meetup_Manager>(context, listen: false).getMeetupsGeojson();
   }
   static Map<AmenityCategory, dynamic> getAmenitiesData(BuildContext context) {
