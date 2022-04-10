@@ -5,15 +5,10 @@ import 'package:aura/controllers/meetups_controller.dart';
 import 'package:aura/managers/map_manager.dart';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/models/amenity_category.dart';
-import 'package:aura/view/map/amenities_filter_chips.dart';
+import 'package:aura/view/tabs/map/amenities_filter_chips.dart';
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:provider/provider.dart';
-
-// void main() => runApp(MultiProvider(providers: [
-//       ChangeNotifierProvider(create: (context) => MapManager()),
-//       ChangeNotifierProvider(create: (context) => Meetup_Manager()),
-//     ], child: const MapboxTab()));
 
 class MapboxTab extends StatefulWidget {
   const MapboxTab({Key? key}) : super(key: key);
@@ -25,57 +20,12 @@ class MapboxTab extends StatefulWidget {
 class _MapboxTabState extends State<MapboxTab> {
   late MapboxMapController controller;
 
-  // handle taps
-  void _onFeatureTapped(
-      dynamic featureId, Point<double> point, LatLng coordinates) {
-    _showSnackBar('feature', coordinates.toString());
-  }
-
-  void _onFillTapped(Fill fill) {
-    _showSnackBar('fill', fill.id);
-  }
-
-  void _onLineTapped(Line line) {
-    _showSnackBar('line', line.id);
-  }
-
-  void _onCircleTapped(Circle circle) {
-    _showSnackBar('circle', circle.id);
-  }
-
-  void _onSymbolTapped(Symbol symbol) {
-    _showSnackBar('symbol', symbol.id);
-  }
-
-  _showSnackBar(String type, String id) {
-    final snackBar = SnackBar(
-        content: Text('Tapped $type $id',
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        backgroundColor: Theme.of(context).primaryColor);
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  @override
-  void dispose() {
-    controller.onFillTapped.remove(_onFillTapped);
-    controller.onCircleTapped.remove(_onCircleTapped);
-    controller.onLineTapped.remove(_onLineTapped);
-    controller.onSymbolTapped.remove(_onSymbolTapped);
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer2<MapManager, Meetup_Manager>(
         builder: (context, mapMgr, meetupMgr, child) {
       void _onMapCreated(MapboxMapController mbController) {
         controller = mbController;
-        controller.onFeatureTapped.add(_onFeatureTapped);
-        controller.onFillTapped.add(_onFillTapped);
-        controller.onCircleTapped.add(_onCircleTapped);
-        controller.onLineTapped.add(_onLineTapped);
-        controller.onSymbolTapped.add(_onSymbolTapped);
       }
 
       // initialise map layers
@@ -86,33 +36,19 @@ class _MapboxTabState extends State<MapboxTab> {
               attribution: "Dengue clusters data from data.gov.sg",
               data: // URL to a GeoJSON file, or inline GeoJSON
                   MapController.getDengueDataURL(),
-              promoteId: 'Name', // TODO TESTING
             ));
         await controller.addFillLayer("dengue_clusters", "dengue_polygon",
             const FillLayerProperties(fillColor: "#EF9A9A", fillOpacity: 0.7));
-        await controller.addSymbolLayer(
-            "dengue_clusters",
-            "dengue_count",
-            const SymbolLayerProperties(
-              textField: "4",
-              // TODO get number of cases
-              textColor: "#C62828",
-              textOpacity: 1,
-              textSize: 16,
-              textAnchor: "center",
-              textJustify: "center",
-            ));
       }
 
       void initTaxisLayer() async {
-        // MapController.fetchTaxiData(context); // todo doesnt work
         await controller.addSource(
           "taxi_locations",
           GeojsonSourceProperties(
             attribution: "Taxi availability data from data.gov.sg",
             data: // URL to a GeoJSON file, or inline GeoJSON
                 MapController
-                    .getTaxiDataURL(), //todo use mapMgr.taxiData, but it gives {}?
+                    .getTaxiDataURL(),
           ),
         );
         await controller.addLayer(
@@ -124,26 +60,6 @@ class _MapboxTabState extends State<MapboxTab> {
               iconSize: 2,
             ));
       }
-
-      // void initBusStopLayer() async {
-      //   MapController.fetchBusStopData(context); // todo doesnt work
-      //   await controller.addSource(
-      //     "bus_stop_locations",
-      //     GeojsonSourceProperties(
-      //         attribution: "Bus stop data from data.gov.sg",
-      //         data: // URL to a GeoJSON file, or inline GeoJSON
-      //             mapMgr.getBusStopDataGeojson() // todo, but it gives {}?
-      //         ),
-      //   );
-      //   await controller.addLayer(
-      //       "bus_stop_locations",
-      //       "bus_icons",
-      //       const SymbolLayerProperties(
-      //         iconOpacity: 1,
-      //         iconImage: "bus-15",
-      //         iconSize: 2,
-      //       ));
-      // }
 
       void initMeetupsLayer() async {
         MeetupsController.fetchMeetups(context);
@@ -159,7 +75,7 @@ class _MapboxTabState extends State<MapboxTab> {
             "meetup_icons",
             const SymbolLayerProperties(
               iconOpacity: 1,
-              iconImage: "heart-15", // todo no ppl icon
+              iconImage: "heart-15",
               iconSize: 2,
             ));
       }
@@ -167,7 +83,6 @@ class _MapboxTabState extends State<MapboxTab> {
       void initAmenitiesLayer() async {
         Map<AmenityCategory, dynamic> amenitiesData =
             MapController.getAmenitiesGeojson(context);
-        // amenitiesData.forEach((category, data)
         for (AmenityCategory category in mapMgr.categories) {
           String queryString = CategoryConvertor.getQueryString(category)!;
           await controller.addSource(
@@ -176,14 +91,6 @@ class _MapboxTabState extends State<MapboxTab> {
               data: amenitiesData[category],
             ),
           );
-          // await controller.addSymbolLayer(
-          //     "amenities_${queryString}_locations",
-          //     "amenities_${queryString}_icons",
-          //     SymbolLayerProperties(
-          //       iconOpacity: 1,
-          //       iconImage: CategoryConvertor.getIcon(category),
-          //       iconSize: 2,
-          //     ));
         }
       }
 
@@ -212,18 +119,6 @@ class _MapboxTabState extends State<MapboxTab> {
                 fillColor: "#EF9A9A",
                 fillOpacity: 0.7,
               ));
-          await controller.addSymbolLayer(
-              "dengue_clusters",
-              "dengue_count",
-              const SymbolLayerProperties(
-                textField: "4",
-                // TODO get number of cases
-                textColor: "#C62828",
-                textOpacity: 1,
-                textSize: 16,
-                textAnchor: "center",
-                textJustify: "center",
-              ));
         }
       }
 
@@ -235,17 +130,15 @@ class _MapboxTabState extends State<MapboxTab> {
               "meetup_icons",
               const SymbolLayerProperties(
                 iconOpacity: 1,
-                iconImage: "restaurant-pizza-15", // todo no ppl icon
+                iconImage: "heart-15",
                 iconSize: 2,
               ));
         }
       }
 
-      // add map layers after style is loaded
       void _onStyleLoaded() async {
         initDengueLayer();
         initTaxisLayer();
-        // initBusStopLayer();
         initMeetupsLayer();
         initAmenitiesLayer();
 
@@ -254,7 +147,6 @@ class _MapboxTabState extends State<MapboxTab> {
           updateTaxiLayer();
           updateDengueLayer();
           updateMeetupsLayer();
-          // updateAllAmenitiesLayers(); // todo no update bc static
         });
       }
 
@@ -328,8 +220,6 @@ class _MapboxTabState extends State<MapboxTab> {
                   primary: mapMgr.isLayerSelected('taxis')
                       ? Colors.blue
                       : Colors.white,
-                  // <-- Button color
-                  // onPrimary: Colors.red, // <-- Splash color
                 ),
               ),
             ),
@@ -350,8 +240,6 @@ class _MapboxTabState extends State<MapboxTab> {
                   primary: mapMgr.isLayerSelected('meetups')
                       ? Colors.deepPurple
                       : Colors.white,
-                  // <-- Button color
-                  // onPrimary: Colors.red, // <-- Splash color
                 ),
               ),
             ),

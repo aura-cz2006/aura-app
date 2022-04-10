@@ -1,11 +1,8 @@
-import 'package:aura/view/map/mapbox_tab.dart';
-import 'package:aura/view/onboarding/introduction_page_view.dart';
+import 'package:aura/view/tabs/map/mapbox_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:aura/view/tabs/community/community_tab.dart';
-import 'package:aura/view/tabs/map/map_tab.dart';
 import 'package:aura/view/tabs/news/news_tab.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../controllers/meetups_controller.dart';
 import '../../controllers/news_controller.dart';

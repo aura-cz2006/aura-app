@@ -5,24 +5,11 @@ import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 
 class Meetup_Manager extends Manager {
-  var meet_up_list = [
-    // Meetup(DateTime.now().add(Duration(days: 2)), LatLng(1.34, 103.68), '1',
-    //     '1', 5, 'Table tennis', 'I love the high speed game.', DateTime.now()),
-    // Meetup(DateTime.now().add(Duration(days: 1)), LatLng(1.3868, 103.8914), '2',
-    //     '2', 15, 'Hackathon', 'I love python.', DateTime.now()),
-    // Meetup(DateTime.now().add(Duration(days: 4)), LatLng(1.3612, 103.8863), '3',
-    //     '3', 10, 'Muay Thai', 'I love beating people up.', DateTime.now()),
-    // Meetup(DateTime.now().add(Duration(days: 4)), LatLng(1.2707, 103.8099), '4',
-    //     '4', 7, 'Botanic Gardens', 'I love plants.', DateTime.now()),
-    // Meetup(DateTime.now().add(Duration(days: 4)), LatLng(1.3385, 103.7304), '5',
-    //     '5', 8, 'Sightseeing', 'I love exploring the city.', DateTime.now()),
-    // Meetup(DateTime.now().add(Duration(days: 4)), LatLng(1.2942, 103.7861), '6',
-    //     '6', 2, 'Anime', 'I love Attack on Titan.', DateTime.now()),
-  ];
+  var meet_up_list = [];
 
-  void updateMeetupList(List<Meetup> meetupList){
+  void updateMeetupList(List<Meetup> meetupList) {
     meet_up_list = meetupList;
-    for (Meetup meetup in meet_up_list){
+    for (Meetup meetup in meet_up_list) {
       print(meetup.getSummary());
     }
   }
@@ -140,14 +127,16 @@ class Meetup_Manager extends Manager {
     return getMeetupByID(meetupID).rsvpAttendees;
   }
 
-  void addMeetup(DateTime timeofMeetup, LatLng location, String userID, int maxAttendees, String title, String description){
-    Meetup meetup_to_add = Meetup(timeofMeetup, location, generateUUID(), userID, maxAttendees, title, description, DateTime.now());
+  void addMeetup(DateTime timeofMeetup, LatLng location, String userID,
+      int maxAttendees, String title, String description) {
+    Meetup meetup_to_add = Meetup(timeofMeetup, location, generateUUID(),
+        userID, maxAttendees, title, description, DateTime.now());
     meet_up_list.add(meetup_to_add);
     notifyListeners();
   }
 
-  String generateUUID(){
-    return (meet_up_list.length+1).toString();
+  String generateUUID() {
+    return (meet_up_list.length + 1).toString();
   }
 
   String latlngToString(LatLng coord) {
@@ -167,14 +156,13 @@ class Meetup_Manager extends Manager {
       "type": "FeatureCollection",
       "features": getMeetupsSortedByTimeOfMeetUp()
           .map((m) => {
-        "type": "Feature",
-        "geometry": {
-          "type": "Point",
-          "coordinates": [m.location.longitude, m.location.latitude]
-        }
-      })
+                "type": "Feature",
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [m.location.longitude, m.location.latitude]
+                }
+              })
           .toList()
     };
   }
-
 }

@@ -6,14 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MapController {
-  static void fetchTaxiData(BuildContext context) async {
-    Map<String, dynamic> fetchedTaxiData = await MapApi.fetchTaxiData();
-
-    // call provider
-    Provider.of<MapManager>(context, listen: false)
-        .setTaxiData(fetchedTaxiData);
-  }
-
   static void fetchAmenitiesData(BuildContext context) async {
     for (AmenityCategory category
         in Provider.of<MapManager>(context, listen: false).categories) {
@@ -56,15 +48,9 @@ class MapController {
     return Provider.of<MapManager>(context, listen: false).amenitiesGeojsonData;
   }
 
-  // static String getAmenityCategoryIcon(AmenityCategory category) {
-  //   return CategoryConvertor.getIcon(category) ?? "marker-15";
-  // }
-
   static void fetchBusStopData(BuildContext context) async {
     List<Map<String, dynamic>> fetchedBusStopData =
         await MapApi.fetchBusStopData();
-
-// call provider
     Provider.of<MapManager>(context, listen: false)
         .setBusStopData(fetchedBusStopData);
   }

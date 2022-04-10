@@ -35,14 +35,6 @@ class MapManager extends Manager {
     };
     return res;
   }
-  // {
-  //   AmenityCategory.Pharmacies: [
-  //     {"name": "Singapore General Hospital", "lat": 1.2804, "lng": 103.8348}
-  //   ],
-  //   AmenityCategory.HawkerCenters: [
-  //     {"name": "Marina Bay Sands", "lat": 1.284, "lng": 103.8610}
-  //   ]
-  // };
 
   void updateAmenitiesGeojsonData(AmenityCategory category, Map<String, dynamic> newGeojsonData) {
     if (amenitiesGeojsonData.keys.contains(category)) {
@@ -55,33 +47,7 @@ class MapManager extends Manager {
 
   UnmodifiableMapView<String, dynamic> get taxiData =>
           UnmodifiableMapView(_taxiData);
-  // Map<AmenityCategory, Map<String, dynamic>> getAmenitiesGeojson() {
-  //   Map<AmenityCategory, Map<String, dynamic>> res = {};
-  //   for (AmenityCategory category in selectedCategories) {
-  //     res[category] = {
-  //       "type": "FeatureCollection",
-  //       "features": (amenitiesData[category] ??
-  //           [])
-  //               .map((a) => {
-  //                     "type": "Feature",
-  //                     "geometry": {
-  //                       "type": "Point",
-  //                       "coordinates": [a['lng'], a['lat']]
-  //                     }
-  //                   })
-  //               .toList()
-  //     };
-  //   }
-  //   return res;
-  // }
 
-  // UnmodifiableListView<String> get categories =>
-  //     UnmodifiableListView(_categories);
-  //
-  // UnmodifiableListView<String> get selectedCategories =>
-  //     UnmodifiableListView(_selectedCategories);
-
-  // todo add updater functions
   void toggleSelectedCategory(AmenityCategory category) {
     if (selectedCategories.contains(category)) {
       selectedCategories.removeWhere((element) => element == category);

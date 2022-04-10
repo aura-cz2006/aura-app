@@ -6,25 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:http_status_code/http_status_code.dart';
 
 class MapApi {
-  static Future<Map<String, dynamic>> fetchTaxiData() async {
-    // todo unused
-    Uri url = Uri.parse(
-        "https://api.data.gov.sg/v1/transport/taxi-availability"); //Uri.parse("${Config().routes["api"]}/proxy/taxis/");
-
-    http.Response response = await http.get(url);
-
-    if (response.statusCode == StatusCode.OK) {
-      String responseBody = response.body;
-      Map<String, dynamic> res =
-          Map<String, dynamic>.from(json.decode(responseBody));
-      return res;
-    } else {
-      print(
-          "ERROR fetching taxi data: ${response.statusCode} ${getStatusMessage(response.statusCode)}");
-      return {};
-    }
-  }
-
   static Future<List<dynamic>> fetchAmenitiesData(
       AmenityCategory category) async {
     String? queryString = CategoryConvertor.getQueryString(category);
@@ -39,10 +20,11 @@ class MapApi {
     http.Response response = await http.get(url);
 
     if (response.statusCode == StatusCode.OK) {
-      Map<String, dynamic> responseBody = json
-          .decode(response.body);
+      Map<String, dynamic> responseBody = json.decode(response.body);
       List<dynamic> res = responseBody['query']
-          .where((x) => x["NAME"] != null) // ignore metadata //todo fix where called on null
+          .where((x) =>
+              x["NAME"] !=
+              null) // ignore metadata //todo fix where called on null
           .toList()
           .map((x) => {
                 "name": x['NAME'],
