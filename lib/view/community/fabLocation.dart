@@ -107,7 +107,11 @@ class _locationFabState extends State<locationFab> {
             child: Icon(Icons.home),
             label: "Home",
             backgroundColor: Colors.redAccent,
-            onTap: (){},
+            onTap: (){
+              setState(() {
+                userMgr.updateLocation(userMgr.getUser(userMgr.active_user_id)!.homeaddress_coord);
+              });
+            },
           )
         ],
       );

@@ -1,5 +1,6 @@
 import 'package:aura/controllers/news_controller.dart';
 import 'package:aura/managers/news_manager.dart';
+import 'package:aura/managers/user_manager.dart';
 import 'package:aura/models/news.dart';
 import 'package:aura/widgets/aura_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+
+import '../../community/fabLocation.dart';
 
 class NewsTab extends StatefulWidget {
   const NewsTab({Key? key}) : super(key: key);
@@ -28,8 +31,9 @@ class _NewsTabState extends State<NewsTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<News_Manager>(builder: (context, newsMgr, child) {
-      Future<void> _handleRefresh() async {
+    return Consumer2<User_Manager,News_Manager>(builder: (context, userMgr, newsMgr, child) {
+
+      Future<void> _handleRefresh () async {
         NewsController.fetchNews(context);
       }
 
@@ -45,14 +49,15 @@ class _NewsTabState extends State<NewsTab> {
               if (!tabController.indexIsChanging) {
                 setState(() {
                   if (tabController.index == 0) {
-                    newsToDisplay = newsMgr.getNowNewsItems();
+                    newsToDisplay = newsMgr.getNowNewsItems(userMgr.location_data);
                   } else if (tabController.index == 1) {
-                    newsToDisplay = newsMgr.getUpcomingNewsItems();
+                    newsToDisplay = newsMgr.getUpcomingNewsItems(userMgr.location_data);
                   }
                 });
               }
             });
             return Scaffold(
+                floatingActionButton: locationFABWrap(),
                 appBar: AuraAppBar(
                   title: const Text("News"),
                   hasBackButton: false,
@@ -71,7 +76,7 @@ class _NewsTabState extends State<NewsTab> {
                       ListView(
                     scrollDirection: Axis.vertical,
                     children: ((newsToDisplay == null)
-                            ? newsMgr.getNowNewsItems()
+                            ? newsMgr.getNowNewsItems(userMgr.location_data)
                             : newsToDisplay!)
                         .map((n) => Card(
                               child: ListTile(
