@@ -46,7 +46,6 @@ class DengueNewsItem extends NewsItem {
 }
 
 class EventNewsItem extends NewsItem {
-  // todo consider start and end date
   String eventTitle;
   String fee;
   String websiteURL;
@@ -79,8 +78,6 @@ class EventNewsItem extends NewsItem {
 class MarketNewsItem extends NewsItem {
   String marketName;
   DateTime reopeningDate;
-
-  // List<LatLng> alternativeMarkets = []; // todo if have time
 
   MarketNewsItem(String id, DateTime dateTime, String location, this.marketName,
       this.reopeningDate)

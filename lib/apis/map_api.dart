@@ -7,7 +7,6 @@ import 'package:http_status_code/http_status_code.dart';
 
 class MapApi {
   static Future<Map<String, dynamic>> fetchTaxiData() async {
-    // todo unused
     Uri url = Uri.parse(
         "https://api.data.gov.sg/v1/transport/taxi-availability"); //Uri.parse("${Config().routes["api"]}/proxy/taxis/");
 

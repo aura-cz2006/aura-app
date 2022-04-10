@@ -56,7 +56,7 @@ class Thread {
 
   void addComment(String userID, String text) {
     Comment newC = Comment('commentID', userID, DateTime.now(),
-        text); // todo set up unique comment id
+        text);
     comments.add(newC);
   }
 

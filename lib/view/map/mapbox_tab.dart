@@ -93,7 +93,7 @@ class _MapboxTabState extends State<MapboxTab> {
               attribution: "Dengue clusters data from data.gov.sg",
               data: // URL to a GeoJSON file, or inline GeoJSON
                   MapController.getDengueDataURL(),
-              promoteId: 'Name', // TODO TESTING
+              promoteId: 'Name',
             ));
         await controller.addFillLayer(
             "dengue_clusters",
@@ -104,7 +104,7 @@ class _MapboxTabState extends State<MapboxTab> {
                 fillOpacity: 0.7,
                 visibility: "none"
                 // mapMgr.isLayerEnabled('dengue')
-                //     ? "visible" // todo broken bc cant find enum
+                //     ? "visible" //
                 //     : "none"
                 ));
         await controller.addSymbolLayer(
@@ -112,7 +112,6 @@ class _MapboxTabState extends State<MapboxTab> {
             "dengue_count",
             const SymbolLayerProperties(
               textField: "4",
-              // TODO get number of cases
               textColor: "#C62828",
               textOpacity: 1,
               textSize: 16,
@@ -122,14 +121,14 @@ class _MapboxTabState extends State<MapboxTab> {
       }
 
       void initTaxisLayer() async {
-        MapController.fetchTaxiData(context); // todo doesnt work
+        MapController.fetchTaxiData(context);
         await controller.addSource(
           "taxi_locations",
           GeojsonSourceProperties(
             attribution: "Taxi availability data from data.gov.sg",
             data: // URL to a GeoJSON file, or inline GeoJSON
                 MapController
-                    .getTaxiDataURL(), //todo use mapMgr.taxiData, but it gives {}?
+                    .getTaxiDataURL(),
           ),
         );
         // await controller.addCircleLayer( // blue dots
@@ -152,13 +151,13 @@ class _MapboxTabState extends State<MapboxTab> {
       }
 
       void initBusStopLayer() async {
-        MapController.fetchBusStopData(context); // todo doesnt work
+        MapController.fetchBusStopData(context);
         await controller.addSource(
           "bus_stop_locations",
           GeojsonSourceProperties(
               attribution: "Bus stop data from data.gov.sg",
               data: // URL to a GeoJSON file, or inline GeoJSON
-                  mapMgr.getBusStopDataGeojson() // todo, but it gives {}?
+                  mapMgr.getBusStopDataGeojson()
               ),
         );
         await controller.addLayer(
@@ -173,7 +172,6 @@ class _MapboxTabState extends State<MapboxTab> {
       }
 
       void initMeetupsLayer() async {
-        // todo allow tapping
         await controller.addSource(
           "meetup_locations",
           GeojsonSourceProperties(
@@ -187,7 +185,7 @@ class _MapboxTabState extends State<MapboxTab> {
             const SymbolLayerProperties(
               iconColor: "#7C4DFF", // colour broken
               iconOpacity: 1,
-              iconImage: "restaurant-pizza-15", // todo no ppl icon
+              iconImage: "restaurant-pizza-15",
               iconSize: 2,
             ));
       }
@@ -237,7 +235,6 @@ class _MapboxTabState extends State<MapboxTab> {
               "dengue_count",
               const SymbolLayerProperties(
                 textField: "4",
-                // TODO get number of cases
                 textColor: "#C62828",
                 textOpacity: 1,
                 textSize: 16,
@@ -254,7 +251,7 @@ class _MapboxTabState extends State<MapboxTab> {
                 const SymbolLayerProperties(
                   iconColor: "#7C4DFF", // colour broken
                   iconOpacity: 1,
-                  iconImage: "restaurant-pizza-15", // todo no ppl icon
+                  iconImage: "restaurant-pizza-15",
                   iconSize: 2,
                 ));
           }

@@ -835,7 +835,6 @@ class MapManager extends Manager {
   // UnmodifiableListView<String> get selectedCategories =>
   //     UnmodifiableListView(_selectedCategories);
 
-  // todo add updater functions
   void setSelectedCategory(AmenityCategory category) {
     if (selectedCategories.contains(category)) {
       selectedCategories.removeWhere((element) => element == category);

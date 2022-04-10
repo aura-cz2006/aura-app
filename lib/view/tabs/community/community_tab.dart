@@ -25,7 +25,7 @@ class CommunityTab extends StatefulWidget {
 
 class _CommunityTabState extends State<CommunityTab> {
   List<no.Notification> notifications =
-      []; // TODO: get notifications from controller
+      [];
 
   @override
   Widget build(BuildContext context) {
