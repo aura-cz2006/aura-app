@@ -133,6 +133,8 @@ class _EditMeetupViewState extends State<EditMeetupView> {
             return null;
           } else if (int.parse(value) < meetupMgr.getMeetupByID(widget.meetupID).rsvpAttendees.length) {
             return "Invalid maximum number of attendees. ${meetupMgr.getMeetupByID(widget.meetupID).rsvpAttendees.length} people have already RSVPed to this meetup.";
+          } else if (int.parse(value)<=0) {
+            return "Please enter a valid number";
           } else {
             return "Please enter the maximum number of attendees.";
           }

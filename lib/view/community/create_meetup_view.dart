@@ -101,6 +101,8 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
         validator: (value){
           if (value!.isNotEmpty){
             return null;
+          } else if (int.parse(value)<=0) {
+            return "Please enter a valid number";
           } else {
             return "Please enter the maximum number of attendees.";
           }
@@ -188,9 +190,7 @@ class _CreateMeetupViewState extends State<CreateMeetupView> {
               //VALIDITY FOR ADDRESS
               var coord;
               var coordinate;
-              print("Checkpoint Address Validity: ENTERING\n");
               try{
-                print("Checkpoint Address Validity: ENTERED\n");
                 coord = await geocoding.locationFromAddress(locationController.text);
                 coordinate = await coord.first;
               } on Exception catch (e) {
