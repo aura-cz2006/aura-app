@@ -36,8 +36,9 @@ class _MainTabBarState extends State<MainTabBar> {
 
     userMgr.active_user_id = (FirebaseAuth.instance.currentUser!.uid);
     userMgr.active_user_name = (FirebaseAuth.instance.currentUser!.displayName)!;
-    userMgr.updateLocation(userMgr.getUser(userMgr.active_user_id)!.homeaddress_coord);
-    print("Local Address: ${userMgr.location_data}, ID: ${userMgr.active_user_id}, Name: ${userMgr.active_user_name}");
+    // todo: uncomment below lines
+    // userMgr.updateLocation(userMgr.getUser(userMgr.active_user_id)!.homeaddress_coord);
+    // print("Local Address: ${userMgr.location_data}, ID: ${userMgr.active_user_id}, Name: ${userMgr.active_user_name}");
   }
 
   @override

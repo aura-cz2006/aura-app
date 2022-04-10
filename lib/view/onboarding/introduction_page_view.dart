@@ -39,7 +39,7 @@ class _IntroScreenState extends State<IntroScreen> {
         body: "An all in one application for people in Singapore to meet, keep updated and connect",
         image: Center(
           child: Image.asset(
-              "assets/splash.jpg",
+              "assets/screen_icon_trans.png",
               height: 175.0),
         ),
       ),
