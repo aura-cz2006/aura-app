@@ -56,13 +56,17 @@ class _SigninScreenState extends State<SigninScreen> {
                           onPressed: () {
                             signInWithGoogle()
                                 .then((value) {
-                                  userMgr.active_user_id = (value.user?.uid)!;
-                                  userMgr.active_user_name = (value.user?.displayName)!;
-                                  print("ID: ${(value.user?.uid)!}, Name: ${(value.user?.displayName)!}");
-                                  context.go("/tabs/map");});
+                                  userMgr.createUser(
+                                      id: value.user!.uid,
+                                      name: value.user!.displayName!,
+                                    home_address: userMgr.location_data,
+                                  );
+                                  context.go("/tabs/map");
+                                });
                             setState(() {
                               userMgr.active_user_id = (FirebaseAuth.instance.currentUser?.uid)!;
                               userMgr.active_user_name = (FirebaseAuth.instance.currentUser?.displayName)!;
+                              // print("UserID: ${userMgr.active_user_id}, Name: ${userMgr.active_user_name}");
 
                               _isLoading = true;
                             });

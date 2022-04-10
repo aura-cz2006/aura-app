@@ -18,6 +18,12 @@ class User_Manager extends Manager {
     User('6', 'Fath')
   ];
 
+  void createUser({required String id, required String name, required LatLng home_address}){
+    User new_user = User(id, name);
+    new_user.updateHomeAddress(home_address);
+    user_list.add(new_user);
+  }
+
 
   User? getUser(String id){
     for (var each in user_list){
