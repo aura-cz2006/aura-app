@@ -102,7 +102,7 @@ class _CreateThreadViewState extends State<CreateThreadView> {
                   title : titleController.text,
                   content : contentController.text,
                   topic: widget.topic,
-                  userID: (userMgr.getUser(userMgr.active_user_id)!.username), //Not yet available
+                  userID: (userMgr.active_user_id), //Not yet available
                 ).then((statcode)  {
                   if (statcode == 200) {
                     setState(() async {
