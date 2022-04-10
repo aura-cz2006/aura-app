@@ -55,7 +55,11 @@ class _SigninScreenState extends State<SigninScreen> {
                         return OutlinedButton(
                           onPressed: () {
                             signInWithGoogle()
-                                .then((value) => {context.go("/tabs/map")});
+                                .then((value) {
+                                  userMgr.active_user_id = (value.user?.uid)!;
+                                  userMgr.active_user_name = (value.user?.displayName)!;
+                                  print("ID: ${(value.user?.uid)!}, Name: ${(value.user?.displayName)!}");
+                                  context.go("/tabs/map");});
                             setState(() {
                               userMgr.active_user_id = (FirebaseAuth.instance.currentUser?.uid)!;
                               userMgr.active_user_name = (FirebaseAuth.instance.currentUser?.displayName)!;
