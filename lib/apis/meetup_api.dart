@@ -19,7 +19,7 @@ class MeetUpAPI{
 
       // use dart:convert to decode JSON
       List<dynamic> decodedJson =
-      json.decode(responseBody); // todo put this back
+      json.decode(responseBody);
 
       List<Meetup> resList = await (decodedJson).map((item) {
         return Meetup.getFromJson(item);

@@ -235,7 +235,6 @@ class _DisplayFullMeetupState extends State<DisplayFullMeetup> {
                       softWrap: true)),
             ),
             ListTile(
-              // TODO: display location address instead of coordinates
               leading: const Icon(Icons.pin_drop),
               title: Text(
                   "Address: ${meetupMgr.getMeetupByID(widget.meetupID).address}"),

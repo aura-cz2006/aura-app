@@ -145,7 +145,7 @@ class Meetup_Manager extends Manager {
     meetupForEdit.title = new_title;
     meetupForEdit.description = new_desc;
     meetupForEdit.location = new_location;
-    meetupForEdit.maxAttendees = new_max_attendees; // todo check constraint
+    meetupForEdit.maxAttendees = new_max_attendees;
     notifyListeners();
   }
 

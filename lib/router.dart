@@ -88,7 +88,7 @@ final router = GoRouter(
                       builder: (BuildContext context, GoRouterState state) =>
                           EditThreadView(
                               threadID: state.params[
-                                  'threadId']!) // TODO: replace with thread id
+                                  'threadId']!)
                       )
                 ]),
             GoRoute(

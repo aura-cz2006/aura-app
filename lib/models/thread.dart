@@ -46,10 +46,11 @@ class Thread {
   // comments: comments, //constructCommentsListfromStringList(json['comments'])
   // likedBy: likes, //List<String>.from(json['likedBy'])
 
-
+  /*
+  For debugging purposes
+   */
   @override
   String toString() {
-    //todo remove this ???
     return 'Thread: {id: $id, title: ${title ?? ""}, userID: ${userID}, displayName: ${displayName}, content: ${content}, topic: ${topic}, timestamp: ${timestamp}, comments: ${comments}, likes: ${likedBy}';
   }
 
