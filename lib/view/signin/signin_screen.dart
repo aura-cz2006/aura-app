@@ -86,8 +86,8 @@ class _SigninScreenState extends State<SigninScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0)),
                           ),
-                        ),
-                      });
+                        );
+                      })
                     ),
                   ]));
   }
