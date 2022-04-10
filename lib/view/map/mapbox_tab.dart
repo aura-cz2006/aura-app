@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:aura/controllers/map_controller.dart';
+import 'package:aura/controllers/meetups_controller.dart';
 import 'package:aura/managers/map_manager.dart';
 import 'package:aura/managers/meetup_manager.dart';
 import 'package:aura/models/amenity_category.dart';
@@ -23,11 +24,6 @@ class MapboxTab extends StatefulWidget {
 
 class _MapboxTabState extends State<MapboxTab> {
   late MapboxMapController controller;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   // handle taps
   void _onFeatureTapped(
@@ -129,28 +125,28 @@ class _MapboxTabState extends State<MapboxTab> {
             ));
       }
 
-      void initBusStopLayer() async {
-        MapController.fetchBusStopData(context); // todo doesnt work
-        await controller.addSource(
-          "bus_stop_locations",
-          GeojsonSourceProperties(
-              attribution: "Bus stop data from data.gov.sg",
-              data: // URL to a GeoJSON file, or inline GeoJSON
-                  mapMgr.getBusStopDataGeojson() // todo, but it gives {}?
-              ),
-        );
-        await controller.addLayer(
-            "bus_stop_locations",
-            "bus_icons",
-            const SymbolLayerProperties(
-              iconOpacity: 1,
-              iconImage: "bus-15",
-              iconSize: 2,
-            ));
-      }
+      // void initBusStopLayer() async {
+      //   MapController.fetchBusStopData(context); // todo doesnt work
+      //   await controller.addSource(
+      //     "bus_stop_locations",
+      //     GeojsonSourceProperties(
+      //         attribution: "Bus stop data from data.gov.sg",
+      //         data: // URL to a GeoJSON file, or inline GeoJSON
+      //             mapMgr.getBusStopDataGeojson() // todo, but it gives {}?
+      //         ),
+      //   );
+      //   await controller.addLayer(
+      //       "bus_stop_locations",
+      //       "bus_icons",
+      //       const SymbolLayerProperties(
+      //         iconOpacity: 1,
+      //         iconImage: "bus-15",
+      //         iconSize: 2,
+      //       ));
+      // }
 
       void initMeetupsLayer() async {
-        // todo allow tapping
+        MeetupsController.fetchMeetups(context);
         await controller.addSource(
           "meetup_locations",
           GeojsonSourceProperties(
@@ -249,7 +245,7 @@ class _MapboxTabState extends State<MapboxTab> {
       void _onStyleLoaded() async {
         initDengueLayer();
         initTaxisLayer();
-        initBusStopLayer();
+        // initBusStopLayer();
         initMeetupsLayer();
         initAmenitiesLayer();
 
