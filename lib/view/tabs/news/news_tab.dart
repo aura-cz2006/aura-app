@@ -29,8 +29,7 @@ class _NewsTabState extends State<NewsTab> {
   @override
   Widget build(BuildContext context) {
     return Consumer<News_Manager>(builder: (context, newsMgr, child) {
-
-      Future<void> _handleRefresh () async {
+      Future<void> _handleRefresh() async {
         NewsController.fetchNews(context);
       }
 
@@ -92,52 +91,34 @@ class _NewsTabState extends State<NewsTab> {
                                   size: 30,
                                 ),
                                 title: Padding(
-                                  padding: const EdgeInsets.only(bottom: 10.0),
-                                  child: Text(n.getText(),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  child: Text(n.getNewsTitle(),
                                       style: const TextStyle(
+                                          fontSize: 17,
                                           fontWeight: FontWeight.bold)),
                                 ),
-                                subtitle: Padding(
-                                  padding: const EdgeInsets.only(bottom: 10.0),
-                                  child: Text(DateFormat('yyyy-MM-dd kk:mm')
-                                      .format(n.dateTime)),
-                                ),
-                                onTap: () {
-                                  final popup = BeautifulPopup(
-                                    //TODO populate w related data by type of news item
-                                    context: context,
-                                    template: TemplateGeolocation,
-                                  );
-                                  popup.show(
-                                    title: "News Details",
-                                    content: n.getText(),
-                                    actions: n is EventNewsItem
-                                        ? [
-                                            //todo make these buttons vertical stack instead of horizontal row
-                                            popup.button(
-                                                label: 'Redirect',
-                                                onPressed: () async {
-                                                  print(n.websiteURL);
-                                                  if (!await launch(
-                                                      n.websiteURL)) {
-                                                    throw 'Could not launch ${n.websiteURL}';
-                                                  }
-                                                }),
-                                            popup.button(
-                                              label: 'Done',
-                                              onPressed: Navigator.of(context)
-                                                  .pop, //todo switch to go router
-                                            )
-                                          ]
-                                        : [
-                                            popup.button(
-                                              label: 'Done',
-                                              onPressed: Navigator.of(context)
-                                                  .pop, //todo switch to go router
-                                            )
-                                          ],
-                                  );
-                                },
+                                subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5),
+                                          child: Text(n.getNewsDetails(),
+                                              style: const TextStyle(
+                                                  fontSize: 15))),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5),
+                                        child: Text(
+                                          DateFormat('yyyy-MM-dd kk:mm')
+                                              .format(n.dateTime),
+                                          style: const TextStyle(
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ),
+                                    ]),
                               ),
                             ))
                         .toList(),
