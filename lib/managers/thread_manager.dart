@@ -10,7 +10,7 @@ class Thread_Manager extends Manager {
   void updateThreadList(List<Thread> threadList){
     print("=============ENTERED THREAD MANAGER===============");
     thread_list = threadList;
-    print(threadList);
+    print("Thread 1: ${threadList[0]}");
     print("=============EXITING THREAD MANAGER===============");
   }
 

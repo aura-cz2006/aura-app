@@ -12,6 +12,7 @@ class Thread {
   late DateTime timestamp;
   late List<Comment> comments = [];
   late List<String> likedBy = []; // list of userIDs
+  late String displayName;
 
   // constructor for app
   Thread(
@@ -27,6 +28,7 @@ class Thread {
     required this.id,
     required this.title,
     required this.userID,
+    required this.displayName,
     required this.content,
     required this.topic,
     required this.timestamp,
@@ -48,7 +50,7 @@ class Thread {
   @override
   String toString() {
     //todo remove this ???
-    return 'Thread: {id: $id, title: ${title ?? ""}, userID: ${userID}, content: ${content}, topic: ${topic}, timestamp: ${timestamp}, comments: ${comments}, likes: ${likedBy}';
+    return 'Thread: {id: $id, title: ${title ?? ""}, userID: ${userID}, displayName: ${displayName}, content: ${content}, topic: ${topic}, timestamp: ${timestamp}, comments: ${comments}, likes: ${likedBy}';
   }
 
   void addComment(String userID, String text) {
@@ -114,7 +116,8 @@ class Thread {
     Thread thread = Thread.fromBackEnd(
         id: json['id'].toString(),
         title: json['title'],
-        userID: json['author_user_id'],
+        userID: json['author']['id'],
+        displayName: json['author']['displayName'],
         content: json['content'],
         topic: TopicConverter.parsable2topic(json['topic']),
         timestamp: DateTime.parse(json['date']),
