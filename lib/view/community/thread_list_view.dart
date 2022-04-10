@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/thread.dart';
+
 void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => Thread_Manager()),
@@ -34,12 +36,27 @@ class ThreadListViewState extends State<ThreadListView> {
   final filter = ProfanityFilter();
   var dropdownValue = 'Most Likes'; // default sort
 
-  @override
-  void initState(){
-    super.initState();
-
-    final myModel = Provider.of<Thread_Manager>(context, listen: false);
-    thread_list = myModel.getListOfThreadsSortedByLikes(widget.topic);
+  List<Thread> getThreads(){
+    final threadMgr = Provider.of<Thread_Manager>(context, listen: false);
+    final userMgr = Provider.of<User_Manager>(context, listen: false);
+    switch (dropdownValue){
+      case 'Most Likes': {
+        return threadMgr
+            .getListOfThreadsSortedByLikes(widget.topic);
+      }
+      case 'Most Recent': {
+        return threadMgr
+            .getListOfThreadsSortedByTime(widget.topic);
+      }
+      case 'My Threads': {
+        return threadMgr
+            .getListOfThreadsSortedByUser(topic: widget.topic,
+            user_id: userMgr.active_user_id);
+      }
+      default: {
+        return [];
+      }
+    }
   }
 
   @override
@@ -73,19 +90,19 @@ class ThreadListViewState extends State<ThreadListView> {
                         onChanged: (String? newValue) {
                           setState(() {
                             dropdownValue = newValue!;
-                            if (newValue == 'Most Likes') {
-                              thread_list = threadMgr
-                                  .getListOfThreadsSortedByLikes(widget.topic);
-                            } else if (newValue == 'Most Recent') {
-                              thread_list = threadMgr
-                                  .getListOfThreadsSortedByTime(widget.topic);
-                            } else if (newValue == 'My Threads') {
-                              print("Sorting by user");
-                              thread_list = threadMgr
-                                  .getListOfThreadsSortedByUser(topic: widget.topic,
-                                  user_id: userMgr.active_user_id);
-                              print(thread_list);
-                            }
+                            // if (newValue == 'Most Likes') {
+                            //   thread_list = threadMgr
+                            //       .getListOfThreadsSortedByLikes(widget.topic);
+                            // } else if (newValue == 'Most Recent') {
+                            //   thread_list = threadMgr
+                            //       .getListOfThreadsSortedByTime(widget.topic);
+                            // } else if (newValue == 'My Threads') {
+                            //   print("Sorting by user");
+                            //   thread_list = threadMgr
+                            //       .getListOfThreadsSortedByUser(topic: widget.topic,
+                            //       user_id: userMgr.active_user_id);
+                            //   print(thread_list);
+                            // }
                           });
                         },
                         items: <String>['Most Likes', 'Most Recent', 'My Threads']
@@ -110,7 +127,7 @@ class ThreadListViewState extends State<ThreadListView> {
                       child: ListView(
                           shrinkWrap: true,
                           physics: const ScrollPhysics(),
-                          children: (thread_list)
+                          children: (getThreads())
                               .map((t) => Card(
                               child: InkWell(
                                   onTap: () => context.push(

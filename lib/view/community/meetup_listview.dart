@@ -11,6 +11,8 @@ import 'package:profanity_filter/profanity_filter.dart';
 import 'package:provider/provider.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
+import '../../models/meetup.dart';
+
 void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => Meetup_Manager()),
@@ -31,12 +33,30 @@ class _MeetUpListViewState extends State<MeetUpListView> {
   late var meetup_list = [];
   var dropdownValue = 'Most Recent';
 
-  @override
-  void initState(){
-    super.initState();
+  List<Meetup> getMeetups(){
+    final meetupMgr = Provider.of<Meetup_Manager>(context, listen: false);
+    final userMgr = Provider.of<User_Manager>(context, listen: false);
 
-    final myModel = Provider.of<Meetup_Manager>(context, listen: false);
-    meetup_list = myModel.getMeetupsSortedByCreationDateTime();
+    switch(dropdownValue){
+      case 'Most Recent': {
+        return meetupMgr.getMeetupsSortedByCreationDateTime();
+      }
+      case 'Starting Soon': {
+        return meetupMgr.getMeetupsSortedByTimeOfMeetUp();
+      }
+      case 'Most Attendees': {
+        return meetupMgr.getMeetupsSortedByMostAttendees();
+      }
+      case 'My Meetups': {
+        return meetupMgr.getMeetupsSortedByUser(user_ID: userMgr.active_user_id);
+      }
+      case 'My RSVP': {
+        return meetupMgr.getMeetupsSortedByRSVP(user_ID: userMgr.active_user_id);
+      }
+      default: {
+        return [];
+      }
+    }
   }
 
 
@@ -70,22 +90,22 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                         onChanged: (String? newValue) {
                           setState(() {
                             dropdownValue = newValue!;
-                            if (newValue == 'Most Recent') {
-                              meetup_list =
-                                  meetupMgr.getMeetupsSortedByCreationDateTime();
-                            } else if (newValue == 'Starting Soon') {
-                              meetup_list =
-                                  meetupMgr.getMeetupsSortedByTimeOfMeetUp();
-                            } else if (newValue == 'Most Attendees') {
-                              meetup_list =
-                                  meetupMgr.getMeetupsSortedByMostAttendees();
-                            } else if (newValue == 'My Meetups') {
-                              meetup_list =
-                                  meetupMgr.getMeetupsSortedByUser(user_ID: userMgr.active_user_id);
-                            } else if (newValue == 'My RSVP') {
-                              meetup_list =
-                                  meetupMgr.getMeetupsSortedByRSVP(user_ID: userMgr.active_user_id);
-                            }
+                            // if (newValue == 'Most Recent') {
+                            //   meetup_list =
+                            //       meetupMgr.getMeetupsSortedByCreationDateTime();
+                            // } else if (newValue == 'Starting Soon') {
+                            //   meetup_list =
+                            //       meetupMgr.getMeetupsSortedByTimeOfMeetUp();
+                            // } else if (newValue == 'Most Attendees') {
+                            //   meetup_list =
+                            //       meetupMgr.getMeetupsSortedByMostAttendees();
+                            // } else if (newValue == 'My Meetups') {
+                            //   meetup_list =
+                            //       meetupMgr.getMeetupsSortedByUser(user_ID: userMgr.active_user_id);
+                            // } else if (newValue == 'My RSVP') {
+                            //   meetup_list =
+                            //       meetupMgr.getMeetupsSortedByRSVP(user_ID: userMgr.active_user_id);
+                            // }
                           });
                         },
                         items: <String>[
@@ -113,7 +133,7 @@ class _MeetUpListViewState extends State<MeetUpListView> {
                       animSpeedFactor: 3,
                       onRefresh: _handleRefresh,
                       child: ListView(
-                          children: (meetup_list)
+                          children: (getMeetups())
                               .map(
                                 (m) => Card(
                               child: InkWell(
